@@ -1,0 +1,34 @@
+{
+  "name": "@legoo/rn-screen-adaption",
+  "version": "0.0.1",
+  "description": "babel plugin for react-native screen adaptation",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf dist && pnpm swc src --ignore **/*.d.ts -d dist",
+    "postbuild": "tsc --emitDeclarationOnly --declaration"
+  },
+  "author": "Soul Shao <a1009943858@gmail.com> (https://github.com/JinYuSha0)",
+  "source": "src/index",
+  "files": [
+    "dist",
+    "babel.js"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.23.7",
+    "@babel/helper-module-imports": "^7.22.15",
+    "micromatch": "^4.0.5",
+    "react-native": "^0.73.2"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.1.63",
+    "@swc/core": "^1.3.102",
+    "@types/node": "^20.11.0",
+    "rimraf": "^5.0.5",
+    "tsc": "^2.0.4",
+    "typescript": "^5.3.3"
+  }
+}
