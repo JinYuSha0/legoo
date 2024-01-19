@@ -31,6 +31,11 @@ const babelLoaderConfiguration = {
   },
 };
 
+const styleLoaderConfiguration = {
+  test: /\.css$/i,
+  use: ['style-loader', 'css-loader', 'postcss-loader'],
+};
+
 // Image loader configuration
 const imageLoaderConfiguration = {
   test: /\.(gif|jpe?g|png|svg)$/,
@@ -87,6 +92,7 @@ module.exports = argv => {
         babelLoaderConfiguration,
         imageLoaderConfiguration,
         fileLoaderConfiguration,
+        styleLoaderConfiguration,
       ],
     },
     plugins: [

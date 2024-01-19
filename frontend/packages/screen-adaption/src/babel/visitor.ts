@@ -4,12 +4,10 @@ import type {
   JSXExpressionContainer,
   Identifier,
   Expression,
-  PatternLike,
   UnaryExpression,
   BinaryExpression,
   ConditionalExpression,
   CallExpression,
-  JSXEmptyExpression,
 } from '@babel/types';
 import {addDefault} from '@babel/helper-module-imports';
 import {propertyRecord} from './const';
@@ -75,7 +73,7 @@ function nodeReplaceWithNumber(
 
 function processRelatedPropertyValue(
   path: Babel.NodePath<any>,
-  expressionNode: Expression | JSXEmptyExpression | PatternLike,
+  expressionNode: Babel.Node,
   propertyDirection,
   state: TraverseState,
   wrapper?: (expression: Expression) => Babel.Node,
