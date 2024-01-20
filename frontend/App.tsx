@@ -5,20 +5,9 @@
  * @format
  */
 import './global.css';
-import {View} from 'react-native';
-import React from 'react';
-
-const Colors = {
-  darker: '#000000',
-  lighter: '#FFFFFF',
-  black: '#000000',
-  white: '#FFFFFF',
-};
-
-function A(...props: any) {
-  console.log(props);
-  return null;
-}
+import {Text, View} from 'react-native';
+import {vars, StyleSheet, remapProps} from 'nativewind';
+import React, {useEffect} from 'react';
 
 function App(): React.JSX.Element {
   return (
@@ -26,7 +15,9 @@ function App(): React.JSX.Element {
       <View className="flex-row">
         <View className="bg-primary-500 w-32 h-32 rounded-md active:bg-primary-600"></View>
         <View className="bg-green-300 w-32 h-32 rounded-md"></View>
+        <View className="bg-indigo-200 w-32 h-32 rounded-md"></View>
       </View>
+      <Text className="text-red-500">111</Text>
     </View>
   );
 }
