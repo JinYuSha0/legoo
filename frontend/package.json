@@ -7,12 +7,14 @@
     "ios": "react-native run-ios",
     "web": "webpack-dev-server --config ./web/webpack.config.js --mode development",
     "build:web": "webpack --config ./web/webpack.config.js --mode production",
+    "build:android": "react-native bundle --entry-file index.js --bundle-output ./android/app/src/main/assets/index.android.bundle --platform android --assets-dest ./android/app/src/main/res --dev false --reset-cache",
     "build:packages": "lerna run build",
     "lint": "eslint .",
-    "start": "concurrently port:metro port:tailwind \"react-native start\"",
+    "start": "react-native start",
     "test": "jest",
     "port:metro": "adb reverse tcp:8081 tcp:8081",
-    "port:tailwind": "adb reverse tcp:8089 tcp:8089"
+    "port:tailwind": "adb reverse tcp:8089 tcp:8089",
+    "proxy": "set HTTP_PROXY=127.0.0.1:7890 && set HTTPS_PROXY=127.0.0.1:7890"
   },
   "dependencies": {
     "@legoo/rn-screen-adaption": "workspace:*",
@@ -53,6 +55,7 @@
     "html-webpack-plugin": "^5.6.0",
     "jest": "^29.6.3",
     "lerna": "^8.0.2",
+    "metro-babel-transformer": "^0.80.4",
     "postcss": "^8.4.33",
     "postcss-loader": "^8.0.0",
     "prettier": "2.8.8",

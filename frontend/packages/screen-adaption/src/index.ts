@@ -1,4 +1,5 @@
 import {Platform, PixelRatio, Dimensions} from 'react-native';
+import {propertyRecord} from './const';
 
 export enum Direction {
   width,
@@ -22,9 +23,34 @@ export type Props = {
   platformExclude?: Platform['OS'][];
 };
 
+export type NativeCssParsed = {
+  declarations: [
+    string,
+    {
+      0?: {
+        specificity: {
+          A: number;
+          B: number;
+          C: number;
+          I: number;
+          S: number;
+          O: number;
+        };
+        scope: number;
+        props: ['style', [string, string | number][]][];
+      }[];
+      scope: number;
+    },
+  ][];
+};
+
 let wScale: number = 1;
 let hScale: number = 1;
 let direction: Direction = Direction.width;
+
+function isNumber(maybeNum): maybeNum is number {
+  return !isNaN(+maybeNum);
+}
 
 export function init(props: Props) {
   if (props.platformExclude && props.platformExclude.includes(Platform.OS)) {
@@ -59,9 +85,23 @@ export function ori(uiElePx: number) {
   return uiElePx;
 }
 
+export function __css(parsed: NativeCssParsed) {
+  for (const [className, style] of parsed.declarations) {
+    try {
+      const curr = style[0]?.[0].props[0][1][0];
+      const [name, value] = curr ?? [];
+      const direction = propertyRecord[name];
+      if (!name || direction == null || !isNumber(value)) continue;
+      curr[1] = px2u(value, direction);
+    } catch (err) {}
+  }
+  return parsed;
+}
+
 export default {
   init,
   px2u,
   ori,
+  __css,
   Direction,
 };

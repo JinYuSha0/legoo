@@ -10,7 +10,7 @@ import type {
   CallExpression,
 } from '@babel/types';
 import {addDefault} from '@babel/helper-module-imports';
-import {propertyRecord} from './const';
+import {propertyRecord} from '../const';
 import {PropertyDirection} from 'index';
 import packageInfo from '../../package.json';
 import * as Babel from '@babel/core';

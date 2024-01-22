@@ -6,6 +6,7 @@ module.exports = {
       {
         include: ['*.tsx', 'src/**/*.tsx', 'packages/**/*.js'],
         exclude: [],
+        tailwindcss: 'global.css',
       },
     ],
   ],
