@@ -5,12 +5,12 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "web": "webpack-dev-server --config ./web/webpack.config.js --mode development",
     "build:web": "webpack --config ./web/webpack.config.js --mode production",
     "build:android": "react-native bundle --entry-file index.js --bundle-output ./android/app/src/main/assets/index.android.bundle --platform android --assets-dest ./android/app/src/main/res --dev false --reset-cache",
     "build:packages": "lerna run build",
     "lint": "eslint .",
     "start": "react-native start",
+    "web": "webpack-dev-server --config ./web/webpack.config.js --mode development",
     "test": "jest",
     "proxy": "set HTTP_PROXY=http://127.0.0.1:7890 && set HTTPS_PROXY=http://127.0.0.1:7890"
   },

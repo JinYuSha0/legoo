@@ -41,7 +41,7 @@ function generateExpression(
       addDefault(path, packageInfo.name),
       t.identifier('px2u'),
     ),
-    [oriValue, t.numericLiteral(direction)],
+    [oriValue, t.numericLiteral(direction), t.booleanLiteral(true)],
   );
   return wrapper ? wrapper(expression) : expression;
 }
