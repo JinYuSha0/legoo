@@ -12,9 +12,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "port:metro": "adb reverse tcp:8081 tcp:8081",
-    "port:tailwind": "adb reverse tcp:8089 tcp:8089",
-    "proxy": "set HTTP_PROXY=127.0.0.1:7890 && set HTTPS_PROXY=127.0.0.1:7890"
+    "proxy": "set HTTP_PROXY=http://127.0.0.1:7890 && set HTTPS_PROXY=http://127.0.0.1:7890"
   },
   "dependencies": {
     "@legoo/rn-screen-adaption": "workspace:*",
@@ -23,6 +21,7 @@
     "react-dom": "^18.2.0",
     "react-native": "0.73.2",
     "react-native-css-interop": "^0.0.22",
+    "react-native-gesture-handler": "^2.14.1",
     "react-native-reanimated": "^3.6.1",
     "react-native-svg": "^14.1.0",
     "react-native-web": "^0.19.10"
@@ -32,6 +31,7 @@
     "@babel/plugin-transform-react-jsx": "^7.23.4",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
+    "@legoo/port-reverser": "workspace:*",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "@react-native-community/cli": "^12.3.3",
     "@react-native-community/cli-platform-android": "^12.3.3",
@@ -58,6 +58,7 @@
     "metro-babel-transformer": "^0.80.4",
     "postcss": "^8.4.33",
     "postcss-loader": "^8.0.0",
+    "postcss-pxtorem": "^6.1.0",
     "prettier": "2.8.8",
     "react-refresh": "^0.14.0",
     "react-test-renderer": "18.2.0",
