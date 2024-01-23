@@ -1,5 +1,5 @@
 import type {PluginObj, PluginPass} from '@babel/core';
-import {normalizePath, relativePath, removeStartSep} from './helper';
+import {normalizePath, relativePath, removeStartSep, resolve} from './helper';
 import micromatch from 'micromatch';
 import * as Babel from '@babel/core';
 import visitor, {type TraverseState} from './visitor';
@@ -14,6 +14,8 @@ interface InputParams {
 
 interface InnerAttribute {}
 
+const rootPath = resolve(__dirname, '../');
+
 export default function (
   {types: t}: typeof Babel,
   opt: InputParams,
@@ -24,6 +26,8 @@ export default function (
       Program: {
         enter(path, state) {
           const cwd = process.cwd();
+          if (!state.filename) return;
+          if (state.filename.startsWith(rootPath)) return;
           const relativeFilename = normalizePath(
             removeStartSep(relativePath(cwd, state.filename)),
           );

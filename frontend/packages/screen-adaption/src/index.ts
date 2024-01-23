@@ -48,7 +48,7 @@ let wScale: number = 1;
 let hScale: number = 1;
 let direction: Direction = Direction.width;
 
-function isNumber(maybeNum): maybeNum is number {
+function isNumber(maybeNum: any): maybeNum is number {
   return !isNaN(+maybeNum);
 }
 
@@ -90,9 +90,9 @@ export function __css(parsed: NativeCssParsed) {
     try {
       const curr = style[0]?.[0].props[0][1][0];
       const [name, value] = curr ?? [];
-      const direction = propertyRecord[name];
+      const direction = propertyRecord[name as keyof typeof propertyRecord];
       if (!name || direction == null || !isNumber(value)) continue;
-      curr[1] = px2u(value, direction);
+      if (curr) curr[1] = px2u(value, direction);
     } catch (err) {}
   }
   return parsed;

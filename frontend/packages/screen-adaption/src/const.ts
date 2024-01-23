@@ -1,5 +1,5 @@
 import type {TextStyle} from 'react-native';
-import {PropertyDirection} from 'index';
+import {PropertyDirection} from './index';
 
 type PropertyRecord = Partial<Record<keyof TextStyle, PropertyDirection>>;
 

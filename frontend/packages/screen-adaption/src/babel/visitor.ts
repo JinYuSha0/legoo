@@ -11,7 +11,7 @@ import type {
 } from '@babel/types';
 import {addDefault} from '@babel/helper-module-imports';
 import {propertyRecord} from '../const';
-import {PropertyDirection} from 'index';
+import {PropertyDirection} from '../index';
 import packageInfo from '../../package.json';
 import * as Babel from '@babel/core';
 
@@ -25,7 +25,7 @@ function getPropertyDirection(
   name: string | JSXIdentifier,
 ): PropertyDirection | null {
   if (typeof name === 'string') {
-    return propertyRecord[name];
+    return propertyRecord[name as keyof typeof propertyRecord] ?? null;
   }
   return null;
 }
@@ -74,7 +74,7 @@ function nodeReplaceWithNumber(
 function processRelatedPropertyValue(
   path: Babel.NodePath<any>,
   expressionNode: Babel.Node,
-  propertyDirection,
+  propertyDirection: PropertyDirection,
   state: TraverseState,
   wrapper?: (expression: Expression) => Babel.Node,
 ) {

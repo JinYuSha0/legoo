@@ -14,3 +14,7 @@ export function removeStartSep(filename: string) {
   }
   return filename;
 }
+
+export function resolve(pathA: string, pathB: string) {
+  return path.resolve(pathA, pathB);
+}
