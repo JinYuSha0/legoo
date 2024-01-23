@@ -8,9 +8,15 @@ importers:
 
   .:
     dependencies:
-      '@legoo/rn-screen-adaption':
+      '@legoo/headless':
+        specifier: workspace:*
+        version: link:packages/headless
+      '@legoo/screen-adaption':
         specifier: workspace:*
         version: link:packages/screen-adaption
+      classnames:
+        specifier: ^2.5.1
+        version: 2.5.1
       nativewind:
         specifier: ^4.0.23
         version: 4.0.23(@babel/core@7.23.7)(react-native-reanimated@3.6.1)(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0)(tailwindcss@3.3.3)
@@ -240,6 +246,9 @@ importers:
       '@babel/types':
         specifier: ^7.23.6
         version: 7.23.6
+      classnames:
+        specifier: ^2.5.1
+        version: 2.5.1
       micromatch:
         specifier: ^4.0.5
         version: 4.0.5
@@ -4832,6 +4841,10 @@ packages:
   /cjs-module-lexer@1.2.3:
     resolution: {integrity: sha512-0TNiGstbQmCFwt4akjjBg5pLRTSyj/PkWQ1ZoO2zntmg9yLqSRxwEa4iCfQLGjqhiqBfOJa7W/E8wfGrTDmlZQ==}
     dev: true
+
+  /classnames@2.5.1:
+    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
+    dev: false
 
   /clean-css@5.3.3:
     resolution: {integrity: sha512-D5J+kHaVb/wKSFcyyV75uCn8fiY4sV38XJoe4CUyGQ+mOU/fMVYUdH1hJC+CJQ5uY3EnW27SbJYS4X8BiLrAFg==}

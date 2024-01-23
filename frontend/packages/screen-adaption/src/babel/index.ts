@@ -21,7 +21,7 @@ export default function (
   opt: InputParams,
 ): PluginObj<PluginPass & InnerAttribute> {
   return {
-    name: 'babel-plugin-rn-screen-adaption',
+    name: 'babel-plugin-screen-adaption',
     visitor: {
       Program: {
         enter(path, state) {

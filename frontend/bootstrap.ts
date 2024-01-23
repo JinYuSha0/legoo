@@ -1,4 +1,4 @@
-import {init, Direction} from '@legoo/rn-screen-adaption';
+import {init, Direction} from '@legoo/screen-adaption';
 
 init({
   designSize: {

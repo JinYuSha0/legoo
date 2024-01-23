@@ -15,7 +15,9 @@
     "proxy": "set HTTP_PROXY=http://127.0.0.1:7890 && set HTTPS_PROXY=http://127.0.0.1:7890"
   },
   "dependencies": {
-    "@legoo/rn-screen-adaption": "workspace:*",
+    "@legoo/headless": "workspace:*",
+    "@legoo/screen-adaption": "workspace:*",
+    "classnames": "^2.5.1",
     "nativewind": "^4.0.23",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
