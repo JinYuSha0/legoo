@@ -3,7 +3,7 @@ const {withNativeWind} = require('nativewind/metro');
 const reverser = require('@legoo/port-reverser/core');
 
 // adb reverse tcp
-reverser([8081, 8089]);
+reverser([8081, 8082]);
 
 const defaultConfig = getDefaultConfig(__dirname);
 
