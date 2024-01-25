@@ -1,0 +1,4 @@
+[submodule "packages/nativewind"]
+	path = packages/nativewind
+	url = https://github.com/JinYuSha0/nativewind.git
+	branch = develop
