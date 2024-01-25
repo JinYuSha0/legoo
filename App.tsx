@@ -5,24 +5,49 @@
  * @format
  */
 import './global.css';
-import {Text, View, Pressable} from 'react-native';
+import {View} from 'react-native';
+import {
+  ThemeProvider,
+  useThemeContext,
+  Button,
+  ButtonVariants,
+  Center,
+} from '@legoo/headless';
 import React from 'react';
 import cx from 'classnames';
-import {Button} from '@legoo/headless';
+
+function ToggleColorScheme() {
+  const {theme, toggleColorScheme} = useThemeContext();
+  return (
+    <Button
+      onPress={() => {
+        toggleColorScheme();
+      }}>
+      toggleColorScheme
+    </Button>
+  );
+}
 
 function App(): React.JSX.Element {
   return (
-    <View>
-      <View className="flex-row">
-        <View className="bg-primary-500 w-[125px] h-[125px] rounded-md active:bg-primary-600"></View>
-        <View className="bg-green-500 w-[125px] h-[125px] rounded-md"></View>
-        <View
-          className={cx('bg-indigo-500 w-[125px] h-[125px]', {
-            'rounded-md': true,
-          })}></View>
+    <ThemeProvider>
+      <View className="flex-1 bg-background">
+        <View className="flex-row">
+          <View className="bg-primary w-[125px] h-[125px] rounded-md "></View>
+          <View className="bg-green-500 w-[125px] h-[125px] rounded-md"></View>
+          <View
+            className={cx('bg-indigo-400 w-[125px] h-[125px]', {
+              'rounded-md': true,
+            })}></View>
+        </View>
+        <Center>
+          <View className="h-4 w-full"></View>
+          <ToggleColorScheme />
+          <View className="h-4 w-full"></View>
+          <Button variants={ButtonVariants.Secondary}>Button</Button>
+        </Center>
       </View>
-      <Button>111</Button>
-    </View>
+    </ThemeProvider>
   );
 }
 

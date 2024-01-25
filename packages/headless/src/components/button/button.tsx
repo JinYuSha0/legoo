@@ -1,22 +1,65 @@
 import type {PressableProps} from 'react-native';
-import {Text, Pressable} from 'react-native';
-import React, {memo, forwardRef, ForwardRefRenderFunction} from 'react';
+import {View, Text, Pressable} from 'react-native';
+import React, {
+  memo,
+  forwardRef,
+  ForwardRefRenderFunction,
+  useMemo,
+} from 'react';
 import cx from 'classnames';
+
+export enum ButtonVariants {
+  Primary,
+  Secondary,
+  Destructive,
+  Outline,
+  Ghost,
+}
 
 export interface ButtonProps extends PressableProps {
   disabled?: boolean;
   className?: string;
   textClassName?: string;
-  children: React.ReactNode;
+  variants?: ButtonVariants;
+  children?: React.ReactNode;
 }
 
 const Button: ForwardRefRenderFunction<any, ButtonProps> = (props, ref) => {
-  const {className, textClassName, children, ...rest} = props;
+  const {
+    className,
+    textClassName,
+    children,
+    variants = ButtonVariants.Primary,
+    disabled = false,
+    ...rest
+  } = props;
+  const computedStyle = useMemo(() => {
+    const styles = {
+      view: '',
+      text: '',
+    };
+    if (disabled) {
+      return styles;
+    }
+    switch (variants) {
+      case ButtonVariants.Primary:
+        styles.view = 'bg-primary active:bg-primary/90';
+        styles.text = 'text-primary-foreground';
+        break;
+      case ButtonVariants.Secondary:
+        styles.view = 'bg-secondary active:bg-secondary/90';
+        styles.text = 'text-secondary-foreground';
+        break;
+    }
+    return styles;
+  }, [variants, disabled]);
   return (
     <Pressable
       ref={ref}
+      disabled={disabled}
       className={cx(
-        'p-2.5 rounded-md select-none bg-primary-500 active:bg-primary-600 dark:bg-primary-700 dark:active:bg-primary-600',
+        'px-4 py-2.5 rounded-md select-none',
+        computedStyle.view,
         className,
       )}
       {...rest}>
@@ -25,7 +68,8 @@ const Button: ForwardRefRenderFunction<any, ButtonProps> = (props, ref) => {
       ) : (
         <Text
           className={cx(
-            'text-base text-center text-white dark:text-gray-100',
+            'text-base font-semibold text-center',
+            computedStyle.text,
             textClassName,
           )}>
           {children}
