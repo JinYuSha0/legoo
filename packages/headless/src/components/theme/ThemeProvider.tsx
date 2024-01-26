@@ -1,28 +1,50 @@
-import {View} from 'react-native';
+import {View, Platform} from 'react-native';
 import {useColorScheme} from 'nativewind';
-import cx from 'classnames';
-import React, {createContext, useCallback, useContext} from 'react';
+import clsx from 'clsx';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
+
+type ColorScheme = 'light' | 'dark';
 
 interface ThemeProviderProps {
   children: React.ReactNode;
+  colorScheme?: ColorScheme;
 }
 
 const ThemeContext = createContext<{
-  theme: 'light' | 'dark';
+  colorScheme: ColorScheme;
   toggleColorScheme: () => void;
 }>({
-  theme: 'light',
+  colorScheme: 'light',
   toggleColorScheme: () => {},
 });
 
-export const ThemeProvider = ({children}: ThemeProviderProps) => {
-  const {colorScheme, setColorScheme} = useColorScheme();
+export const ThemeProvider = ({children, colorScheme}: ThemeProviderProps) => {
+  const [_colorScheme, _setColorScheme] = useState(colorScheme);
+  const {colorScheme: __colorScheme, setColorScheme: __setColorScheme} =
+    useColorScheme();
+  const reallyColorScheme = useMemo(
+    () => _colorScheme ?? __colorScheme,
+    [_colorScheme, __colorScheme],
+  );
   const toggleColorScheme = useCallback(() => {
-    setColorScheme(colorScheme === 'light' ? 'dark' : 'light');
-  }, [colorScheme, setColorScheme]);
+    const newColorScheme = reallyColorScheme === 'light' ? 'dark' : 'light';
+    _setColorScheme(newColorScheme);
+    if (Platform.OS !== 'web') {
+      __setColorScheme(newColorScheme);
+    }
+  }, [reallyColorScheme, _setColorScheme]);
   return (
-    <ThemeContext.Provider value={{theme: colorScheme, toggleColorScheme}}>
-      <View key={colorScheme} className={cx('flex-1', colorScheme)}>
+    <ThemeContext.Provider
+      value={{colorScheme: reallyColorScheme, toggleColorScheme}}>
+      <View
+        key={reallyColorScheme}
+        className={clsx('flex-1', reallyColorScheme)}>
         {children}
       </View>
     </ThemeContext.Provider>

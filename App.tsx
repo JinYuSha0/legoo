@@ -5,27 +5,14 @@
  * @format
  */
 import './global.css';
-import {View} from 'react-native';
-import {
-  ThemeProvider,
-  useThemeContext,
-  Button,
-  ButtonVariants,
-  Center,
-} from '@legoo/headless';
+import {Text, View} from 'react-native';
+import {ThemeProvider, useThemeContext, Button, Center} from '@legoo/headless';
 import React from 'react';
-import cx from 'classnames';
+import clsx from 'clsx';
 
 function ToggleColorScheme() {
-  const {theme, toggleColorScheme} = useThemeContext();
-  return (
-    <Button
-      onPress={() => {
-        toggleColorScheme();
-      }}>
-      toggleColorScheme
-    </Button>
-  );
+  const {colorScheme, toggleColorScheme} = useThemeContext();
+  return <Button onPress={toggleColorScheme}>toggleColorScheme</Button>;
 }
 
 function App(): React.JSX.Element {
@@ -36,7 +23,7 @@ function App(): React.JSX.Element {
           <View className="bg-primary w-[125px] h-[125px] rounded-md "></View>
           <View className="bg-green-500 w-[125px] h-[125px] rounded-md"></View>
           <View
-            className={cx('bg-indigo-400 w-[125px] h-[125px]', {
+            className={clsx('bg-indigo-400 w-[125px] h-[125px]', {
               'rounded-md': true,
             })}></View>
         </View>
@@ -44,7 +31,18 @@ function App(): React.JSX.Element {
           <View className="h-4 w-full"></View>
           <ToggleColorScheme />
           <View className="h-4 w-full"></View>
-          <Button variants={ButtonVariants.Secondary}>Button</Button>
+          <Button variant="destructive" onPress={() => console.log(1111)}>
+            Button
+          </Button>
+          <Button variant="secondary" onPress={() => console.log(1111)}>
+            Button
+          </Button>
+          <Button
+            disabled
+            variant="secondary"
+            onPress={() => console.log(1111)}>
+            Button
+          </Button>
         </Center>
       </View>
     </ThemeProvider>

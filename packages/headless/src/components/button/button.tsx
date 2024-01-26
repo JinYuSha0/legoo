@@ -1,26 +1,56 @@
 import type {PressableProps} from 'react-native';
-import {View, Text, Pressable} from 'react-native';
-import React, {
-  memo,
-  forwardRef,
-  ForwardRefRenderFunction,
-  useMemo,
-} from 'react';
-import cx from 'classnames';
+import {Text, Pressable} from 'react-native';
+import {cva, type VariantProps} from 'cva';
+import React, {memo, forwardRef, ForwardRefRenderFunction} from 'react';
+import clsx from 'clsx';
 
-export enum ButtonVariants {
-  Primary,
-  Secondary,
-  Destructive,
-  Outline,
-  Ghost,
-}
+const buttonVariants = cva({
+  base: 'inline-flex items-center justify-center rounded-md font-medium',
+  variants: {
+    variant: {
+      default: 'bg-primary active:bg-primary/90',
+      destructive: 'bg-destructive active:bg-destructive/90',
+      outline: 'border border-input active:bg-accent',
+      secondary: 'bg-secondary active:bg-secondary/80',
+      ghost: 'active:bg-accent',
+      link: '',
+    },
+    size: {
+      default: 'h-10 py-2 px-4',
+      sm: 'h-9 px-3',
+      lg: 'h-11 px-8',
+      icon: 'h-10 w-10',
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+    size: 'default',
+  },
+});
 
-export interface ButtonProps extends PressableProps {
+const textVariants = cva({
+  base: 'text-base font-semibold text-center',
+  variants: {
+    variant: {
+      default: 'text-primary-foreground',
+      destructive: 'text-destructive-foreground',
+      outline: 'active:text-accent-foreground',
+      secondary: 'text-secondary-foreground',
+      ghost: 'active:text-accent-foreground',
+      link: 'underline-offset-4 active:underline text-primary',
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+  },
+});
+
+export interface ButtonProps
+  extends PressableProps,
+    VariantProps<typeof buttonVariants> {
   disabled?: boolean;
   className?: string;
   textClassName?: string;
-  variants?: ButtonVariants;
   children?: React.ReactNode;
 }
 
@@ -29,49 +59,30 @@ const Button: ForwardRefRenderFunction<any, ButtonProps> = (props, ref) => {
     className,
     textClassName,
     children,
-    variants = ButtonVariants.Primary,
+    variant,
+    size,
     disabled = false,
     ...rest
   } = props;
-  const computedStyle = useMemo(() => {
-    const styles = {
-      view: '',
-      text: '',
-    };
-    if (disabled) {
-      return styles;
-    }
-    switch (variants) {
-      case ButtonVariants.Primary:
-        styles.view = 'bg-primary active:bg-primary/90';
-        styles.text = 'text-primary-foreground';
-        break;
-      case ButtonVariants.Secondary:
-        styles.view = 'bg-secondary active:bg-secondary/90';
-        styles.text = 'text-secondary-foreground';
-        break;
-    }
-    return styles;
-  }, [variants, disabled]);
   return (
     <Pressable
       ref={ref}
       disabled={disabled}
-      className={cx(
-        'px-4 py-2.5 rounded-md select-none',
-        computedStyle.view,
-        className,
+      className={clsx(
+        buttonVariants({
+          variant,
+          size,
+          className,
+        }),
+        {
+          'opacity-50 pointer-events-none': disabled,
+        },
       )}
       {...rest}>
       {React.isValidElement(children) ? (
         children
       ) : (
-        <Text
-          className={cx(
-            'text-base font-semibold text-center',
-            computedStyle.text,
-            textClassName,
-          )}>
+        <Text className={clsx(textVariants({variant, className}))}>
           {children}
         </Text>
       )}
@@ -79,4 +90,6 @@ const Button: ForwardRefRenderFunction<any, ButtonProps> = (props, ref) => {
   );
 };
 
-export default memo(forwardRef(Button));
+Button.displayName = 'Button';
+
+export default forwardRef(Button);

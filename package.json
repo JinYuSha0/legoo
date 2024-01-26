@@ -17,7 +17,8 @@
   "dependencies": {
     "@legoo/headless": "workspace:*",
     "@legoo/screen-adaption": "workspace:*",
-    "classnames": "^2.5.1",
+    "clsx": "^2.1.0",
+    "cva": "1.0.0-beta.1",
     "nativewind": "file:./packages/nativewind/packages/nativewind",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
