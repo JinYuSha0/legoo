@@ -1,7 +1,7 @@
 import type {PressableProps} from 'react-native';
 import {Text, Pressable} from 'react-native';
 import {cva, type VariantProps} from 'cva';
-import React, {memo, forwardRef, ForwardRefRenderFunction} from 'react';
+import React, {forwardRef, ForwardRefRenderFunction} from 'react';
 import clsx from 'clsx';
 
 const buttonVariants = cva({
@@ -82,7 +82,8 @@ const Button: ForwardRefRenderFunction<any, ButtonProps> = (props, ref) => {
       {React.isValidElement(children) ? (
         children
       ) : (
-        <Text className={clsx(textVariants({variant, className}))}>
+        <Text
+          className={clsx(textVariants({variant, className: textClassName}))}>
           {children}
         </Text>
       )}
