@@ -5,20 +5,26 @@
  * @format
  */
 import './global.css';
-import {Text, View} from 'react-native';
+import {View, TextInput} from 'react-native';
 import {
   ThemeProvider,
   useThemeContext,
+  Layout,
   Center,
   Button,
   Input,
 } from '@legoo/headless';
+import {AmountTextInput} from '@legoo/keyboard-manager';
 import React from 'react';
 import clsx from 'clsx';
 
 function ToggleColorScheme() {
   const {colorScheme, toggleColorScheme} = useThemeContext();
-  return <Button onPress={toggleColorScheme}>toggleColorScheme</Button>;
+  return (
+    <Button onPress={toggleColorScheme}>
+      {colorScheme === 'light' ? '切换深色模式' : '切换浅色模式'}
+    </Button>
+  );
 }
 
 function App(): React.JSX.Element {
@@ -50,6 +56,7 @@ function App(): React.JSX.Element {
             Button
           </Button>
           <Input placeholder="Please input" />
+          <AmountTextInput />
         </Center>
       </View>
     </ThemeProvider>
