@@ -35,18 +35,25 @@ export const ThemeProvider = ({children, colorScheme}: ThemeProviderProps) => {
   const toggleColorScheme = useCallback(() => {
     const newColorScheme = reallyColorScheme === 'light' ? 'dark' : 'light';
     _setColorScheme(newColorScheme);
-    if (Platform.OS !== 'web') {
+    if (Platform.OS === 'web') {
+      document.body.classList.remove(reallyColorScheme);
+      document.body.classList.add(newColorScheme);
+    } else {
       __setColorScheme(newColorScheme);
     }
   }, [reallyColorScheme, _setColorScheme]);
   return (
     <ThemeContext.Provider
       value={{colorScheme: reallyColorScheme, toggleColorScheme}}>
-      <View
-        key={reallyColorScheme}
-        className={clsx('flex-1', reallyColorScheme)}>
-        {children}
-      </View>
+      {Platform.OS === 'web' ? (
+        children
+      ) : (
+        <View
+          key={reallyColorScheme}
+          className={clsx('flex-1', reallyColorScheme)}>
+          {children}
+        </View>
+      )}
     </ThemeContext.Provider>
   );
 };

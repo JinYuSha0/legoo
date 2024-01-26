@@ -5,7 +5,7 @@ import React, {forwardRef, ForwardRefRenderFunction, memo} from 'react';
 import clsx from 'clsx';
 
 const buttonVariants = cva({
-  base: 'inline-flex items-center justify-center rounded-md font-medium',
+  base: 'inline-flex items-center justify-center rounded-md font-medium focus-visible:outline-none',
   variants: {
     variant: {
       default: 'bg-primary active:bg-primary/90',
@@ -72,11 +72,11 @@ const Button: ForwardRefRenderFunction<any, ButtonProps> = (props, ref) => {
         buttonVariants({
           variant,
           size,
-          className,
         }),
         {
           'opacity-50 pointer-events-none': disabled,
         },
+        className,
       )}
       {...rest}>
       {React.isValidElement(children) ? (

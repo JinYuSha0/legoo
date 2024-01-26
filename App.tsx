@@ -6,7 +6,13 @@
  */
 import './global.css';
 import {Text, View} from 'react-native';
-import {ThemeProvider, useThemeContext, Button, Center} from '@legoo/headless';
+import {
+  ThemeProvider,
+  useThemeContext,
+  Center,
+  Button,
+  Input,
+} from '@legoo/headless';
 import React from 'react';
 import clsx from 'clsx';
 
@@ -27,7 +33,7 @@ function App(): React.JSX.Element {
               'rounded-md': true,
             })}></View>
         </View>
-        <Center>
+        <Center className="px-8">
           <View className="h-4 w-full"></View>
           <ToggleColorScheme />
           <View className="h-4 w-full"></View>
@@ -43,6 +49,7 @@ function App(): React.JSX.Element {
             onPress={() => console.log(1111)}>
             Button
           </Button>
+          <Input placeholder="Please input" />
         </Center>
       </View>
     </ThemeProvider>
