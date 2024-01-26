@@ -19,4 +19,6 @@ const Center: ForwardRefRenderFunction<any, CenterProps> = (props, ref) => {
   );
 };
 
+Center.displayName = 'Center';
+
 export default memo(forwardRef(Center));

@@ -1,7 +1,7 @@
 import type {PressableProps} from 'react-native';
 import {Text, Pressable} from 'react-native';
 import {cva, type VariantProps} from 'cva';
-import React, {forwardRef, ForwardRefRenderFunction} from 'react';
+import React, {forwardRef, ForwardRefRenderFunction, memo} from 'react';
 import clsx from 'clsx';
 
 const buttonVariants = cva({
@@ -93,4 +93,4 @@ const Button: ForwardRefRenderFunction<any, ButtonProps> = (props, ref) => {
 
 Button.displayName = 'Button';
 
-export default forwardRef(Button);
+export default memo(forwardRef(Button));
