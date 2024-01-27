@@ -5,16 +5,15 @@
  * @format
  */
 import './global.css';
-import {View, TextInput} from 'react-native';
+import {View} from 'react-native';
 import {
   ThemeProvider,
   useThemeContext,
-  Layout,
   Center,
   Button,
   Input,
 } from '@legoo/headless';
-import {AmountTextInput} from '@legoo/keyboard-manager';
+import {AmountInput, RestrictedTextInput} from '@legoo/keyboard-manager';
 import React from 'react';
 import clsx from 'clsx';
 
@@ -55,8 +54,9 @@ function App(): React.JSX.Element {
             onPress={() => console.log(1111)}>
             Button
           </Button>
-          <Input placeholder="Please input" />
-          <AmountTextInput />
+          <Input placeholder="Please input" maxLength={30}>
+            {(props, ref) => <AmountInput ref={ref} decimal={2} {...props} />}
+          </Input>
         </Center>
       </View>
     </ThemeProvider>

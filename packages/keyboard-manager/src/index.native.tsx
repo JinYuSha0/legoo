@@ -2,9 +2,9 @@ import { NativeModules, Platform } from 'react-native';
 export {
   RestrictedTextInput,
   type RestrictedTextInputProps,
-  AmountTextInput,
-  type AmountTextInputProps,
-} from './components/restrictedTextInput';
+  AmountInput,
+  type AmountInputProps,
+} from './components/restrictedTextInput/index.native';
 
 const LINKING_ERROR =
   `The package '@legoo/keyboard-manager' doesn't seem to be linked. Make sure: \n\n` +

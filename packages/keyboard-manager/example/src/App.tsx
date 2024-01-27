@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from '@legoo/keyboard-manager';
+import { multiply } from '../../lib/typescript/src/index.native';
 
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();

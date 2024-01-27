@@ -1,4 +1,5 @@
 import type { TextInputProps, TextInput as RNTextInput } from 'react-native';
+import { cssInterop } from 'nativewind';
 import React, {
   type ForwardRefRenderFunction,
   memo,
@@ -6,7 +7,7 @@ import React, {
   useMemo,
 } from 'react';
 // @ts-ignore
-import TextInput from './TextInput';
+import TextInput from './lib/TextInput';
 
 export interface RestrictedTextInputProps extends TextInputProps {
   regex?: string;
@@ -21,14 +22,14 @@ const RestrictedTextInputImpl: ForwardRefRenderFunction<
 
 export const RestrictedTextInput = memo(forwardRef(RestrictedTextInputImpl));
 
-export interface AmountTextInputProps extends TextInputProps {
+export interface AmountInputProps extends TextInputProps {
   decimal?: number;
   separator?: string;
 }
 
-const AmountTextInputImpl: ForwardRefRenderFunction<
+const AmountInputImpl: ForwardRefRenderFunction<
   RNTextInput,
-  AmountTextInputProps
+  AmountInputProps
 > = (props, ref) => {
   const { decimal = 0, separator = ',', ...rest } = props;
   const regex = useMemo(() => {
@@ -49,6 +50,9 @@ const AmountTextInputImpl: ForwardRefRenderFunction<
   );
 };
 
-export const AmountTextInput = memo(forwardRef(AmountTextInputImpl));
+export const AmountInput = memo(forwardRef(AmountInputImpl));
+
+cssInterop(RestrictedTextInput, { className: 'style' });
+cssInterop(AmountInput, { className: 'style' });
 
 export default RestrictedTextInput;
