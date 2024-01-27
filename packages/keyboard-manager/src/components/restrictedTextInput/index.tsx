@@ -30,7 +30,7 @@ const AmountTextInputImpl: ForwardRefRenderFunction<
   RNTextInput,
   AmountTextInputProps
 > = (props, ref) => {
-  const { decimal = 0, separator = ',' } = props;
+  const { decimal = 0, separator = ',', ...rest } = props;
   const regex = useMemo(() => {
     if (props.decimal) {
       return '[^0-9|\\.]';
@@ -44,6 +44,7 @@ const AmountTextInputImpl: ForwardRefRenderFunction<
       decimal={decimal}
       separator={separator}
       keyboardType="numeric"
+      {...rest}
     />
   );
 };
