@@ -6,7 +6,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.legoo.keyboardmanager.components.TextInput.RestrictedTextInput;
+import com.legoo.keyboardmanager.components.TextInput.RestrictedTextInputManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ public class KeyboardManagerPackage implements ReactPackage {
   @Override
   public List<ViewManager> createViewManagers(@NonNull ReactApplicationContext reactContext) {
     return Arrays.<ViewManager>asList(
-      new RestrictedTextInput()
+      new RestrictedTextInputManager()
     );
   }
 }

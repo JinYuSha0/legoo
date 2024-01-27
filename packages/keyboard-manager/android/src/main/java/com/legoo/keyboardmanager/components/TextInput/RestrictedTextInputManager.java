@@ -11,17 +11,16 @@ import com.facebook.react.views.textinput.ReactEditText;
 import com.facebook.react.views.textinput.ReactTextInputManager;
 
 import java.util.HashMap;
-import java.util.WeakHashMap;
 
-@ReactModule(name = RestrictedTextInput.REACT_CLASS)
-public class RestrictedTextInput extends ReactTextInputManager {
+@ReactModule(name = RestrictedTextInputManager.REACT_CLASS)
+public class RestrictedTextInputManager extends ReactTextInputManager {
   final static String REACT_CLASS = "RestrictedTextInput";
 
   HashMap<ReactEditText, ReactEditTextProperty> map = new HashMap<>();
 
   @Override
   public String getName() {
-    return RestrictedTextInput.REACT_CLASS;
+    return RestrictedTextInputManager.REACT_CLASS;
   }
 
   public void apply(ReactEditText view) {

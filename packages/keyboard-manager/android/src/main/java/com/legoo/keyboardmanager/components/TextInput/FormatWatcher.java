@@ -14,7 +14,6 @@ public class FormatWatcher implements TextWatcher {
   private String regex;
   private Integer decimal;
   private String separator;
-  private DecimalFormat decimalFormat;
   private boolean flag = false;
   private String beforeText;
 
@@ -23,13 +22,6 @@ public class FormatWatcher implements TextWatcher {
     this.regex = regex;
     this.separator = separator;
     this.decimal = decimal;
-    if (separator != null) {
-      String decimalFormat = "#,###";
-      if (decimal != null && decimal > 0) {
-        decimalFormat += "." + "#".repeat(decimal);
-      }
-      this.decimalFormat = new DecimalFormat(decimalFormat);
-    }
   }
 
   @Override
@@ -58,7 +50,7 @@ public class FormatWatcher implements TextWatcher {
         if (this.regex != null) {
           str = str.replaceAll(regex, "");
         }
-        if (this.decimal != null) {
+        if (!TextUtils.isEmpty(str) && this.decimal != null) {
           if (decimal > 0) {
             if (str.startsWith(".")) str = "0.";
             if (!this.isNumeric(str) || this.countDecimalPlaces(str) > this.decimal) str = this.removeLastCharacter(str);
@@ -66,7 +58,7 @@ public class FormatWatcher implements TextWatcher {
             if (str.startsWith("0") && str.length() > 1) str = str.substring(1);
           }
         }
-        if(this.separator != null) {
+        if(!TextUtils.isEmpty(str) && this.separator != null) {
           boolean endWithsDot = str.endsWith(".");
           str = this.formatWithThousandSeparator(endWithsDot ? removeLastCharacter(str) : str);
           if (str.equals(this.beforeText) && currText.length() < this.beforeText.length()) {
@@ -94,8 +86,7 @@ public class FormatWatcher implements TextWatcher {
 
   private String formatWithThousandSeparator(String input) {
     try {
-      Double inputValue = Double.parseDouble(input.replace(this.separator, ""));
-      return decimalFormat.format(inputValue);
+      return input.replaceAll("\\B(?=(\\d{3})+(?!\\d))",this.separator);
     } catch (NumberFormatException exception) {
       exception.printStackTrace();
     }
