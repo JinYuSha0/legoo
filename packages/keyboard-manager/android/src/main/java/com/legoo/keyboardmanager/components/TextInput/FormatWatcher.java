@@ -6,29 +6,35 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 
 import java.text.DecimalFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FormatWatcher implements TextWatcher {
   EditText editText;
   private String regex;
-  private Boolean decimal;
+  private Integer decimal;
   private String separator;
   private DecimalFormat decimalFormat;
   private boolean flag = false;
   private String beforeText;
 
-  public FormatWatcher(EditText editText, String regex, Boolean decimal, String separator) {
+  public FormatWatcher(EditText editText, String regex, Integer decimal, String separator) {
     this.editText = editText;
     this.regex = regex;
     this.separator = separator;
     this.decimal = decimal;
-    if (separator != null) this.decimalFormat = new DecimalFormat("#,###");
+    if (separator != null) {
+      String decimalFormat = "#,###";
+      if (decimal != null && decimal > 0) {
+        decimalFormat += "." + "#".repeat(decimal);
+      }
+      this.decimalFormat = new DecimalFormat(decimalFormat);
+    }
   }
 
   @Override
   public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    if (this.separator != null) {
-      this.beforeText = editText.getText().toString();
-    }
+    this.beforeText = editText.getText().toString();
   }
 
   @Override
@@ -42,30 +48,34 @@ public class FormatWatcher implements TextWatcher {
         flag = false;
         return;
       }
+
       String currText = editText.getText().toString();
       String str = currText;
       int selectionEnd = this.editText.getSelectionEnd();
       int increased = 0;
 
       if (!TextUtils.isEmpty(str)) {
-        if (this.decimal != null) {
-          if (Boolean.TRUE.equals(this.decimal) && str.startsWith(".")) {
-            str = "0.";
-          } else if (str.startsWith("0") && str.length() > 1) {
-            str = str.substring(1);
-          }
-        }
         if (this.regex != null) {
           str = str.replaceAll(regex, "");
         }
+        if (this.decimal != null) {
+          if (decimal > 0) {
+            if (str.startsWith(".")) str = "0.";
+            if (!this.isNumeric(str) || this.countDecimalPlaces(str) > this.decimal) str = this.removeLastCharacter(str);
+          } else {
+            if (str.startsWith("0") && str.length() > 1) str = str.substring(1);
+          }
+        }
         if(this.separator != null) {
-          str = this.formatWithThousandSeparator(str);
+          boolean endWithsDot = str.endsWith(".");
+          str = this.formatWithThousandSeparator(endWithsDot ? removeLastCharacter(str) : str);
           if (str.equals(this.beforeText) && currText.length() < this.beforeText.length()) {
             StringBuilder builder = new StringBuilder(currText);
             builder.delete(selectionEnd - 1, selectionEnd);
             String modifiedString = builder.toString();
             str = this.formatWithThousandSeparator(modifiedString);
           };
+          if (endWithsDot) str += ".";
           increased = str.length() - this.beforeText.length();
         }
       }
@@ -84,11 +94,31 @@ public class FormatWatcher implements TextWatcher {
 
   private String formatWithThousandSeparator(String input) {
     try {
-      long inputValue = Long.parseLong(input.replace(this.separator, ""));
+      Double inputValue = Double.parseDouble(input.replace(this.separator, ""));
       return decimalFormat.format(inputValue);
     } catch (NumberFormatException exception) {
       exception.printStackTrace();
     }
     return input;
+  }
+
+  public boolean isNumeric(String str) {
+    Pattern pattern = Pattern.compile("-?\\d+(\\.\\d*)?");
+    return pattern.matcher(str).matches();
+  }
+
+  public String removeLastCharacter(String str) {
+    return str.substring(0, str.length() - 1);
+  }
+
+  public int countDecimalPlaces(String str) {
+    if (!TextUtils.isEmpty(str)) {
+      Pattern pattern = Pattern.compile("\\.\\d+");
+      Matcher matcher = pattern.matcher(str);
+      if (matcher.find()) {
+        return matcher.group().length() - 1;
+      }
+    }
+    return 0;
   }
 }

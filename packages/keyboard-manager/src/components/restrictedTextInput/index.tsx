@@ -9,8 +9,6 @@ import React, {
 import TextInput from './TextInput';
 
 export interface RestrictedTextInputProps extends TextInputProps {
-  decimal?: boolean;
-  separator?: string;
   regex?: string;
 }
 
@@ -24,7 +22,7 @@ const RestrictedTextInputImpl: ForwardRefRenderFunction<
 export const RestrictedTextInput = memo(forwardRef(RestrictedTextInputImpl));
 
 export interface AmountTextInputProps extends TextInputProps {
-  decimal?: boolean;
+  decimal?: number;
   separator?: string;
 }
 
@@ -32,7 +30,7 @@ const AmountTextInputImpl: ForwardRefRenderFunction<
   RNTextInput,
   AmountTextInputProps
 > = (props, ref) => {
-  const { decimal = false, separator = ',' } = props;
+  const { decimal = 0, separator = ',' } = props;
   const regex = useMemo(() => {
     if (props.decimal) {
       return '[^0-9|\\.]';
@@ -40,11 +38,12 @@ const AmountTextInputImpl: ForwardRefRenderFunction<
     return '[^(0-9)]';
   }, [props.decimal]);
   return (
-    <RestrictedTextInput
+    <TextInput
       ref={ref}
       regex={regex}
       decimal={decimal}
       separator={separator}
+      keyboardType="numeric"
     />
   );
 };

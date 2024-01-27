@@ -52,9 +52,9 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
+    "deprecated-react-native-prop-types": "^5.0.0",
     "invariant": "^2.2.4",
-    "nullthrows": "^1.1.1",
-    "deprecated-react-native-prop-types": "^5.0.0"
+    "nullthrows": "^1.1.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
@@ -62,7 +62,7 @@
     "@react-native/eslint-config": "^0.72.2",
     "@release-it/conventional-changelog": "^5.0.0",
     "@types/jest": "^28.1.2",
-    "@types/react": "~17.0.21",
+    "@types/react": "^18.2.6",
     "@types/react-native": "0.70.0",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
@@ -78,9 +78,6 @@
     "release-it": "^15.0.0",
     "turbo": "^1.10.7",
     "typescript": "^5.0.2"
-  },
-  "resolutions": {
-    "@types/react": "17.0.21"
   },
   "peerDependencies": {
     "react": "*",

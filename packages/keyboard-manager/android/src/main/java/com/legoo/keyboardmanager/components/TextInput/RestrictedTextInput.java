@@ -1,6 +1,7 @@
 package com.legoo.keyboardmanager.components.TextInput;
 
 import android.text.TextWatcher;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
@@ -9,13 +10,14 @@ import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.views.textinput.ReactEditText;
 import com.facebook.react.views.textinput.ReactTextInputManager;
 
+import java.util.HashMap;
+import java.util.WeakHashMap;
+
 @ReactModule(name = RestrictedTextInput.REACT_CLASS)
 public class RestrictedTextInput extends ReactTextInputManager {
   final static String REACT_CLASS = "RestrictedTextInput";
-  private TextWatcher currWatcher;
-  private String regex;
-  private Boolean decimal;
-  private String separator;
+
+  HashMap<ReactEditText, ReactEditTextProperty> map = new HashMap<>();
 
   @Override
   public String getName() {
@@ -23,8 +25,9 @@ public class RestrictedTextInput extends ReactTextInputManager {
   }
 
   public void apply(ReactEditText view) {
-    if (regex != null || separator != null || decimal != null) {
-      addWatcher(view, new FormatWatcher(view, regex, decimal, separator));
+    ReactEditTextProperty property = getProperty(view);
+    if (property.regex != null || property.separator != null || property.decimal != null) {
+      addWatcher(view, new FormatWatcher(view, property.regex, property.decimal, property.separator));
     } else {
       removeCurrWatcher(view);
     }
@@ -33,34 +36,54 @@ public class RestrictedTextInput extends ReactTextInputManager {
   @ReactProp(name = "regex")
   public void setExtraChar(ReactEditText view, @Nullable String regex) {
     if (regex == null) return;
-    this.regex = regex;
+    getProperty(view).setRegex(regex);
     apply(view);
   }
 
   @ReactProp(name = "decimal")
-  public void setDecimal(ReactEditText view, @Nullable Boolean decimal) {
+  public void setDecimal(ReactEditText view, @Nullable Integer decimal) {
     if (decimal == null) return;
-    this.decimal = decimal;
+    getProperty(view).setDecimal(decimal);
     apply(view);
   }
 
   @ReactProp(name = "separator")
-  public void setThousands(ReactEditText view, @Nullable String separator) {
+  public void setSeparator(ReactEditText view, @Nullable String separator) {
     if (separator == null) return;
-    this.separator = separator;
+    getProperty(view).setSeparator(separator);
     apply(view);
   }
 
   public void removeCurrWatcher(ReactEditText view) {
-    if (this.currWatcher != null) {
-      view.removeTextChangedListener(this.currWatcher);
-      this.currWatcher = null;
+    if (getProperty(view).currWatcher != null) {
+      view.removeTextChangedListener(getProperty(view).currWatcher);
+      getProperty(view).setCurrWatcher(null);
     }
   }
 
   public void addWatcher(ReactEditText view, TextWatcher watcher) {
     removeCurrWatcher(view);
-    this.currWatcher = watcher;
     view.addTextChangedListener(watcher);
+    getProperty(view).setCurrWatcher(watcher);
+  }
+
+  public ReactEditTextProperty getProperty(ReactEditText view) {
+    if (map.containsKey(view)) {
+      return map.get(view);
+    } else {
+      ReactEditTextProperty property = new ReactEditTextProperty();
+      map.put(view, property);
+      view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+        @Override
+        public void onViewAttachedToWindow(View v) {
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(View v) {
+          map.remove(view);
+        }
+      });
+      return property;
+    }
   }
 }
