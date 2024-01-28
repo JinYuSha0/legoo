@@ -7,22 +7,26 @@ import {ThemeProvider} from '../theme';
 import React, {forwardRef, ForwardRefRenderFunction, memo} from 'react';
 import clsx from 'clsx';
 
-interface LayoutPropsAvoiding
-  extends React.ComponentProps<typeof KeyboardAvoidingView> {
+interface LayoutPropsBase {
   children: React.ReactNode;
-  avoiding?: true;
   className?: string;
   contentContainerClassName?: string;
   indicatorClassName?: string;
+  avoiding?: boolean;
+}
+
+interface LayoutPropsAvoiding
+  extends LayoutPropsBase,
+    React.ComponentProps<typeof KeyboardAvoidingView> {
+  children: React.ReactNode;
+  avoiding?: true;
 }
 
 interface LayoutPropsAware
-  extends React.ComponentProps<typeof KeyboardAwareScrollView> {
+  extends LayoutPropsBase,
+    React.ComponentProps<typeof KeyboardAwareScrollView> {
   children: React.ReactNode;
   avoiding?: false;
-  className?: string;
-  contentContainerClassName?: string;
-  indicatorClassName?: string;
 }
 
 export type LayoutProps = LayoutPropsAvoiding | LayoutPropsAware;
