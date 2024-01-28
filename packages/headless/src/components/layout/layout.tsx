@@ -1,33 +1,55 @@
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {
-  Platform,
-  ScrollView,
+  KeyboardAwareScrollView,
   KeyboardAvoidingView,
-  SafeAreaView,
-  type ScrollViewProps,
-} from 'react-native';
+} from 'react-native-keyboard-controller';
 import React, {forwardRef, ForwardRefRenderFunction, memo} from 'react';
 import clsx from 'clsx';
 
-export interface LayoutProps extends ScrollViewProps {
+interface LayoutPropsAvoiding
+  extends React.ComponentProps<typeof KeyboardAvoidingView> {
+  children: React.ReactNode;
+  avoiding?: true;
   className?: string;
   contentContainerClassName?: string;
   indicatorClassName?: string;
-  children: React.ReactNode;
 }
+
+interface LayoutPropsAware
+  extends React.ComponentProps<typeof KeyboardAwareScrollView> {
+  children: React.ReactNode;
+  avoiding?: false;
+  className?: string;
+  contentContainerClassName?: string;
+  indicatorClassName?: string;
+}
+
+export type LayoutProps = LayoutPropsAvoiding | LayoutPropsAware;
 
 const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
   const {
     children,
+    avoiding,
     className,
     contentContainerClassName,
     indicatorClassName,
-    keyboardDismissMode,
-    keyboardShouldPersistTaps,
-    showsHorizontalScrollIndicator,
-    showsVerticalScrollIndicator,
     ...rest
   } = props;
-  return <SafeAreaView>{children}</SafeAreaView>;
+  const KeyboardView = avoiding
+    ? KeyboardAvoidingView
+    : KeyboardAwareScrollView;
+  return (
+    <SafeAreaView className="flex-1">
+      <KeyboardView
+        ref={ref}
+        className={clsx('flex-1', className)}
+        contentContainerClassName={clsx('grow', contentContainerClassName)}
+        indicatorClassName={clsx(indicatorClassName)}
+        {...rest}>
+        {children}
+      </KeyboardView>
+    </SafeAreaView>
+  );
 };
 
 Layout.displayName = 'Layout';
