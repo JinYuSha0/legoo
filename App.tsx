@@ -31,7 +31,7 @@ function App(): React.JSX.Element {
   return (
     <Provider>
       <Layout>
-        <View className="flex-1">
+        <View className="flex-1 bg-background">
           <View className="flex-row">
             <View className="bg-primary w-[125px] h-[125px] rounded-md "></View>
             <View className="bg-green-500 w-[125px] h-[125px] rounded-md"></View>

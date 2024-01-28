@@ -3,6 +3,7 @@ import {
   KeyboardAwareScrollView,
   KeyboardAvoidingView,
 } from 'react-native-keyboard-controller';
+import {ThemeProvider} from '../theme';
 import React, {forwardRef, ForwardRefRenderFunction, memo} from 'react';
 import clsx from 'clsx';
 
@@ -46,7 +47,7 @@ const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
         contentContainerClassName={clsx('grow', contentContainerClassName)}
         indicatorClassName={clsx(indicatorClassName)}
         {...rest}>
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </KeyboardView>
     </SafeAreaView>
   );

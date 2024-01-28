@@ -8,7 +8,6 @@ import {
   initialWindowMetrics,
 } from 'react-native-safe-area-context';
 import clsx from 'clsx';
-import {ThemeProvider} from '../theme';
 
 export interface ProviderProps {
   className?: string;
@@ -18,11 +17,9 @@ const Provider: React.FC<React.PropsWithChildren<ProviderProps>> = props => {
   const {children, className} = props;
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <ThemeProvider>
-        <GestureHandlerRootView className={clsx('flex-1', className)}>
-          <KeyboardProvider statusBarTranslucent>{children}</KeyboardProvider>
-        </GestureHandlerRootView>
-      </ThemeProvider>
+      <GestureHandlerRootView className={clsx('flex-1', className)}>
+        <KeyboardProvider statusBarTranslucent>{children}</KeyboardProvider>
+      </GestureHandlerRootView>
     </SafeAreaProvider>
   );
 };
