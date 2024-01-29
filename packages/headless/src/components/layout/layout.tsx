@@ -3,7 +3,7 @@ import {
   KeyboardAwareScrollView,
   KeyboardAvoidingView,
 } from 'react-native-keyboard-controller';
-import {View, StatusBar} from 'react-native';
+import {View} from 'react-native';
 import React, {
   forwardRef,
   ForwardRefRenderFunction,
@@ -61,7 +61,6 @@ const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
   );
   return (
     <View className={clsx('flex-1', className)}>
-      {/* // todo actionbar */}
       <KeyboardView
         ref={ref}
         className={clsx('flex-1 bg-background')}

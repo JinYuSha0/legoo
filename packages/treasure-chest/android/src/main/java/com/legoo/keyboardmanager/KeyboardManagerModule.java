@@ -1,5 +1,10 @@
 package com.legoo.keyboardmanager;
 
+import android.app.Activity;
+import android.os.Build;
+import android.view.View;
+import android.view.Window;
+
 import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.Promise;
@@ -10,7 +15,7 @@ import com.facebook.react.module.annotations.ReactModule;
 
 @ReactModule(name = KeyboardManagerModule.NAME)
 public class KeyboardManagerModule extends ReactContextBaseJavaModule {
-  public static final String NAME = "KeyboardManager";
+  public static final String NAME = "TreasureChest";
 
   public KeyboardManagerModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -22,11 +27,9 @@ public class KeyboardManagerModule extends ReactContextBaseJavaModule {
     return NAME;
   }
 
-
-  // Example method
-  // See https://reactnative.dev/docs/native-modules-android
-  @ReactMethod
-  public void multiply(double a, double b, Promise promise) {
-    promise.resolve(a * b);
+  private Activity getActivity() {
+    Activity currActivity = this.getReactApplicationContext().getCurrentActivity();
+    if (currActivity == null || currActivity.isFinishing()) return null;
+    return currActivity;
   }
 }

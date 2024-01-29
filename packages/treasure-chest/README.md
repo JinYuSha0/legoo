@@ -1,17 +1,17 @@
-# @legoo/keyboard-manager
+# @legoo/treasure-chest
 
-keyboard-manager
+treasure-chest
 
 ## Installation
 
 ```sh
-npm install @legoo/keyboard-manager
+npm install @legoo/treasure-chest
 ```
 
 ## Usage
 
 ```js
-import { multiply } from '@legoo/keyboard-manager';
+import { multiply } from '@legoo/treasure-chest';
 
 // ...
 

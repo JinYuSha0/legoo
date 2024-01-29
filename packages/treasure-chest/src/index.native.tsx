@@ -7,13 +7,13 @@ export {
 } from './components/restrictedTextInput/index.native';
 
 const LINKING_ERROR =
-  `The package '@legoo/keyboard-manager' doesn't seem to be linked. Make sure: \n\n` +
+  `The package '@legoo/treasure-chest' doesn't seem to be linked. Make sure: \n\n` +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-const KeyboardManager = NativeModules.KeyboardManager
-  ? NativeModules.KeyboardManager
+const TreasureChest = NativeModules.TreasureChest
+  ? NativeModules.TreasureChest
   : new Proxy(
       {},
       {
@@ -23,6 +23,4 @@ const KeyboardManager = NativeModules.KeyboardManager
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return KeyboardManager.multiply(a, b);
-}
+TreasureChest;

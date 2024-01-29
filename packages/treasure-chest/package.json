@@ -1,7 +1,7 @@
 {
-  "name": "@legoo/keyboard-manager",
+  "name": "@legoo/treasure-chest",
   "version": "0.1.0",
-  "description": "keyboard-manager",
+  "description": "treasure-chest",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.native.d.ts",
@@ -25,7 +25,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "example": "yarn workspace @legoo/keyboard-manager-example",
+    "example": "yarn workspace @legoo/treasure-chest-example",
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
@@ -40,14 +40,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JinYuSha0/legoo/tree/main/frontend/packages/headless/legoo-keyboard-manager.git"
+    "url": "git+https://github.com/JinYuSha0/legoo/tree/main/frontend/packages/headless/legoo-treasure-chest.git"
   },
   "author": "JinYuShao <a1009943858@gmail.com> (https://github.com/JinYuSha0/legoo/tree/main/frontend/packages/headless)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JinYuSha0/legoo/tree/main/frontend/packages/headless/legoo-keyboard-manager/issues"
+    "url": "https://github.com/JinYuSha0/legoo/tree/main/frontend/packages/headless/legoo-treasure-chest/issues"
   },
-  "homepage": "https://github.com/JinYuSha0/legoo/tree/main/frontend/packages/headless/legoo-keyboard-manager#readme",
+  "homepage": "https://github.com/JinYuSha0/legoo/tree/main/frontend/packages/headless/legoo-treasure-chest#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

@@ -2,7 +2,7 @@ import type {RootStackParamList} from '@/navigation/rootStack';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {View} from 'react-native';
 import {Layout, Center, Button, Input, useThemeContext} from '@legoo/headless';
-import {AmountInput, RestrictedTextInput} from '@legoo/keyboard-manager';
+import {AmountInput, RestrictedTextInput} from '@legoo/treasure-chest';
 import {ScreenNames} from '@helper/sceenNames';
 import React, {memo} from 'react';
 import clsx from 'clsx';

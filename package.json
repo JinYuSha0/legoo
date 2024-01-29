@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@legoo/headless": "workspace:*",
-    "@legoo/keyboard-manager": "workspace:*",
     "@legoo/screen-adaption": "workspace:*",
+    "@legoo/treasure-chest": "workspace:*",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",

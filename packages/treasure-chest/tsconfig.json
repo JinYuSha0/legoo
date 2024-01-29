@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "@legoo/keyboard-manager": ["./src/index"]
+      "@legoo/treasure-chest": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

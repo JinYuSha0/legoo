@@ -3,6 +3,8 @@ import {
   NativeStackNavigationOptions,
 } from '@react-navigation/native-stack';
 import {ScreenNames} from '@helper/sceenNames';
+import {Text, View} from 'react-native';
+import {NavBar} from '@legoo/headless';
 import React from 'react';
 import Preview from '@screens/preview';
 import Test from '@/screens/test';
@@ -18,7 +20,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const options: Record<keyof typeof ScreenNames, NativeStackNavigationOptions> =
   {
-    [ScreenNames.PREVIEW]: {headerShown: false},
+    [ScreenNames.PREVIEW]: {title: 'previde'},
     [ScreenNames.TEST]: {title: 'Test'},
   };
 
@@ -26,10 +28,9 @@ const RootStack = () => (
   <Stack.Navigator
     initialRouteName={ScreenNames.PREVIEW}
     screenOptions={route => ({
-      headerShown: false,
-      statusBarColor: 'transparent',
-      statusBarTranslucent: true,
+      // headerShown: false,
       animation: 'ios',
+      header: props => <NavBar {...props} />,
     })}>
     <Stack.Screen
       name={ScreenNames.PREVIEW}
