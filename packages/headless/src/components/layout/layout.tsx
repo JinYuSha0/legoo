@@ -1,10 +1,15 @@
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   KeyboardAwareScrollView,
   KeyboardAvoidingView,
 } from 'react-native-keyboard-controller';
-import {ThemeProvider} from '../theme';
-import React, {forwardRef, ForwardRefRenderFunction, memo} from 'react';
+import {View, StatusBar} from 'react-native';
+import React, {
+  forwardRef,
+  ForwardRefRenderFunction,
+  memo,
+  useMemo,
+} from 'react';
 import clsx from 'clsx';
 
 interface LayoutPropsBase {
@@ -32,6 +37,7 @@ interface LayoutPropsAware
 export type LayoutProps = LayoutPropsAvoiding | LayoutPropsAware;
 
 const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
+  const insets = useSafeAreaInsets();
   const {
     children,
     avoiding,
@@ -40,20 +46,35 @@ const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
     indicatorClassName,
     ...rest
   } = props;
-  const KeyboardView = avoiding
-    ? KeyboardAvoidingView
-    : KeyboardAwareScrollView;
+  const KeyboardView = useMemo(
+    () => (avoiding ? KeyboardAvoidingView : KeyboardAwareScrollView),
+    [avoiding],
+  );
+  const styles = useMemo(
+    () => ({
+      paddingTop: insets.top,
+      paddingBottom: insets.bottom,
+      paddingLeft: insets.left,
+      paddingRight: insets.right,
+    }),
+    [insets],
+  );
   return (
-    <SafeAreaView className="flex-1">
+    <View className={clsx('flex-1', className)}>
+      {/* // todo actionbar */}
       <KeyboardView
         ref={ref}
-        className={clsx('flex-1', className)}
-        contentContainerClassName={clsx('grow', contentContainerClassName)}
+        className={clsx('flex-1 bg-background')}
+        contentContainerClassName={clsx(
+          'grow bg-background',
+          contentContainerClassName,
+        )}
         indicatorClassName={clsx(indicatorClassName)}
+        keyboardShouldPersistTaps="handled"
         {...rest}>
-        <ThemeProvider>{children}</ThemeProvider>
+        {children}
       </KeyboardView>
-    </SafeAreaView>
+    </View>
   );
 };
 

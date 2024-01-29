@@ -6,22 +6,44 @@ import {KeyboardProvider} from 'react-native-keyboard-controller';
 import {
   SafeAreaProvider,
   initialWindowMetrics,
+  type SafeAreaProviderProps,
 } from 'react-native-safe-area-context';
+import {ThemeProvider} from '../theme/index';
+import {NavigationContainer} from '@react-navigation/native';
 import clsx from 'clsx';
 
-export interface ProviderProps {
+export interface AppProviderProps {
   className?: string;
+  safeAreaProviderProps?: SafeAreaProviderProps;
+  keyboardProviderProps?: React.ComponentProps<typeof KeyboardProvider>;
+  navigationContainerProps?: React.ComponentProps<typeof NavigationContainer>;
 }
 
-const Provider: React.FC<React.PropsWithChildren<ProviderProps>> = props => {
-  const {children, className} = props;
+const AppProvider: React.FC<
+  React.PropsWithChildren<AppProviderProps>
+> = props => {
+  const {
+    children,
+    className,
+    safeAreaProviderProps,
+    keyboardProviderProps,
+    navigationContainerProps,
+  } = props;
   return (
-    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+    <SafeAreaProvider
+      initialMetrics={initialWindowMetrics}
+      {...safeAreaProviderProps}>
       <GestureHandlerRootView className={clsx('flex-1', className)}>
-        <KeyboardProvider statusBarTranslucent>{children}</KeyboardProvider>
+        <KeyboardProvider statusBarTranslucent {...keyboardProviderProps}>
+          <NavigationContainer {...navigationContainerProps}>
+            <ThemeProvider>{children}</ThemeProvider>
+          </NavigationContainer>
+        </KeyboardProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );
 };
 
-export default React.memo(Provider);
+AppProvider.displayName = 'AppProvider';
+
+export default React.memo(AppProvider);

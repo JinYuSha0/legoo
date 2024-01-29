@@ -27,8 +27,8 @@ cssInterop(KeyboardAwareScrollView, {
 
 export {ThemeProvider, useThemeContext} from './components/theme';
 export {
-  default as Provider,
-  type ProviderProps,
+  default as AppProvider,
+  type AppProviderProps,
 } from './components/provider/provider';
 export {default as Layout, type LayoutProps} from './components/layout/layout';
 export {default as Button, type ButtonProps} from './components/button/button';
