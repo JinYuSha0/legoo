@@ -34,3 +34,6 @@ export {default as Layout, type LayoutProps} from './components/layout/layout';
 export {default as Button, type ButtonProps} from './components/button/button';
 export {default as Center, type CenterProps} from './components/center/center';
 export {default as Input, type InputProps} from './components/input/input';
+export {default as Card, type CardProps} from './components/card/card';
+export {default as Badge, type BadgeProps} from './components/badge/badge';
+export {default as Label, type LabelProps} from './components/label/label';
