@@ -32,6 +32,9 @@ importers:
       cva:
         specifier: 1.0.0-beta.1
         version: 1.0.0-beta.1(typescript@5.3.3)
+      lucide-react-native:
+        specifier: ^0.317.0
+        version: 0.317.0(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0)
       nativewind:
         specifier: file:./packages/nativewind/packages/nativewind
         version: file:packages/nativewind/packages/nativewind(tailwindcss@3.3.3)
@@ -213,6 +216,9 @@ importers:
       cva:
         specifier: 1.0.0-beta.1
         version: 1.0.0-beta.1(typescript@5.3.3)
+      lucide-react-native:
+        specifier: ^0.317.0
+        version: 0.317.0(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -12733,6 +12739,18 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
     dev: true
+
+  /lucide-react-native@0.317.0(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0):
+    resolution: {integrity: sha512-RKK+WgC7FfL0PAORE8D5jyfI7odhxXfJEZriXsauA1Kds7vcHdfeZ+8itzDaPdfprdWh7LT0MEEaESrBc6DRQQ==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+      react-native: '*'
+      react-native-svg: ^12.0.0 || ^13.0.0 || ^14.0.0
+    dependencies:
+      react: 18.2.0
+      react-native: 0.73.2(@babel/core@7.23.7)(@babel/preset-env@7.23.8)(react@18.2.0)
+      react-native-svg: 14.1.0(react-native@0.73.2)(react@18.2.0)
+    dev: false
 
   /macos-release@3.2.0:
     resolution: {integrity: sha512-fSErXALFNsnowREYZ49XCdOHF8wOPWuFOGQrAhP7x5J/BqQv+B02cNsTykGpDgRVx43EKg++6ANmTaGTtW+hUA==}

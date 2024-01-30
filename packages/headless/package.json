@@ -20,6 +20,7 @@
     "@react-navigation/native": "^6.1.9",
     "clsx": "^2.1.0",
     "cva": "1.0.0-beta.1",
+    "lucide-react-native": "^0.317.0",
     "react": "18.2.0",
     "react-native-gesture-handler": "^2.14.1",
     "react-native-keyboard-controller": "^1.10.3",

@@ -20,8 +20,8 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const options: Record<keyof typeof ScreenNames, NativeStackNavigationOptions> =
   {
-    [ScreenNames.PREVIEW]: {title: 'previde'},
-    [ScreenNames.TEST]: {title: 'Test'},
+    [ScreenNames.PREVIEW]: {title: 'Preview'},
+    [ScreenNames.TEST]: {title: 'Test'.repeat(4)},
   };
 
 const RootStack = () => (

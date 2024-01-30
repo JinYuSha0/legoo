@@ -14,6 +14,7 @@ const buttonVariants = cva({
       secondary: 'bg-secondary active:bg-secondary/80',
       ghost: 'active:bg-accent',
       link: '',
+      none: '',
     },
     size: {
       default: 'h-10 py-2 px-4',
@@ -38,6 +39,7 @@ const textVariants = cva({
       secondary: 'text-secondary-foreground',
       ghost: 'active:text-accent-foreground',
       link: 'underline-offset-4 active:underline text-primary',
+      none: '',
     },
   },
   defaultVariants: {
