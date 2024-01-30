@@ -1,7 +1,14 @@
 import type {RootStackParamList} from '@/navigation/rootStack';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {View} from 'react-native';
-import {Layout, Center, Button, Input, useThemeContext} from '@legoo/headless';
+import {
+  useThemeContext,
+  addPortalScreen,
+  Layout,
+  Center,
+  Button,
+  Input,
+} from '@legoo/headless';
 import {AmountInput, RestrictedTextInput} from '@legoo/treasure-chest';
 import {ScreenNames} from '@helper/sceenNames';
 import React, {memo} from 'react';
@@ -18,8 +25,21 @@ function ToggleColorScheme() {
   );
 }
 
+function PortalTest() {
+  return <View className="w-screen h-24 bg-rose-300"></View>;
+}
+
 const Preview: React.FC<Props> = props => {
   const {navigation} = props;
+  function addPortal() {
+    addPortalScreen({
+      name: 'haha',
+      component: PortalTest,
+    });
+    setTimeout(() => {
+      navigation.push('haha');
+    });
+  }
   return (
     <Layout bottomOffset={20}>
       <View className="flex-row">
@@ -30,25 +50,25 @@ const Preview: React.FC<Props> = props => {
             'rounded-md': true,
           })}></View>
       </View>
-      <Center className="px-8">
-        <View className="h-4 w-full"></View>
+      <Center className="px-8 gap-y-6">
         <ToggleColorScheme />
-        <View className="h-4 w-full"></View>
-        <Button
-          variant="destructive"
-          onPress={() => navigation.push(ScreenNames.TEST, {})}>
-          Go to test
-        </Button>
-        <Button variant="secondary" onPress={() => console.log(1111)}>
-          Button
-        </Button>
-        <Button disabled variant="secondary" onPress={() => console.log(1111)}>
-          Button
-        </Button>
+        <View className="flex-row gap-x-2">
+          <Button
+            variant="destructive"
+            onPress={() => navigation.push(ScreenNames.TEST)}>
+            Go 2 Test
+          </Button>
+          <Button variant="secondary" onPress={addPortal}>
+            BottomSheet
+          </Button>
+          <Button variant="outline" onPress={() => console.log(1111)}>
+            Modal
+          </Button>
+        </View>
         <Input placeholder="Please input" maxLength={30}>
           {(props, ref) => <AmountInput ref={ref} decimal={2} {...props} />}
         </Input>
-        <Input placeholder="Please input" maxLength={30} className="mt-4">
+        <Input placeholder="Please input" maxLength={30}>
           {(props, ref) => (
             <RestrictedTextInput ref={ref} regex="[^a-z|A-Z]" {...props} />
           )}

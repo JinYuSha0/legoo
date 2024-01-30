@@ -30,7 +30,9 @@ export {
   default as AppProvider,
   type AppProviderProps,
 } from './components/provider/provider';
+export * from './components/portal/index';
 export {default as Layout, type LayoutProps} from './components/layout/layout';
+export * from './helper/ui';
 export * from './components/navbar/index';
 export {default as Button, type ButtonProps} from './components/button/button';
 export {default as Center, type CenterProps} from './components/center/center';

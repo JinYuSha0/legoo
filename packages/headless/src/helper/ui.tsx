@@ -10,3 +10,7 @@ export const statusBarHeight = (() => {
       return 0;
   }
 })();
+
+const getRamdonStr = () => Math.random().toString(36).split('.')[1];
+
+export const randomRouteName = (name: string) => `${name}_${getRamdonStr()}`;
