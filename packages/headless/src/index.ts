@@ -38,3 +38,4 @@ export {default as Input, type InputProps} from './components/input/input';
 export {default as Card, type CardProps} from './components/card/card';
 export {default as Badge, type BadgeProps} from './components/badge/badge';
 export {default as Label, type LabelProps} from './components/label/label';
+export {default as Checkbox, type CheckboxProps} from './components/checkbox/checkbox';
