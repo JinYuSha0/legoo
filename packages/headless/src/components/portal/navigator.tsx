@@ -14,19 +14,19 @@ export type PortalScreenProps = React.ComponentProps<typeof Stack.Screen> & {
   portal?: Partial<PortalProps>;
 };
 
-const [routesAtom, setRoutes] = atom<PortalScreenProps[]>(() => []);
+const [screensAtom, setScreens] = atom<PortalScreenProps[]>(() => []);
 
 export function addPortalScreen(portalScreen: PortalScreenProps) {
   let idx = -1;
-  if (routesAtom.val.find(portal => portal.name === portalScreen.name)) {
-    console.warn(`Screen name ${portalScreen.name} is duplicate`);
+  if (screensAtom.val.find(portal => portal.name === portalScreen.name)) {
+    console.warn(`Screen name ${portalScreen.name} is duplicated`);
     return;
   }
-  setRoutes(draft => {
+  setScreens(draft => {
     idx = draft.push(portalScreen);
   }, {});
   return () => {
-    setRoutes(draft => {
+    setScreens(draft => {
       draft.splice(idx, 1);
       return draft;
     });
@@ -37,7 +37,7 @@ export function withPortalStack(Compt: React.ReactElement) {
   const newProps = {...Compt.props};
   const {children, ...rest} = newProps;
   return () => {
-    const [routes] = useAtom(routesAtom);
+    const [screens] = useAtom(screensAtom);
     return React.cloneElement(
       Compt,
       rest,
@@ -48,12 +48,8 @@ export function withPortalStack(Compt: React.ReactElement) {
           headerShown: false,
           animation: 'none',
         }}>
-        {routes.map(route => (
-          <Stack.Screen
-            key={route.name}
-            name={route.name}
-            component={route.component}
-          />
+        {screens.map(screen => (
+          <Stack.Screen key={screen.name} {...screen} />
         ))}
       </Stack.Group>,
     );
