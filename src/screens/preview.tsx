@@ -25,25 +25,28 @@ function ToggleColorScheme() {
   );
 }
 
-const Portal: React.FC<React.PropsWithChildren<{}>> = props => {
-  return <>{props.children}</>;
-};
+function NonAnonymous(props: any) {
+  console.log(props.route.params);
+  return (
+    <View className="w-screen h-24 bg-rose-300">
+      <Input placeholder="Please input" maxLength={30}>
+        {(props, ref) => <AmountInput ref={ref} decimal={2} {...props} />}
+      </Input>
+    </View>
+  );
+}
 
 const Preview: React.FC<Props> = props => {
   const {navigation} = props;
-  function NonAnonymous(props: any) {
-    console.log(props.route.params);
-    return (
-      <Portal>
-        <View className="w-screen h-24 bg-rose-300"></View>
-      </Portal>
-    );
-  }
+
   function addPortal() {
-    addPortalScreen({
+    const remove = addPortalScreen({
       name: 'haha',
       initialParams: {msg: 'hello'},
       component: NonAnonymous,
+      portal: {
+        direction: 'bottomCenter',
+      },
     });
     setTimeout(() => {
       navigation.push('haha');

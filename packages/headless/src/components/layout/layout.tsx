@@ -1,12 +1,11 @@
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   KeyboardAwareScrollView,
   KeyboardAvoidingView,
 } from 'react-native-keyboard-controller';
 import {View} from 'react-native';
 import React, {
+  type ForwardRefRenderFunction,
   forwardRef,
-  ForwardRefRenderFunction,
   memo,
   useMemo,
 } from 'react';
@@ -37,7 +36,6 @@ interface LayoutPropsAware
 export type LayoutProps = LayoutPropsAvoiding | LayoutPropsAware;
 
 const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
-  const insets = useSafeAreaInsets();
   const {
     children,
     avoiding,
@@ -50,20 +48,11 @@ const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
     () => (avoiding ? KeyboardAvoidingView : KeyboardAwareScrollView),
     [avoiding],
   );
-  const styles = useMemo(
-    () => ({
-      paddingTop: insets.top,
-      paddingBottom: insets.bottom,
-      paddingLeft: insets.left,
-      paddingRight: insets.right,
-    }),
-    [insets],
-  );
   return (
     <View className={clsx('flex-1', className)}>
       <KeyboardView
         ref={ref}
-        className={clsx('flex-1 bg-background')}
+        className={clsx('flex-1')}
         contentContainerClassName={clsx(
           'grow bg-background',
           contentContainerClassName,

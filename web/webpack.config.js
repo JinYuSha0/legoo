@@ -7,6 +7,17 @@ const appDirectory = path.resolve(__dirname, '../');
 
 const babelConfig = require('../babel.config');
 
+const babelLoader = {
+  loader: 'babel-loader',
+  options: {
+    cacheDirectory: true,
+    // Presets and plugins imported from main babel.config.js in root dir
+    presets: babelConfig.presets,
+
+    plugins: ['react-native-web', ...(babelConfig.plugins || [])],
+  },
+};
+
 // Babel loader configuration
 const babelLoaderConfiguration = {
   test: /.[tj]sx?$/,
@@ -20,15 +31,14 @@ const babelLoaderConfiguration = {
       not: [],
     },
   ],
-  use: {
-    loader: 'babel-loader',
-    options: {
-      cacheDirectory: true,
-      // Presets and plugins imported from main babel.config.js in root dir
-      presets: babelConfig.presets,
-      plugins: ['react-native-web', ...(babelConfig.plugins || [])],
-    },
-  },
+  use: babelLoader,
+};
+
+const mjsLoaderConfiguration = {
+  test: /\.mjs$/,
+  include: [path.resolve(appDirectory, 'node_modules')],
+  type: 'javascript/auto',
+  use: babelLoader,
 };
 
 const styleLoaderConfiguration = {
@@ -77,6 +87,8 @@ module.exports = argv => {
         'react-native$': 'react-native-web',
       },
       extensions: [
+        '.web.mjs',
+        '.mjs',
         '.web.js',
         '.js',
         '.web.ts',
@@ -90,6 +102,7 @@ module.exports = argv => {
     module: {
       rules: [
         babelLoaderConfiguration,
+        mjsLoaderConfiguration,
         imageLoaderConfiguration,
         fileLoaderConfiguration,
         styleLoaderConfiguration,
