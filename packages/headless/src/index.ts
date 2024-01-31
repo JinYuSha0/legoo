@@ -6,6 +6,7 @@ import {
   KeyboardStickyView,
   KeyboardAwareScrollView,
 } from 'react-native-keyboard-controller/src/components';
+import MyKeyboardAwareScrollView from './components/keyboardAwareScrollView/keyboardAwareScrollView';
 
 cssInterop(SafeAreaView, {
   className: 'style',
@@ -24,6 +25,11 @@ cssInterop(KeyboardAwareScrollView, {
   contentContainerClassName: 'contentContainerStyle',
   indicatorClassName: 'indicatorStyle',
 });
+cssInterop(MyKeyboardAwareScrollView, {
+  className: 'style',
+  contentContainerClassName: 'contentContainerStyle',
+  indicatorClassName: 'indicatorStyle',
+});
 
 export {ThemeProvider, useThemeContext} from './components/theme';
 export {
@@ -32,6 +38,10 @@ export {
 } from './components/provider/provider';
 export * from './components/portal/index';
 export {default as Layout, type LayoutProps} from './components/layout/layout';
+export {
+  default as keyboardAwareScrollView,
+  type KeyboardAwareScrollViewProps,
+} from './components/keyboardAwareScrollView/keyboardAwareScrollView';
 export * from './helper/ui';
 export * from './components/navbar/index';
 export {default as Button, type ButtonProps} from './components/button/button';
@@ -40,4 +50,7 @@ export {default as Input, type InputProps} from './components/input/input';
 export {default as Card, type CardProps} from './components/card/card';
 export {default as Badge, type BadgeProps} from './components/badge/badge';
 export {default as Label, type LabelProps} from './components/label/label';
-export {default as Checkbox, type CheckboxProps} from './components/checkbox/checkbox';
+export {
+  default as Checkbox,
+  type CheckboxProps,
+} from './components/checkbox/checkbox';

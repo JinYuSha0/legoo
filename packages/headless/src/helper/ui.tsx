@@ -1,4 +1,8 @@
-import {Platform, StatusBar} from 'react-native';
+import {Platform, Dimensions, StatusBar} from 'react-native';
+
+const {height, width} = Dimensions.get('window');
+export const ScreenWidth = width;
+export const ScreenHeight = height;
 
 export const statusBarHeight = (() => {
   switch (Platform.OS) {

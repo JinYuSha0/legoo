@@ -4,6 +4,7 @@ import {
 } from '@react-navigation/native-stack';
 import {ScreenNames} from '@helper/sceenNames';
 import {withPortalStack, NavBar} from '@legoo/headless';
+import {Keyboard} from 'react-native';
 import React from 'react';
 import Preview from '@screens/preview';
 import Test from '@/screens/test';
@@ -24,7 +25,13 @@ const options: Record<keyof typeof ScreenNames, NativeStackNavigationOptions> =
   };
 
 const RootStack = withPortalStack(
-  <Stack.Navigator initialRouteName={ScreenNames.PREVIEW}>
+  <Stack.Navigator
+    initialRouteName={ScreenNames.PREVIEW}
+    screenListeners={{
+      state: e => {
+        Keyboard.dismiss();
+      },
+    }}>
     <Stack.Group
       screenOptions={route => ({
         // headerShown: false,

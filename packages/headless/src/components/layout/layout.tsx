@@ -1,8 +1,7 @@
-import {
-  KeyboardAwareScrollView,
-  KeyboardAvoidingView,
-} from 'react-native-keyboard-controller';
+import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
 import {View} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
+import KeyboardAwareScrollView from '../keyboardAwareScrollView/keyboardAwareScrollView';
 import React, {
   type ForwardRefRenderFunction,
   forwardRef,
@@ -44,6 +43,7 @@ const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
     indicatorClassName,
     ...rest
   } = props;
+  const isFocused = useIsFocused();
   const KeyboardView = useMemo(
     () => (avoiding ? KeyboardAvoidingView : KeyboardAwareScrollView),
     [avoiding],
@@ -51,7 +51,8 @@ const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
   return (
     <View className={clsx('flex-1', className)}>
       <KeyboardView
-        ref={ref}
+        ref={ref as any}
+        enabled={isFocused}
         className={clsx('flex-1')}
         contentContainerClassName={clsx(
           'grow bg-background',
