@@ -31,26 +31,27 @@ cssInterop(MyKeyboardAwareScrollView, {
   indicatorClassName: 'indicatorStyle',
 });
 
-export {ThemeProvider, useThemeContext} from './components/theme';
 export {
+  type IAppProviderProps,
   default as AppProvider,
-  type AppProviderProps,
+  navigationRef,
 } from './components/provider/provider';
+export {ThemeProvider, useThemeContext} from './components/theme';
 export * from './components/portal/index';
-export {default as Layout, type LayoutProps} from './components/layout/layout';
+export {type LayoutProps, default as Layout} from './components/layout/layout';
 export {
-  default as keyboardAwareScrollView,
   type KeyboardAwareScrollViewProps,
+  default as keyboardAwareScrollView,
 } from './components/keyboardAwareScrollView/keyboardAwareScrollView';
 export * from './helper/ui';
 export * from './components/navbar/index';
-export {default as Button, type ButtonProps} from './components/button/button';
-export {default as Center, type CenterProps} from './components/center/center';
-export {default as Input, type InputProps} from './components/input/input';
-export {default as Card, type CardProps} from './components/card/card';
-export {default as Badge, type BadgeProps} from './components/badge/badge';
-export {default as Label, type LabelProps} from './components/label/label';
+export {type IButtonProps, default as Button} from './components/button/button';
+export {type ICenterProps, default as Center} from './components/center/center';
+export {type IInputProps, default as Input} from './components/input/input';
+export {type ICardProps, default as Card} from './components/card/card';
+export {type IBadgeProps, default as Badge} from './components/badge/badge';
+export {type ILabelProps, default as Label} from './components/label/label';
 export {
+  type ICheckboxProps,
   default as Checkbox,
-  type CheckboxProps,
 } from './components/checkbox/checkbox';

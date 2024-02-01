@@ -2,7 +2,7 @@ import {TextInput, type TextInputProps} from 'react-native';
 import React, {forwardRef, ForwardRefRenderFunction, memo} from 'react';
 import clsx from 'clsx';
 
-export interface InputProps extends Omit<TextInputProps, 'children'> {
+export interface IInputProps extends Omit<TextInputProps, 'children'> {
   disabled?: boolean;
   className?: string;
   children?:
@@ -10,7 +10,7 @@ export interface InputProps extends Omit<TextInputProps, 'children'> {
     | React.ReactNode;
 }
 
-const Input: ForwardRefRenderFunction<any, InputProps> = (props, ref) => {
+const Input: ForwardRefRenderFunction<any, IInputProps> = (props, ref) => {
   const {className, disabled = false, children, ...rest} = props;
   const _props: TextInputProps = {
     className: clsx(

@@ -1,32 +1,42 @@
-import Portal, {type PortalProps} from './portal';
+import type {IPortalPushParams, IPortalFeture, IScreenProps} from './types';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {atom, useAtom} from 'helux';
+import {deferred, serial, randomStr, nextTick} from '@legoo/helper';
+import {navigationRef} from '../provider/provider';
 import React from 'react';
+import Portal from './portal';
 
 const Stack = createNativeStackNavigator();
 
-export type PortalScreenProps = React.ComponentProps<typeof Stack.Screen> & {
-  portal?: PortalProps;
-};
+const [screensAtom, setScreens] = atom<
+  Map<string, IPortalPushParams & IPortalFeture>
+>(() => new Map());
 
-const [screensAtom, setScreens] = atom<Map<string, PortalScreenProps>>(
-  () => new Map(),
-);
-
-export function addPortalScreen(portalScreen: PortalScreenProps) {
-  const name = portalScreen.name;
+export function pushPortalScreen<T = any, P = {}>(
+  portalPushParams: IPortalPushParams<T, P>,
+  immediately: boolean = true,
+) {
+  const {future} = deferred<T>();
+  const name = portalPushParams.name ?? randomStr();
   if (screensAtom.val.has(name)) {
     console.warn(`Screen name ${name} is duplicated`);
     return;
   }
   setScreens(draft => {
-    draft.set(name, portalScreen);
+    draft.set(name, {...portalPushParams, future});
   });
-  return function remove() {
+  function removeScreen() {
     setScreens(draft => {
       draft.delete(name);
     });
-  };
+  }
+  future.finally(serial(removeScreen, portalPushParams.onClose));
+  if (immediately) {
+    nextTick(() => {
+      navigationRef.navigate(name, portalPushParams.initialParams);
+    });
+  }
+  return future;
 }
 
 export function withPortalStack(Compt: React.ReactElement) {
@@ -45,17 +55,20 @@ export function withPortalStack(Compt: React.ReactElement) {
           animation: 'none',
         }}>
         {Array.from(screens.values()).map(screen => {
-          const {portal, ...rest} = screen;
+          const {portal, future, onClose, ...rest} = screen;
           function TempScreen(props) {
             return (
-              <Portal {...portal}>
-                {React.createElement(screen.component, props)}
+              <Portal future={future} {...portal}>
+                {React.createElement(screen.component, {
+                  ...props,
+                  future,
+                })}
               </Portal>
             );
           }
           TempScreen.name = `Portal_${screen.name}`;
           rest.component = TempScreen;
-          return <Stack.Screen key={screen.name} {...rest} />;
+          return <Stack.Screen key={screen.name} {...(rest as IScreenProps)} />;
         })}
       </Stack.Group>,
     );

@@ -7,13 +7,13 @@ import React, {
   ReactNode,
   isValidElement,
 } from 'react';
-export interface CardProps {
+export interface ICardProps {
   className?: string;
   textClassName?: string;
   children?: ReactNode;
 }
 
-const Card: ForwardRefRenderFunction<any, CardProps> = (props, ref) => {
+const Card: ForwardRefRenderFunction<any, ICardProps> = (props, ref) => {
   const {className, textClassName, children, ...rest} = props;
 
   return (

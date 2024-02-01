@@ -1,3 +1,3 @@
-export {default as NavBar, type NavBarProps} from './navbar';
-export {default as HeaderLeft, type HeaderLeftProps} from './headerLeft';
-export {default as HeaderTitle, type HeaderTitleProps} from './headerTitle';
+export {type INavBarProps, default as NavBar} from './navbar';
+export {type IHeaderLeftProps, default as HeaderLeft} from './headerLeft';
+export {type IHeaderTitleProps, default as HeaderTitle} from './headerTitle';

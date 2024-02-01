@@ -12,7 +12,7 @@ const labelVariants = cva({
   base: 'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
 });
 
-export interface LabelProps
+export interface ILabelProps
   extends React.ComponentPropsWithoutRef<typeof View>,
     VariantProps<typeof labelVariants> {
   textClassName?: string;
@@ -20,13 +20,15 @@ export interface LabelProps
 
 const Label: ForwardRefRenderFunction<
   React.ElementRef<typeof View>,
-  LabelProps
+  ILabelProps
 > = ({className, textClassName, children, ...props}, ref) => (
   <View ref={ref} className={clsx(labelVariants(), className)} {...props}>
     {isValidElement(children) ? (
       children
     ) : (
-      <Text className={clsx('text-sm font-medium', textClassName)}>{children}</Text>
+      <Text className={clsx('text-sm font-medium', textClassName)}>
+        {children}
+      </Text>
     )}
   </View>
 );

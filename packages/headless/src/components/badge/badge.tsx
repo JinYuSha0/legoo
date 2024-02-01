@@ -3,7 +3,6 @@ import React, {
   forwardRef,
   ForwardRefRenderFunction,
   memo,
-  ReactNode,
   isValidElement,
 } from 'react';
 import {cva, type VariantProps} from 'cva';
@@ -27,13 +26,13 @@ const badgeVariants = cva({
   },
 });
 
-export interface BadgeProps
+export interface IBadgeProps
   extends React.ComponentPropsWithoutRef<typeof View>,
     VariantProps<typeof badgeVariants> {
   textClassName?: string;
 }
 
-const Badge: ForwardRefRenderFunction<any, BadgeProps> = (props, ref) => {
+const Badge: ForwardRefRenderFunction<any, IBadgeProps> = (props, ref) => {
   const {className, textClassName, variant, children, ...rest} = props;
   return (
     <View

@@ -10,12 +10,12 @@ cssInterop(ChevronLeft, {
   className: 'style',
 });
 
-export interface HeaderLeftProps {
+export interface IHeaderLeftProps {
   className?: string;
   goBack: () => void;
 }
 
-export const HeaderLeft: ForwardRefRenderFunction<View, HeaderLeftProps> = (
+export const HeaderLeft: ForwardRefRenderFunction<View, IHeaderLeftProps> = (
   props,
   ref,
 ) => {

@@ -4,12 +4,12 @@ import {View, Text} from 'react-native';
 import React from 'react';
 import clsx from 'clsx';
 
-export interface HeaderTitleProps {
+export interface IHeaderTitleProps {
   children: string;
   className?: string;
 }
 
-export const HeaderTitle: ForwardRefRenderFunction<View, HeaderTitleProps> = (
+export const HeaderTitle: ForwardRefRenderFunction<View, IHeaderTitleProps> = (
   props,
   ref,
 ) => {

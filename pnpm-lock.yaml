@@ -216,6 +216,9 @@ importers:
       '@gorhom/bottom-sheet':
         specifier: ^4.6.0
         version: 4.6.0(@types/react@18.2.48)(react-native-gesture-handler@2.14.1)(react-native-reanimated@3.6.1)(react-native@0.73.2)(react@18.2.0)
+      '@legoo/helper':
+        specifier: workspace:*
+        version: link:../helper
       '@react-navigation/native':
         specifier: ^6.1.9
         version: 6.1.9(react-native@0.73.2)(react@18.2.0)

@@ -110,7 +110,7 @@ module.exports = argv => {
     },
     plugins: [
       // Fast refresh plugin
-      new ReactRefreshWebpackPlugin(),
+      new ReactRefreshWebpackPlugin({overlay: false}),
 
       // Plugin that takes public/index.html and injects script tags with the built bundles
       new HtmlWebpackPlugin({

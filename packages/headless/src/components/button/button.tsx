@@ -47,7 +47,7 @@ const textVariants = cva({
   },
 });
 
-export interface ButtonProps
+export interface IButtonProps
   extends PressableProps,
     VariantProps<typeof buttonVariants> {
   disabled?: boolean;
@@ -56,7 +56,7 @@ export interface ButtonProps
   children?: React.ReactNode;
 }
 
-const Button: ForwardRefRenderFunction<any, ButtonProps> = (props, ref) => {
+const Button: ForwardRefRenderFunction<any, IButtonProps> = (props, ref) => {
   const {
     className,
     textClassName,

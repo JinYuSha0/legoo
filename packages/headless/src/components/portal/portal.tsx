@@ -1,8 +1,13 @@
+import type {IPortalFeture} from './types';
 import {TouchableWithoutFeedback, View} from 'react-native';
 import {cva, type VariantProps} from 'cva';
-import {useNavigation} from '@react-navigation/native';
 import Layout from '../layout/layout';
-import React, {type ForwardRefRenderFunction, memo, forwardRef} from 'react';
+import React, {
+  type ForwardRefRenderFunction,
+  memo,
+  forwardRef,
+  useCallback,
+} from 'react';
 import clsx from 'clsx';
 
 const portalVariants = cva({
@@ -30,7 +35,9 @@ const portalVariants = cva({
   },
 });
 
-export interface PortalProps extends VariantProps<typeof portalVariants> {
+export interface IPortalProps
+  extends VariantProps<typeof portalVariants>,
+    IPortalFeture {
   className?: string;
   closeable?: boolean;
   overlayClosable?: boolean;
@@ -38,9 +45,10 @@ export interface PortalProps extends VariantProps<typeof portalVariants> {
 
 const Portal: ForwardRefRenderFunction<
   View,
-  React.PropsWithChildren<PortalProps>
+  React.PropsWithChildren<IPortalProps>
 > = (props, ref) => {
   const {
+    future,
     children,
     direction,
     overlay,
@@ -48,7 +56,9 @@ const Portal: ForwardRefRenderFunction<
     closeable = true,
     overlayClosable = true,
   } = props;
-  const navigation = useNavigation();
+  const overlayClose = useCallback(() => {
+    future.reject('Close by overlay press');
+  }, [future]);
   return (
     <Layout
       ref={ref}
@@ -58,7 +68,7 @@ const Portal: ForwardRefRenderFunction<
       )}
       keyboardShouldPersistTaps="never">
       {closeable && overlayClosable && (
-        <TouchableWithoutFeedback className="z-10" onPress={navigation.goBack}>
+        <TouchableWithoutFeedback className="z-10" onPress={overlayClose}>
           <View className="absolute top-0 left-0 bottom-0 right-0" />
         </TouchableWithoutFeedback>
       )}

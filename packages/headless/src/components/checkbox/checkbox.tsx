@@ -3,7 +3,7 @@ import {Pressable, Text, View} from 'react-native';
 import {Check} from 'lucide-react-native';
 import clsx from 'clsx';
 
-export interface CheckboxProps {
+export interface ICheckboxProps {
   checked?: boolean;
   onValueChange?: (value: Boolean) => void;
   className?: string;
@@ -13,7 +13,7 @@ export interface CheckboxProps {
   defaultChecked?: boolean;
 }
 
-const Checkbox = (props: CheckboxProps) => {
+const Checkbox = (props: ICheckboxProps) => {
   const {
     checked,
     onValueChange,

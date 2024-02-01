@@ -9,18 +9,24 @@ import {
   type SafeAreaProviderProps,
 } from 'react-native-safe-area-context';
 import {ThemeProvider} from '../theme/index';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  createNavigationContainerRef,
+} from '@react-navigation/native';
 import clsx from 'clsx';
 
-export interface AppProviderProps {
+export interface IAppProviderProps {
   className?: string;
   safeAreaProviderProps?: SafeAreaProviderProps;
   keyboardProviderProps?: React.ComponentProps<typeof KeyboardProvider>;
   navigationContainerProps?: React.ComponentProps<typeof NavigationContainer>;
 }
 
+// global navigation ref
+export const navigationRef = createNavigationContainerRef<{[x: string]: any}>();
+
 const AppProvider: React.FC<
-  React.PropsWithChildren<AppProviderProps>
+  React.PropsWithChildren<IAppProviderProps>
 > = props => {
   const {
     children,
@@ -35,7 +41,9 @@ const AppProvider: React.FC<
       {...safeAreaProviderProps}>
       <GestureHandlerRootView className={clsx('flex-1', className)}>
         <KeyboardProvider statusBarTranslucent {...keyboardProviderProps}>
-          <NavigationContainer {...navigationContainerProps}>
+          <NavigationContainer
+            ref={navigationRef}
+            {...navigationContainerProps}>
             <ThemeProvider>{children}</ThemeProvider>
           </NavigationContainer>
         </KeyboardProvider>

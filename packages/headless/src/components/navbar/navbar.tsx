@@ -19,13 +19,13 @@ cssInterop(ChevronLeft, {
   className: 'style',
 });
 
-export interface NavBarProps extends NativeStackHeaderProps {
+export interface INavBarProps extends NativeStackHeaderProps {
   className?: string;
   titleClassName?: string;
   leftClassName?: string;
 }
 
-const NavBar: ForwardRefRenderFunction<View, NavBarProps> = (props, ref) => {
+const NavBar: ForwardRefRenderFunction<View, INavBarProps> = (props, ref) => {
   const {
     className,
     titleClassName,
