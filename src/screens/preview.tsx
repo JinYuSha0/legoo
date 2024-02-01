@@ -36,6 +36,17 @@ function NonAnonymous(props: any) {
   );
 }
 
+function NonAnonymous2(props: any) {
+  console.log(props.route.params);
+  return (
+    <View className="w-screen h-24 bg-rose-300">
+      <Input placeholder="Please input" maxLength={30}>
+        {(props, ref) => <AmountInput ref={ref} decimal={2} {...props} />}
+      </Input>
+    </View>
+  );
+}
+
 const Preview: React.FC<Props> = props => {
   const {navigation} = props;
 
@@ -48,8 +59,19 @@ const Preview: React.FC<Props> = props => {
         direction: 'bottomCenter',
       },
     });
+    addPortalScreen({
+      name: 'haha2',
+      initialParams: {msg: 'hello'},
+      component: NonAnonymous2,
+      portal: {
+        direction: 'middleCenter',
+      },
+    });
     setTimeout(() => {
       navigation.push('haha');
+      setTimeout(() => {
+        navigation.push('haha2');
+      }, 1000);
     });
   }
   return (

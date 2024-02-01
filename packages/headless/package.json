@@ -1,7 +1,7 @@
 {
   "name": "@legoo/headless",
   "version": "0.0.1",
-  "description": "",
+  "description": "react-native headless component",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
@@ -13,7 +13,8 @@
   "author": "Soul Shao <a1009943858@gmail.com> (https://github.com/JinYuSha0)",
   "source": "src/index",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "license": "ISC",
   "dependencies": {

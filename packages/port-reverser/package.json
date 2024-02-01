@@ -14,6 +14,7 @@
   "source": "src/index",
   "files": [
     "dist",
+    "src",
     "bin.js",
     "core.js"
   ],
