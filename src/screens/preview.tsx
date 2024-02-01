@@ -11,7 +11,7 @@ import {
 } from '@legoo/headless';
 import {AmountInput, RestrictedTextInput} from '@legoo/treasure-chest';
 import {ScreenNames} from '@helper/sceenNames';
-import {computing, nextTick} from '@legoo/helper';
+import * as Helper from '@legoo/helper';
 import React, {memo} from 'react';
 import clsx from 'clsx';
 
@@ -49,7 +49,7 @@ const Preview: React.FC<Props> = props => {
         direction: 'bottomCenter',
       },
     });
-    await nextTick();
+    await Helper.nextTick();
     navigation.push('haha');
   }
   return (
@@ -75,7 +75,9 @@ const Preview: React.FC<Props> = props => {
           </Button>
           <Button
             variant="outline"
-            onPress={() => console.log(111, computing.add('1', 2, 3, '4', 5))}>
+            onPress={() =>
+              console.log(111, Helper.computing.add('0.1', '0.2', '0.3'))
+            }>
             Modal
           </Button>
         </View>

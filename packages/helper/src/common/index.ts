@@ -10,4 +10,4 @@ export {randomStr} from './ramdomStr';
 export {removeNilField} from './removeNilField';
 export {removeNonNumber} from './removeNonNumber';
 export {removeSpace} from './removeSpace';
-export {uniq} from './uniq';
+export {uniqe} from './uniqe';
