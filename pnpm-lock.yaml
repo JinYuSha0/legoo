@@ -11,6 +11,9 @@ importers:
       '@legoo/headless':
         specifier: workspace:*
         version: link:packages/headless
+      '@legoo/helper':
+        specifier: workspace:*
+        version: link:packages/helper
       '@legoo/screen-adaption':
         specifier: workspace:*
         version: link:packages/screen-adaption

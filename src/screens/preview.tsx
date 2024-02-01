@@ -11,6 +11,7 @@ import {
 } from '@legoo/headless';
 import {AmountInput, RestrictedTextInput} from '@legoo/treasure-chest';
 import {ScreenNames} from '@helper/sceenNames';
+import {computing, nextTick} from '@legoo/helper';
 import React, {memo} from 'react';
 import clsx from 'clsx';
 
@@ -36,21 +37,10 @@ function NonAnonymous(props: any) {
   );
 }
 
-function NonAnonymous2(props: any) {
-  console.log(props.route.params);
-  return (
-    <View className="w-screen h-24 bg-rose-300">
-      <Input placeholder="Please input" maxLength={30}>
-        {(props, ref) => <AmountInput ref={ref} decimal={2} {...props} />}
-      </Input>
-    </View>
-  );
-}
-
 const Preview: React.FC<Props> = props => {
   const {navigation} = props;
 
-  function addPortal() {
+  async function addPortal() {
     const remove = addPortalScreen({
       name: 'haha',
       initialParams: {msg: 'hello'},
@@ -59,20 +49,8 @@ const Preview: React.FC<Props> = props => {
         direction: 'bottomCenter',
       },
     });
-    addPortalScreen({
-      name: 'haha2',
-      initialParams: {msg: 'hello'},
-      component: NonAnonymous2,
-      portal: {
-        direction: 'middleCenter',
-      },
-    });
-    setTimeout(() => {
-      navigation.push('haha');
-      setTimeout(() => {
-        navigation.push('haha2');
-      }, 1000);
-    });
+    await nextTick();
+    navigation.push('haha');
   }
   return (
     <Layout bottomOffset={20}>
@@ -95,7 +73,9 @@ const Preview: React.FC<Props> = props => {
           <Button variant="secondary" onPress={addPortal}>
             BottomSheet
           </Button>
-          <Button variant="outline" onPress={() => console.log(1111)}>
+          <Button
+            variant="outline"
+            onPress={() => console.log(111, computing.add('1', 2, 3, '4', 5))}>
             Modal
           </Button>
         </View>

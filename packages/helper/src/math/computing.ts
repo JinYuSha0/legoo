@@ -22,7 +22,7 @@ function recursion(
     prevValue === null ? args.splice(0, 2) : [prevValue, args.splice(0, 1)[0]],
   );
   if (args.length === 0) return value;
-  return recursion(method, prevValue, ...args);
+  return recursion(method, value, ...args);
 }
 
 function factory(method: Method) {
@@ -33,29 +33,32 @@ function factory(method: Method) {
   };
 }
 
+function isInterage(x: Numeric) {
+  return new Decimal(x).isInteger();
+}
+
+function toFixd(x: Numeric, dp?: number, rm?: number) {
+  return new Decimal(x).toFixed(dp, rm);
+}
+
 function equal(x: Numeric, y: Numeric) {
-  const result = computingExecute('sub')(x, y);
-  if (result === '0') return true;
-  return false;
+  return new Decimal(x).equals(y);
 }
 
 function lessThan(x: Numeric, y: Numeric) {
-  const result = computingExecute('sub')(x, y);
-  if (result.startsWith('-')) return true;
-  return false;
+  return new Decimal(x).lessThan(y);
 }
 
-function moreThan(x: Numeric, y: Numeric) {
-  if (!lessThan(x, y) && !equal(x, y)) return true;
-  return false;
+function greaterThan(x: Numeric, y: Numeric) {
+  return new Decimal(x).greaterThan(y);
 }
 
-function lessThanOrEqual(x: Numeric, y: Numeric) {
-  return lessThan(x, y) || equal(x, y);
+function lessThanOrEqualTo(x: Numeric, y: Numeric) {
+  return new Decimal(x).lessThanOrEqualTo(y);
 }
 
-function moreThanOrEqual(x: Numeric, y: Numeric) {
-  return !lessThan(x, y);
+function greaterThanOrEqualTo(x: Numeric, y: Numeric) {
+  return new Decimal(x).greaterThanOrEqualTo(y);
 }
 
 export const computing = {
@@ -63,9 +66,11 @@ export const computing = {
   sub: factory('sub'),
   mul: factory('mul'),
   div: factory('div'),
+  isInterage,
+  toFixd,
   equal,
   lessThan,
-  moreThan,
-  lessThanOrEqual,
-  moreThanOrEqual,
+  greaterThan,
+  lessThanOrEqualTo,
+  greaterThanOrEqualTo,
 };
