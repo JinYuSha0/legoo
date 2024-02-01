@@ -57,7 +57,7 @@ const Portal: ForwardRefRenderFunction<
     overlayClosable = true,
   } = props;
   const overlayClose = useCallback(() => {
-    future.reject('Close by overlay press');
+    future.reject('Portal screen close by overlay press');
   }, [future]);
   return (
     <Layout

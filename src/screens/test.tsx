@@ -46,14 +46,13 @@ function NonAnonymous(props: IPortalScreenProps<string, {msg: string}>) {
 async function pushPortal() {
   try {
     const res = await pushPortalScreen<string, {msg: string}>({
-      name: 'haha',
       initialParams: {msg: '10000'},
       component: NonAnonymous,
       portal: {
         direction: 'bottomCenter',
       },
     });
-    console.log(res);
+    console.log(111, res);
   } catch (err) {
     console.log(err);
   }

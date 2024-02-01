@@ -16,8 +16,11 @@ export function pushPortalScreen<T = any, P = {}>(
   portalPushParams: IPortalPushParams<T, P>,
   immediately: boolean = true,
 ) {
+  if (!portalPushParams.name) {
+    portalPushParams.name = randomStr();
+  }
   const {future} = deferred<T>();
-  const name = portalPushParams.name ?? randomStr();
+  const name = portalPushParams.name;
   if (screensAtom.val.has(name)) {
     console.warn(`Screen name ${name} is duplicated`);
     return;
@@ -25,6 +28,7 @@ export function pushPortalScreen<T = any, P = {}>(
   setScreens(draft => {
     draft.set(name, {...portalPushParams, future});
   });
+  // todo 物理返回按键清除screen portal阻止物理返回
   function removeScreen() {
     setScreens(draft => {
       draft.delete(name);
