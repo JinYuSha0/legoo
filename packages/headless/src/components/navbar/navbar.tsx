@@ -10,10 +10,11 @@ import React, {
 import {View, StatusBar} from 'react-native';
 import {ChevronLeft} from 'lucide-react-native';
 import {useColorScheme, cssInterop} from 'nativewind';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {NavBarHeight} from '../../helper/ui';
 import DefaultHeaderLeft from './headerLeft';
 import DefaultHeaderTitle from './headerTitle';
 import clsx from 'clsx';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 cssInterop(ChevronLeft, {
   className: 'style',
@@ -78,7 +79,7 @@ const NavBar: ForwardRefRenderFunction<View, INavBarProps> = (props, ref) => {
       <View
         ref={ref}
         className={clsx('relative w-screen h-11 bg-background', className)}
-        style={{height: insets.top + 44, paddingTop: insets.top}}>
+        style={{height: insets.top + NavBarHeight, paddingTop: insets.top}}>
         <View className="flex flex-1 flex-row items-center justify-between">
           {_headerLeft}
           {_headerRight}

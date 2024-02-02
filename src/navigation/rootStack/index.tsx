@@ -6,7 +6,7 @@ import {ScreenNames} from '@helper/sceenNames';
 import {withPortalStack, NavBar} from '@legoo/headless';
 import {variableToHsla} from '@legoo/helper';
 import {Keyboard} from 'react-native';
-import {useColorScheme, useUnstableNativeVariable} from 'nativewind';
+import {useUnstableNativeVariable} from 'nativewind';
 import React from 'react';
 import Preview from '@screens/preview';
 import Test from '@/screens/test';
@@ -34,7 +34,6 @@ const RootStack = withPortalStack((props: React.PropsWithChildren<{}>) => {
   return (
     <Stack.Navigator
       initialRouteName={ScreenNames.PREVIEW}
-      screenOptions={{}}
       screenListeners={{
         state: e => {
           Keyboard.dismiss();
@@ -42,7 +41,7 @@ const RootStack = withPortalStack((props: React.PropsWithChildren<{}>) => {
       }}>
       <Stack.Group
         screenOptions={route => ({
-          // headerShown: false,
+          headerShadowVisible: false,
           animation: 'ios',
           header: props => <NavBar {...props} />,
           contentStyle: {
