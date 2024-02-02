@@ -42,38 +42,39 @@ export function pushPortalScreen<T = any, P = {}>(
   return future;
 }
 
-export function withPortalStack(Compt: React.ReactElement) {
-  const newProps = {...Compt.props};
-  const {children, ...rest} = newProps;
+export function withPortalStack(
+  Navigator: React.ComponentType<React.PropsWithChildren<{}>>,
+) {
   return () => {
     const [screens] = useAtom(screensAtom);
-    return React.cloneElement(
-      Compt,
-      rest,
-      children,
-      <Stack.Group
-        screenOptions={{
-          presentation: 'transparentModal',
-          headerShown: false,
-          animation: 'none',
-        }}>
-        {Array.from(screens.values()).map(screen => {
-          const {portal, future, onClose, ...rest} = screen;
-          function TempScreen(props) {
+    return (
+      <Navigator>
+        <Stack.Group
+          screenOptions={{
+            presentation: 'transparentModal',
+            headerShown: false,
+            animation: 'none',
+          }}>
+          {Array.from(screens.values()).map(screen => {
+            const {portal, future, onClose, ...rest} = screen;
+            function TempScreen(props) {
+              return (
+                <Portal future={future} {...portal}>
+                  {React.createElement(screen.component, {
+                    ...props,
+                    future,
+                  })}
+                </Portal>
+              );
+            }
+            TempScreen.name = `Portal_${screen.name}`;
+            rest.component = TempScreen;
             return (
-              <Portal future={future} {...portal}>
-                {React.createElement(screen.component, {
-                  ...props,
-                  future,
-                })}
-              </Portal>
+              <Stack.Screen key={screen.name} {...(rest as IScreenProps)} />
             );
-          }
-          TempScreen.name = `Portal_${screen.name}`;
-          rest.component = TempScreen;
-          return <Stack.Screen key={screen.name} {...(rest as IScreenProps)} />;
-        })}
-      </Stack.Group>,
+          })}
+        </Stack.Group>
+      </Navigator>
     );
   };
 }

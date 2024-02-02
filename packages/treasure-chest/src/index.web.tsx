@@ -4,3 +4,4 @@ export {
   AmountInput,
   type AmountInputProps,
 } from './components/restrictedTextInput/index.web';
+export { TextInput } from 'react-native';

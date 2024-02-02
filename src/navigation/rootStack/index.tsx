@@ -4,7 +4,9 @@ import {
 } from '@react-navigation/native-stack';
 import {ScreenNames} from '@helper/sceenNames';
 import {withPortalStack, NavBar} from '@legoo/headless';
+import {variableToHsla} from '@legoo/helper';
 import {Keyboard} from 'react-native';
+import {useColorScheme, useUnstableNativeVariable} from 'nativewind';
 import React from 'react';
 import Preview from '@screens/preview';
 import Test from '@/screens/test';
@@ -24,32 +26,43 @@ const options: Record<keyof typeof ScreenNames, NativeStackNavigationOptions> =
     [ScreenNames.TEST]: {title: 'Test'},
   };
 
-const RootStack = withPortalStack(
-  <Stack.Navigator
-    initialRouteName={ScreenNames.PREVIEW}
-    screenListeners={{
-      state: e => {
-        Keyboard.dismiss();
-      },
-    }}>
-    <Stack.Group
-      screenOptions={route => ({
-        // headerShown: false,
-        animation: 'ios',
-        header: props => <NavBar {...props} />,
-      })}>
-      <Stack.Screen
-        name={ScreenNames.PREVIEW}
-        component={Preview}
-        options={options[ScreenNames.PREVIEW]}
-      />
-      <Stack.Screen
-        name={ScreenNames.TEST}
-        component={Test}
-        options={options[ScreenNames.TEST]}
-      />
-    </Stack.Group>
-  </Stack.Navigator>,
-);
+const RootStack = withPortalStack((props: React.PropsWithChildren<{}>) => {
+  const {children} = props;
+  const contentBgColor = variableToHsla(
+    useUnstableNativeVariable('--background'),
+  );
+  return (
+    <Stack.Navigator
+      initialRouteName={ScreenNames.PREVIEW}
+      screenOptions={{}}
+      screenListeners={{
+        state: e => {
+          Keyboard.dismiss();
+        },
+      }}>
+      <Stack.Group
+        screenOptions={route => ({
+          // headerShown: false,
+          animation: 'ios',
+          header: props => <NavBar {...props} />,
+          contentStyle: {
+            backgroundColor: contentBgColor,
+          },
+        })}>
+        <Stack.Screen
+          name={ScreenNames.PREVIEW}
+          component={Preview}
+          options={options[ScreenNames.PREVIEW]}
+        />
+        <Stack.Screen
+          name={ScreenNames.TEST}
+          component={Test}
+          options={options[ScreenNames.TEST]}
+        />
+      </Stack.Group>
+      {children}
+    </Stack.Navigator>
+  );
+});
 
 export default RootStack;

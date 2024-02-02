@@ -74,6 +74,7 @@ const Portal: ForwardRefRenderFunction<
         portalVariants({direction, overlay}),
         className,
       )}
+      bounces={false}
       keyboardShouldPersistTaps="never">
       {closeable && overlayClosable && (
         <TouchableWithoutFeedback className="z-10" onPress={overlayClose}>

@@ -31,6 +31,7 @@ cssInterop(MyKeyboardAwareScrollView, {
   indicatorClassName: 'indicatorStyle',
 });
 
+export {normalization} from './normalization';
 export {
   type IAppProviderProps,
   default as AppProvider,

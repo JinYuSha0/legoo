@@ -35,9 +35,9 @@ const textVariants = cva({
     variant: {
       default: 'text-primary-foreground',
       destructive: 'text-destructive-foreground',
-      outline: 'active:text-accent-foreground',
+      outline: '',
       secondary: 'text-secondary-foreground',
-      ghost: 'active:text-accent-foreground',
+      ghost: '',
       link: 'underline-offset-4 active:underline text-primary',
       none: '',
     },

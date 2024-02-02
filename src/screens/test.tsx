@@ -24,7 +24,7 @@ function NonAnonymous(props: IPortalScreenProps<string, {msg: string}>) {
   } = props;
   const resultRef = useRef(msg);
   return (
-    <View className="w-screen h-64 p-8 gap-y-2 bg-rose-300">
+    <View className="w-screen h-60 p-8 gap-y-2 bg-rose-300">
       <Input placeholder="Please input" maxLength={30}>
         {(props, ref) => (
           <AmountInput

@@ -5,6 +5,8 @@ export {
   AmountInput,
   type AmountInputProps,
 } from './components/restrictedTextInput/index.native';
+// @ts-ignore
+export { default as TextInput } from './components/restrictedTextInput/rnlib/TextInput.js';
 
 const LINKING_ERROR =
   `The package '@legoo/treasure-chest' doesn't seem to be linked. Make sure: \n\n` +
