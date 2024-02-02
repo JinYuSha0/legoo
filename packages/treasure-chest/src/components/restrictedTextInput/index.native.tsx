@@ -7,7 +7,7 @@ import React, {
   useMemo,
 } from 'react';
 // @ts-ignore
-import TextInput from './lib/TextInput';
+import TextInput from './rnlib/TextInput';
 
 export interface RestrictedTextInputProps extends TextInputProps {
   regex?: string;
