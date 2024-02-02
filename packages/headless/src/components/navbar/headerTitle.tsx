@@ -1,5 +1,5 @@
-import {statusBarHeight} from '../../helper/ui';
 import {type ForwardRefRenderFunction, forwardRef, memo} from 'react';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {View, Text} from 'react-native';
 import React from 'react';
 import clsx from 'clsx';
@@ -14,11 +14,12 @@ export const HeaderTitle: ForwardRefRenderFunction<View, IHeaderTitleProps> = (
   ref,
 ) => {
   const {className, children} = props;
+  const insets = useSafeAreaInsets();
   return (
     <View
       ref={ref}
       className="absolute top-0 left-0 bottom-0 right-0 pointer-events-none"
-      style={{paddingTop: statusBarHeight}}>
+      style={{paddingTop: insets.top}}>
       <View className="flex-1 justify-center items-center">
         <Text
           className={clsx(

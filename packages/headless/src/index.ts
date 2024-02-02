@@ -43,7 +43,6 @@ export {
   type KeyboardAwareScrollViewProps,
   default as keyboardAwareScrollView,
 } from './components/keyboardAwareScrollView/keyboardAwareScrollView';
-export * from './helper/ui';
 export * from './components/navbar/index';
 export {type IButtonProps, default as Button} from './components/button/button';
 export {type ICenterProps, default as Center} from './components/center/center';
