@@ -6,7 +6,6 @@ import {
   KeyboardStickyView,
   KeyboardAwareScrollView,
 } from 'react-native-keyboard-controller/src/components';
-import MyKeyboardAwareScrollView from './components/keyboardAwareScrollView/keyboardAwareScrollView';
 
 cssInterop(SafeAreaView, {
   className: 'style',
@@ -25,11 +24,6 @@ cssInterop(KeyboardAwareScrollView, {
   contentContainerClassName: 'contentContainerStyle',
   indicatorClassName: 'indicatorStyle',
 });
-cssInterop(MyKeyboardAwareScrollView, {
-  className: 'style',
-  contentContainerClassName: 'contentContainerStyle',
-  indicatorClassName: 'indicatorStyle',
-});
 
 export {normalization} from './normalization';
 export {
@@ -40,10 +34,6 @@ export {
 export {ThemeProvider, useThemeContext} from './components/theme';
 export * from './components/portal/index';
 export {type LayoutProps, default as Layout} from './components/layout/layout';
-export {
-  type KeyboardAwareScrollViewProps,
-  default as keyboardAwareScrollView,
-} from './components/keyboardAwareScrollView/keyboardAwareScrollView';
 export * from './components/navbar/index';
 export {type IButtonProps, default as Button} from './components/button/button';
 export {type ICenterProps, default as Center} from './components/center/center';

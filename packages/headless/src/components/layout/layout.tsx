@@ -1,7 +1,9 @@
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
+import {
+  KeyboardAvoidingView,
+  KeyboardAwareScrollView,
+} from 'react-native-keyboard-controller';
 import {View} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
-import KeyboardAwareScrollView from '../keyboardAwareScrollView/keyboardAwareScrollView';
 import React, {
   type ForwardRefRenderFunction,
   forwardRef,
