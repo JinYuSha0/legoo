@@ -1,6 +1,7 @@
 import type {IPortalFeture} from './types';
 import {TouchableWithoutFeedback, View} from 'react-native';
 import {cva, type VariantProps} from 'cva';
+import {useHardwareBackPress} from '@legoo/hooks';
 import Layout from '../layout/layout';
 import React, {
   type ForwardRefRenderFunction,
@@ -56,9 +57,16 @@ const Portal: ForwardRefRenderFunction<
     closeable = true,
     overlayClosable = true,
   } = props;
+  const handleHardwareBackPress = useCallback(() => {
+    if (closeable) {
+      future.reject('Portal screen closed by hardware back press');
+    }
+    return true;
+  }, [future, closeable]);
   const overlayClose = useCallback(() => {
-    future.reject('Portal screen close by overlay press');
+    future.reject('Portal screen closed by overlay press');
   }, [future]);
+  useHardwareBackPress(true, handleHardwareBackPress);
   return (
     <Layout
       ref={ref}

@@ -1,7 +1,7 @@
 import type {IPortalPushParams, IPortalFeture, IScreenProps} from './types';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {atom, useAtom} from 'helux';
-import {deferred, serial, randomStr, nextTick} from '@legoo/helper';
+import {deferred, serial, randomStr, nextTick, noop} from '@legoo/helper';
 import {navigationRef} from '../provider/provider';
 import React from 'react';
 import Portal from './portal';
@@ -28,13 +28,12 @@ export function pushPortalScreen<T = any, P = {}>(
   setScreens(draft => {
     draft.set(name, {...portalPushParams, future});
   });
-  // todo 物理返回按键清除screen portal阻止物理返回
   function removeScreen() {
     setScreens(draft => {
       draft.delete(name);
     });
   }
-  future.finally(serial(removeScreen, portalPushParams.onClose));
+  future.finally(serial(removeScreen, portalPushParams.onClose)).catch(noop);
   if (immediately) {
     nextTick(() => {
       navigationRef.navigate(name, portalPushParams.initialParams);

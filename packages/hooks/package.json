@@ -1,12 +1,26 @@
 {
   "name": "@legoo/hooks",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.ts",
+  "description": "Universal react-native hooks library",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "homepage": "https://github.com/JinYuSha0/legoo/tree/main/frontend/packages/hooks",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": " "
+    "build": "rimraf dist && swc src --ignore **/*.d.ts -d dist && tsc --emitDeclarationOnly --declaration"
   },
-  "author": "Soul",
-  "license": "ISC"
+  "author": "Soul Shao <a1009943858@gmail.com> (https://github.com/JinYuSha0)",
+  "source": "src/index",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "license": "ISC",
+  "devDependencies": {
+    "@swc/cli": "^0.1.63",
+    "@swc/core": "^1.3.103",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  }
 }

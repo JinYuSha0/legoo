@@ -21,7 +21,6 @@ function ToggleColorScheme() {
 
 const Preview: React.FC<Props> = props => {
   const {navigation} = props;
-
   return (
     <Layout bottomOffset={20}>
       <View className="flex-row">
@@ -44,7 +43,7 @@ const Preview: React.FC<Props> = props => {
           <Button
             variant="outline"
             onPress={() =>
-              console.log(Helper.computing.add('0.1', '0.2', '0.3'))
+              console.log(Helper.computing.add('0.1', '0.2', 0.3))
             }>
             Test
           </Button>

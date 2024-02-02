@@ -219,6 +219,9 @@ importers:
       '@legoo/helper':
         specifier: workspace:*
         version: link:../helper
+      '@legoo/hooks':
+        specifier: workspace:*
+        version: link:../hooks
       '@react-navigation/native':
         specifier: ^6.1.9
         version: 6.1.9(react-native@0.73.2)(react@18.2.0)
@@ -285,7 +288,20 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  packages/hooks: {}
+  packages/hooks:
+    devDependencies:
+      '@swc/cli':
+        specifier: ^0.1.63
+        version: 0.1.63(@swc/core@1.3.103)
+      '@swc/core':
+        specifier: ^1.3.103
+        version: 1.3.103
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.5
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
 
   packages/nativewind:
     dependencies:

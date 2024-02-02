@@ -54,7 +54,7 @@ async function pushPortal() {
     });
     console.log(111, res);
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 
