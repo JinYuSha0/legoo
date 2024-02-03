@@ -2,6 +2,7 @@ export * from './common';
 export * from './currency';
 export * from './fp';
 export * from './math';
+export * from './structure';
 export * from './sync';
 export * from './time';
 export * from './config';

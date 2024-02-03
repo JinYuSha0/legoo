@@ -14,6 +14,9 @@ importers:
       '@legoo/helper':
         specifier: workspace:*
         version: link:packages/helper
+      '@legoo/hooks':
+        specifier: workspace:*
+        version: link:packages/hooks
       '@legoo/screen-adaption':
         specifier: workspace:*
         version: link:packages/screen-adaption

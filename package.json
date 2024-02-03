@@ -15,8 +15,9 @@
     "proxy": "set HTTP_PROXY=http://127.0.0.1:7890 && set HTTPS_PROXY=http://127.0.0.1:7890"
   },
   "dependencies": {
-    "@legoo/helper": "workspace:*",
     "@legoo/headless": "workspace:*",
+    "@legoo/helper": "workspace:*",
+    "@legoo/hooks": "workspace:*",
     "@legoo/screen-adaption": "workspace:*",
     "@legoo/treasure-chest": "workspace:*",
     "@react-navigation/bottom-tabs": "^6.5.11",

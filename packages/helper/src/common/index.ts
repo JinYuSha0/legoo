@@ -1,3 +1,4 @@
+export {debounce} from './debounce';
 export {isArray} from './isArray';
 export {isEmpty} from './isEmpty';
 export {isNil} from './isNil';
@@ -10,4 +11,5 @@ export {randomStr} from './ramdomStr';
 export {removeNilField} from './removeNilField';
 export {removeNonNumber} from './removeNonNumber';
 export {removeSpace} from './removeSpace';
+export {throttle} from './throttle';
 export {uniqe} from './uniqe';
