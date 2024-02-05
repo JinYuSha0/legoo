@@ -39,7 +39,11 @@ const Preview: React.FC<Props> = props => {
             onPress={() => navigation.push(ScreenNames.TEST)}>
             Go 2 Test
           </Button>
-          <Button variant="secondary">Secondary</Button>
+          <Button
+            variant="secondary"
+            onPress={() => navigation.push(ScreenNames.SELECTOR)}>
+            Secondary
+          </Button>
           <Button
             variant="outline"
             onPress={() =>

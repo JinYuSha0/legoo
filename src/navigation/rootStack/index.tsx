@@ -10,12 +10,14 @@ import {useUnstableNativeVariable} from 'nativewind';
 import React from 'react';
 import Preview from '@screens/preview';
 import Test from '@/screens/test';
+import Selector from '@/screens/selector';
 
 export type RootStackParamList = {
   [ScreenNames.PREVIEW]: {
     a: number;
   };
   [ScreenNames.TEST]?: {};
+  [ScreenNames.SELECTOR]?: {};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -24,6 +26,7 @@ const options: Record<keyof typeof ScreenNames, NativeStackNavigationOptions> =
   {
     [ScreenNames.PREVIEW]: {title: 'Preview'},
     [ScreenNames.TEST]: {title: 'Test'},
+    [ScreenNames.SELECTOR]: {title: 'Selector'},
   };
 
 const RootStack = withPortalStack((props: React.PropsWithChildren<{}>) => {
@@ -57,6 +60,11 @@ const RootStack = withPortalStack((props: React.PropsWithChildren<{}>) => {
           name={ScreenNames.TEST}
           component={Test}
           options={options[ScreenNames.TEST]}
+        />
+        <Stack.Screen
+          name={ScreenNames.SELECTOR}
+          component={Selector}
+          options={options[ScreenNames.SELECTOR]}
         />
       </Stack.Group>
       {children}

@@ -45,4 +45,8 @@ export {
   type ICheckboxProps,
   default as Checkbox,
 } from './components/checkbox/checkbox';
-export {type IAlertDialogProps, default as AlertDialog} from './components/alertDialog/alertDialog';
+export {
+  type IAlertDialogProps,
+  default as AlertDialog,
+} from './components/alertDialog/alertDialog';
+export * from './components/selector/index';
