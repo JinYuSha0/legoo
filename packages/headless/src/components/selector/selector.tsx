@@ -29,19 +29,68 @@ export type IItem<T = any> = {
 };
 
 export interface ISelectorProps<T = any> {
+  /**
+   * Data array
+   */
   data: IItem<T>[];
-  visibleItemCount: number;
-  width?: number;
-  height?: number;
+  /**
+   * Selector height
+   */
+  height: number;
+  /**
+   * Initial selected index
+   * default: 0
+   */
   initialIndex?: number;
+  /**
+   * Render Item height
+   * default: 30
+   */
   itemHeight?: number;
+  /**
+   * Scroll container height
+   * this value determines the maximum scroll distance you can scroll in both directions.
+   * default: 30 * 2001
+   */
   containerHeight?: number;
+  /**
+   * Render an extra number of items outside the visible range
+   * if a white screen appears when you scroll quickly, you can try increasing this value.
+   * if the value is particularly large, it may cause the rendering speed to slow down.
+   * deafult: Three times the number of items in the visible range
+   */
   extraRenderItem?: number;
+  /**
+   * This value determines how many items remain from the boundary to start the next round of lazy rendering.
+   * if a white screen appears when you scroll quickly, you can try decreasing this value.
+   * if the value is particularly small, it may cause the unnecessary rendering.
+   * default: Math.ceil(extraRenderItem / 2)
+   */
   renderThreshold?: number;
+  /**
+   * Debug mode
+   */
   debug?: boolean;
+  /**
+   * Maximum scroll velocity
+   * if the velocity is too high, it will easily cause a white screen.
+   * limit the velocity to reduce unnecessary rendering.
+   */
   maxVelocity?: number;
+  /**
+   * Item component
+   * it is recommended to use the React.memo package to improve performance
+   */
   ItemComponent?: (props: IItemProps) => React.ReactNode;
+  /**
+   * Indicator Component
+   */
   IndicatorComponent?: (props: IIndicatorProps) => React.ReactNode;
+  /**
+   * A callback triggered when the selection changes.
+   * the first parameter is the selected value,
+   * and the second parameter is the index of the selection in the data array.
+   */
   onChange?: (value: T, index: number) => void;
 }
 
@@ -56,14 +105,12 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
 ) => {
   const {
     data,
-    visibleItemCount,
-    width = 100,
     height,
     initialIndex = 0,
     itemHeight = 30,
     containerHeight = 2001 * itemHeight,
-    extraRenderItem = 3 * visibleItemCount,
-    renderThreshold = Math.ceil(extraRenderItem / 2),
+    extraRenderItem,
+    renderThreshold,
     debug = false,
     maxVelocity = Number.MAX_SAFE_INTEGER,
     ItemComponent = DefaultItemComponent,
@@ -71,51 +118,51 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     onChange,
   } = props;
   const len = useMemo(() => data.length, [data.length]);
-  const _visibleItemCount = useMemo(() => {
-    if (visibleItemCount > len) {
-      console.warn('visibleItemCount exceeds length');
-      return len;
-    }
-    return visibleItemCount;
-  }, [visibleItemCount, len]);
   const _initialIndex = useMemo(() => {
     if (initialIndex >= len || initialIndex < 0) {
       console.warn('initialIndex out of bounds');
-      return 0;
+      return initialIndex % len;
     }
     return initialIndex;
   }, [initialIndex, len]);
-  const visibleHeight = useMemo(
-    () => _visibleItemCount * itemHeight,
-    [_visibleItemCount, itemHeight],
+  const visibleItemCount = useMemo(
+    () => Math.floor(height / itemHeight),
+    [height, itemHeight],
   );
-  const _height = useMemo(
-    () => height ?? itemHeight * _visibleItemCount,
-    [height, itemHeight, _visibleItemCount],
+  const _extraRenderItem = useMemo(
+    () => extraRenderItem ?? 3 * visibleItemCount,
+    [extraRenderItem, visibleItemCount],
   );
   const _renderThreshold = useMemo(
-    () => renderThreshold * itemHeight,
-    [renderThreshold, itemHeight],
+    () => (renderThreshold ?? Math.ceil(_extraRenderItem / 2)) * itemHeight,
+    [renderThreshold, _extraRenderItem, itemHeight],
   );
+  const visibleHeight = useMemo(
+    () => visibleItemCount * itemHeight,
+    [visibleItemCount, itemHeight],
+  );
+  const excessHeight = useMemo(
+    () => height - visibleHeight,
+    [height, visibleHeight],
+  );
+  const initialOffsetY = useMemo(() => {
+    return -(containerHeight - visibleHeight) / 2;
+  }, [containerHeight, visibleHeight]);
   const halfItemOffset = useMemo(
     () => (visibleItemCount % 2 === 0 ? itemHeight / 2 : 0),
     [visibleItemCount, itemHeight],
   );
-  const initialOffsetY = useMemo(
-    () => -(containerHeight - _visibleItemCount * itemHeight) / 2,
-    [],
-  );
   const computeRenderRange = useCallback(
     (offsetY: number) => {
       const renderRange = [
-        offsetY + extraRenderItem * itemHeight - halfItemOffset,
+        offsetY + _extraRenderItem * itemHeight - halfItemOffset,
         offsetY -
-          (visibleItemCount + extraRenderItem) * itemHeight -
+          (visibleItemCount + _extraRenderItem) * itemHeight -
           halfItemOffset,
       ];
       return renderRange as [number, number];
     },
-    [itemHeight, extraRenderItem, halfItemOffset],
+    [visibleHeight, _extraRenderItem, itemHeight, halfItemOffset],
   );
   const computeRenderBoundray = useCallback(
     (offsetY: number) => {
@@ -160,8 +207,8 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
       const [_, map] = cycliData;
       const baseNode = map.get(baseIndex);
 
-      const count = visibleItemCount + 2 * extraRenderItem;
-      const topLen = extraRenderItem + Math.ceil(visibleItemCount / 2);
+      const count = visibleItemCount + 2 * _extraRenderItem;
+      const topLen = _extraRenderItem + Math.ceil(visibleItemCount / 2);
 
       let startOffset = renderRange[0] - (topLen - 1) * itemHeight;
       let head = baseNode;
@@ -202,7 +249,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
 
       return result;
     },
-    [cycliData, extraRenderItem, debug],
+    [cycliData, _extraRenderItem, debug],
   );
   const initialData = useMemo(
     () => generateRenderList(_initialIndex, renderRange.current),
@@ -287,49 +334,54 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     };
   }, []);
   return (
-    <View className="relative">
-      <View
-        style={{
-          height: _height,
-          width: width,
-          overflow: 'hidden',
-        }}>
-        <GestureDetector gesture={pan}>
-          <Reanimated.View ref={ref} style={[animatedStyles]}>
-            <View className="relative" style={{height: containerHeight}}>
-              {debug && (
-                <>
-                  <View
-                    className="absolute w-full bg-orange-700"
-                    style={{
-                      top: -renderBoundary.current[0],
-                      height: itemHeight,
-                    }}
+    <View style={{height, marginTop: excessHeight / 2}}>
+      <View className="relative">
+        <View
+          style={{
+            height: visibleHeight,
+            overflow: 'hidden',
+          }}>
+          <GestureDetector gesture={pan}>
+            <Reanimated.View ref={ref} style={[animatedStyles]}>
+              <View
+                className="relative"
+                style={{
+                  height: containerHeight,
+                }}>
+                {debug && (
+                  <>
+                    <View
+                      className="absolute w-full bg-orange-700"
+                      style={{
+                        top: -renderBoundary.current[0],
+                        height: itemHeight,
+                      }}
+                    />
+                    <View
+                      className="absolute w-full bg-orange-700"
+                      style={{
+                        top: -renderBoundary.current[1],
+                        height: itemHeight,
+                      }}
+                    />
+                  </>
+                )}
+                {innerData.map((item, index) => (
+                  <ItemComponent
+                    key={`${item.wrapped.value}_${index}`}
+                    top={-item.top}
+                    itemHeight={itemHeight}
+                    label={item.wrapped.label}
                   />
-                  <View
-                    className="absolute w-full bg-orange-700"
-                    style={{
-                      top: -renderBoundary.current[1],
-                      height: itemHeight,
-                    }}
-                  />
-                </>
-              )}
-              {innerData.map((item, index) => (
-                <ItemComponent
-                  key={`${item.wrapped.value}_${index}`}
-                  top={-item.top}
-                  itemHeight={itemHeight}
-                  label={item.wrapped.label}
-                />
-              ))}
-            </View>
-          </Reanimated.View>
-        </GestureDetector>
-      </View>
-      <View className="absolute top-0 left-0 bottom-0 right-0 pointer-events-none">
-        <View className="flex flex-1 justify-center items-center z-10">
-          <IndicatorComponent itemHeight={itemHeight} />
+                ))}
+              </View>
+            </Reanimated.View>
+          </GestureDetector>
+        </View>
+        <View className="absolute top-0 left-0 bottom-0 right-0 pointer-events-none">
+          <View className="flex flex-1 justify-center items-center z-10">
+            <IndicatorComponent itemHeight={itemHeight} />
+          </View>
         </View>
       </View>
     </View>

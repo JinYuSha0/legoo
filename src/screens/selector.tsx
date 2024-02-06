@@ -7,7 +7,7 @@ import React, {memo} from 'react';
 
 type Props = NativeStackScreenProps<RootStackParamList, ScreenNames.SELECTOR>;
 
-const data = Array.from({length: 24})
+const data = Array.from({length: 100})
   .fill(undefined)
   .map((_, idx) => ({
     label: `${idx + 1}`,
@@ -20,9 +20,10 @@ const SelectorScreen: React.FC<Props> = props => {
       <View className="flex-row">
         <View className="w-20">
           <Selector
+            debug
             initialIndex={0}
             data={data}
-            visibleItemCount={8}
+            height={200}
             maxVelocity={1400}
             onChange={(value, idx) => {
               console.log(value, idx);

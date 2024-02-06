@@ -10,7 +10,7 @@
     "outDir": "dist",
     "rootDir": "src",
     "jsx": "react-native",
-    "removeComments": true,
+    "removeComments": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
