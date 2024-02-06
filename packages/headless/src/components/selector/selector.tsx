@@ -1,5 +1,6 @@
+import type {ISelectorProps, WrapItem} from './type';
 import {View} from 'react-native';
-import {isNil} from '@legoo/helper';
+import {isNil, last} from '@legoo/helper';
 import {DoubleLinkList} from '@legoo/helper';
 import {useEvent} from '@legoo/hooks';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
@@ -19,85 +20,10 @@ import Reanimated, {
   runOnJS,
   runOnUI,
   withSpring,
+  withClamp,
 } from 'react-native-reanimated';
-import DefaultItemComponent, {type IItemProps} from './item';
-import DefaultIndicatorComponent, {type IIndicatorProps} from './indicator';
-
-export type IItem<T = any> = {
-  label: string;
-  value: T;
-};
-
-export interface ISelectorProps<T = any> {
-  /**
-   * Data array
-   */
-  data: IItem<T>[];
-  /**
-   * Selector height
-   */
-  height: number;
-  /**
-   * Initial selected index
-   * default: 0
-   */
-  initialIndex?: number;
-  /**
-   * Render Item height
-   * default: 30
-   */
-  itemHeight?: number;
-  /**
-   * Scroll container height
-   * this value determines the maximum scroll distance you can scroll in both directions.
-   * default: 30 * 2001
-   */
-  containerHeight?: number;
-  /**
-   * Render an extra number of items outside the visible range
-   * if a white screen appears when you scroll quickly, you can try increasing this value.
-   * if the value is particularly large, it may cause the rendering speed to slow down.
-   * deafult: Three times the number of items in the visible range
-   */
-  extraRenderItem?: number;
-  /**
-   * This value determines how many items remain from the boundary to start the next round of lazy rendering.
-   * if a white screen appears when you scroll quickly, you can try decreasing this value.
-   * if the value is particularly small, it may cause the unnecessary rendering.
-   * default: Math.ceil(extraRenderItem / 2)
-   */
-  renderThreshold?: number;
-  /**
-   * Debug mode
-   */
-  debug?: boolean;
-  /**
-   * Maximum scroll velocity
-   * if the velocity is too high, it will easily cause a white screen.
-   * limit the velocity to reduce unnecessary rendering.
-   */
-  maxVelocity?: number;
-  /**
-   * Item component
-   * it is recommended to use the React.memo package to improve performance
-   */
-  ItemComponent?: (props: IItemProps) => React.ReactNode;
-  /**
-   * Indicator Component
-   */
-  IndicatorComponent?: (props: IIndicatorProps) => React.ReactNode;
-  /**
-   * A callback triggered when the selection changes.
-   * the first parameter is the selected value,
-   * and the second parameter is the index of the selection in the data array.
-   */
-  onChange?: (value: T, index: number) => void;
-}
-
-type WrapItem = {
-  top: number;
-  wrapped: IItem;
-};
+import DefaultItemComponent from './item';
+import DefaultIndicatorComponent from './indicator';
 
 const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
   props,
@@ -106,9 +32,10 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
   const {
     data,
     height,
+    cycle = true,
     initialIndex = 0,
     itemHeight = 30,
-    containerHeight = 2001 * itemHeight,
+    containerHeight = 2000 * itemHeight,
     extraRenderItem,
     renderThreshold,
     debug = false,
@@ -207,35 +134,36 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
       const [_, map] = cycliData;
       const baseNode = map.get(baseIndex);
 
-      const count = visibleItemCount + 2 * _extraRenderItem;
-      const topLen = _extraRenderItem + Math.ceil(visibleItemCount / 2);
-
-      let startOffset = renderRange[0] - (topLen - 1) * itemHeight;
-      let head = baseNode;
+      const topLen = _extraRenderItem + Math.floor(visibleItemCount / 2);
+      let topStartOffset =
+        renderRange[0] - (topLen - (halfItemOffset === 0 ? 1 : 2)) * itemHeight;
+      let head = baseNode.prev;
       for (let i = 0; i < topLen; i++) {
-        if (head?.value) {
+        if (!cycle && head.value === last(data)) break;
+        if (!isNil(head?.value)) {
           result.unshift({
-            top: startOffset,
+            top: topStartOffset,
             wrapped: head?.value,
           });
           head = head.prev;
-          startOffset += itemHeight;
+          topStartOffset += itemHeight;
         } else {
           break;
         }
       }
 
-      startOffset -= (topLen + 1) * itemHeight;
-      let tail = baseNode?.next;
-      const bottomLen = count - topLen;
+      const bottomLen = _extraRenderItem + Math.ceil(visibleItemCount / 2);
+      let bottomStartOffset = renderRange[0] - (bottomLen - 1) * itemHeight;
+      let tail = baseNode;
       for (let i = 0; i < bottomLen; i++) {
+        if (!cycle && last(result)?.wrapped === last(data)) break;
         if (!isNil(tail?.value)) {
           result.push({
-            top: startOffset,
+            top: bottomStartOffset,
             wrapped: tail?.value,
           });
           tail = tail?.next;
-          startOffset -= itemHeight;
+          bottomStartOffset -= itemHeight;
         } else {
           break;
         }
@@ -305,19 +233,23 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
           itemHeight,
       );
       const expectedRechedOffset = initialOffsetY + expectedOffset * itemHeight;
-      offset.value = withSpring(
-        expectedRechedOffset,
-        {
-          velocity: event.velocityY,
-          damping: 100,
-        },
-        finished => {
-          if (finished && onChange) {
-            let idx = expectedOffset % len;
-            idx = idx > 0 ? len - idx : Math.abs(idx);
-            runOnJS(onChange)(data[idx].value, idx);
-          }
-        },
+      // -containerHeight - halfItemOffset, 0 - halfItemOffset
+      offset.value = withClamp(
+        {},
+        withSpring(
+          expectedRechedOffset,
+          {
+            velocity: event.velocityY,
+            damping: 100,
+          },
+          finished => {
+            if (finished && onChange) {
+              let idx = expectedOffset % len;
+              idx = idx > 0 ? len - idx : Math.abs(idx);
+              runOnJS(onChange)(data[idx].value, idx);
+            }
+          },
+        ),
       );
     });
   useEffect(() => {
