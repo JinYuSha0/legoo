@@ -4,7 +4,7 @@ import {DoubleLinkList} from '@legoo/helper';
 import {useEvent} from '@legoo/hooks';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import React, {
-  ForwardRefRenderFunction,
+  type ForwardRefRenderFunction,
   forwardRef,
   memo,
   useCallback,
@@ -18,18 +18,18 @@ import Reanimated, {
   useSharedValue,
   runOnJS,
   runOnUI,
-  withDecay,
+  withSpring,
 } from 'react-native-reanimated';
-import ItemComponent, {IItemProps} from './item';
-import IndicatorComponent, {IIndicatorProps} from './indicator';
+import DefaultItemComponent, {type IItemProps} from './item';
+import DefaultIndicatorComponent, {type IIndicatorProps} from './indicator';
 
-export type IItem = {
+export type IItem<T = any> = {
   label: string;
-  value: any;
+  value: T;
 };
 
-export interface ISelectorProps {
-  data: IItem[];
+export interface ISelectorProps<T = any> {
+  data: IItem<T>[];
   visibleItemCount: number;
   width?: number;
   height?: number;
@@ -40,8 +40,9 @@ export interface ISelectorProps {
   renderThreshold?: number;
   debug?: boolean;
   maxVelocity?: number;
-  Item?: (props: IItemProps) => React.ReactNode;
-  Indicator?: (props: IIndicatorProps) => React.ReactNode;
+  ItemComponent?: (props: IItemProps) => React.ReactNode;
+  IndicatorComponent?: (props: IIndicatorProps) => React.ReactNode;
+  onChange?: (value: T, index: number) => void;
 }
 
 type WrapItem = {
@@ -61,12 +62,13 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     initialIndex = 0,
     itemHeight = 30,
     containerHeight = 2001 * itemHeight,
-    extraRenderItem = 2 * visibleItemCount,
-    renderThreshold = Math.ceil(extraRenderItem / 2) * itemHeight,
+    extraRenderItem = 3 * visibleItemCount,
+    renderThreshold = Math.ceil(extraRenderItem / 2),
     debug = false,
     maxVelocity = Number.MAX_SAFE_INTEGER,
-    Item = ItemComponent,
-    Indicator = IndicatorComponent,
+    ItemComponent = DefaultItemComponent,
+    IndicatorComponent = DefaultIndicatorComponent,
+    onChange,
   } = props;
   const len = useMemo(() => data.length, [data.length]);
   const _visibleItemCount = useMemo(() => {
@@ -91,6 +93,10 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     () => height ?? itemHeight * _visibleItemCount,
     [height, itemHeight, _visibleItemCount],
   );
+  const _renderThreshold = useMemo(
+    () => renderThreshold * itemHeight,
+    [renderThreshold, itemHeight],
+  );
   const halfItemOffset = useMemo(
     () => (visibleItemCount % 2 === 0 ? itemHeight / 2 : 0),
     [visibleItemCount, itemHeight],
@@ -109,15 +115,15 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
       ];
       return renderRange as [number, number];
     },
-    [itemHeight, extraRenderItem, renderThreshold, halfItemOffset],
+    [itemHeight, extraRenderItem, halfItemOffset],
   );
   const computeRenderBoundray = useCallback(
     (offsetY: number) => {
       const [start, end] = computeRenderRange(offsetY);
-      const renderBoundray = [start - renderThreshold, end + renderThreshold];
+      const renderBoundray = [start - _renderThreshold, end + _renderThreshold];
       return renderBoundray as [number, number];
     },
-    [computeRenderRange, renderThreshold],
+    [computeRenderRange, _renderThreshold],
   );
   const renderRange = useRef<[number, number]>(
     computeRenderRange(initialOffsetY),
@@ -244,11 +250,28 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     })
     .onFinalize(event => {
       const maxAbsVelocity = Math.min(Math.abs(event.velocityY), maxVelocity);
-      offset.value = withDecay({
-        velocity: event.velocityY < 0 ? -maxAbsVelocity : maxAbsVelocity,
-        rubberBandEffect: true,
-        clamp: [-containerHeight - halfItemOffset, 0 - halfItemOffset],
-      });
+      const velocity = event.velocityY < 0 ? -maxAbsVelocity : maxAbsVelocity;
+      const expectedVelocityEffectedOffset =
+        Math.abs(velocity) < 100 ? 0 : velocity / 3;
+      const expectedOffset = Math.round(
+        (offset.value + expectedVelocityEffectedOffset - initialOffsetY) /
+          itemHeight,
+      );
+      const expectedRechedOffset = initialOffsetY + expectedOffset * itemHeight;
+      offset.value = withSpring(
+        expectedRechedOffset,
+        {
+          velocity: event.velocityY,
+          damping: 100,
+        },
+        finished => {
+          if (finished && onChange) {
+            let idx = expectedOffset % len;
+            idx = idx > 0 ? len - idx : Math.abs(idx);
+            runOnJS(onChange)(data[idx].value, idx);
+          }
+        },
+      );
     });
   useEffect(() => {
     const id = 1;
@@ -293,7 +316,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
                 </>
               )}
               {innerData.map((item, index) => (
-                <Item
+                <ItemComponent
                   key={`${item.wrapped.value}_${index}`}
                   top={-item.top}
                   itemHeight={itemHeight}
@@ -306,7 +329,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
       </View>
       <View className="absolute top-0 left-0 bottom-0 right-0 pointer-events-none">
         <View className="flex flex-1 justify-center items-center z-10">
-          <Indicator itemHeight={itemHeight} />
+          <IndicatorComponent itemHeight={itemHeight} />
         </View>
       </View>
     </View>
