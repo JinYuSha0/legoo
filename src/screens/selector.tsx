@@ -7,7 +7,7 @@ import React, {memo, useEffect, useRef} from 'react';
 
 type Props = NativeStackScreenProps<RootStackParamList, ScreenNames.SELECTOR>;
 
-const data = Array.from({length: 100})
+const data = Array.from({length: 24})
   .fill(undefined)
   .map((_, idx) => ({
     label: `${idx + 1}`,
@@ -15,14 +15,16 @@ const data = Array.from({length: 100})
   }));
 
 const SelectorScreen: React.FC<Props> = props => {
-  const startRef = useRef(+new Date());
-  useEffect(() => {
-    console.log(+new Date() - startRef.current);
-  }, []);
   return (
     <Layout bottomOffset={20}>
       <View className="w-20">
-        <Selector data={data} visibleItemCount={9} maxVelocity={3000} />
+        <Selector
+          debug
+          initialIndex={0}
+          data={data}
+          visibleItemCount={8}
+          maxVelocity={2000}
+        />
       </View>
     </Layout>
   );

@@ -7,10 +7,11 @@ export interface IItemProps {
   label: string;
   itemHeight: number;
   className?: string;
+  textClassName?: string;
 }
 
 const Item: React.FC<IItemProps> = props => {
-  const {top, label, itemHeight, className} = props;
+  const {top, label, itemHeight, className, textClassName} = props;
   return (
     <View
       className={clsx('w-full justify-center absolute left-0', className)}
@@ -18,7 +19,9 @@ const Item: React.FC<IItemProps> = props => {
         top: top,
         height: itemHeight,
       }}>
-      <Text>{label}</Text>
+      <Text className={clsx('text-foreground text-center', textClassName)}>
+        {label}
+      </Text>
     </View>
   );
 };

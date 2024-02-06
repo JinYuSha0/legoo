@@ -33,11 +33,12 @@ export interface ISelectorProps {
   visibleItemCount: number;
   width?: number;
   height?: number;
+  initialIndex?: number;
   itemHeight?: number;
   containerHeight?: number;
   extraRenderItem?: number;
   renderThreshold?: number;
-  boundaryIndicator?: boolean;
+  debug?: boolean;
   maxVelocity?: number;
   Item?: (props: IItemProps) => React.ReactNode;
   Indicator?: (props: IIndicatorProps) => React.ReactNode;
@@ -57,23 +58,42 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     visibleItemCount,
     width = 100,
     height,
+    initialIndex = 0,
     itemHeight = 30,
     containerHeight = 2001 * itemHeight,
     extraRenderItem = 2 * visibleItemCount,
     renderThreshold = Math.ceil(extraRenderItem / 2) * itemHeight,
-    boundaryIndicator = false,
+    debug = false,
     maxVelocity = Number.MAX_SAFE_INTEGER,
     Item = ItemComponent,
     Indicator = IndicatorComponent,
   } = props;
   const len = useMemo(() => data.length, [data.length]);
-  const _visibleItemCount = useMemo(
-    () => (visibleItemCount >= len ? len : visibleItemCount),
-    [visibleItemCount, len],
+  const _visibleItemCount = useMemo(() => {
+    if (visibleItemCount > len) {
+      console.warn('visibleItemCount exceeds length');
+      return len;
+    }
+    return visibleItemCount;
+  }, [visibleItemCount, len]);
+  const _initialIndex = useMemo(() => {
+    if (initialIndex >= len || initialIndex < 0) {
+      console.warn('initialIndex out of bounds');
+      return 0;
+    }
+    return initialIndex;
+  }, [initialIndex, len]);
+  const visibleHeight = useMemo(
+    () => _visibleItemCount * itemHeight,
+    [_visibleItemCount, itemHeight],
   );
   const _height = useMemo(
     () => height ?? itemHeight * _visibleItemCount,
     [height, itemHeight, _visibleItemCount],
+  );
+  const halfItemOffset = useMemo(
+    () => (visibleItemCount % 2 === 0 ? itemHeight / 2 : 0),
+    [visibleItemCount, itemHeight],
   );
   const initialOffsetY = useMemo(
     () => -(containerHeight - _visibleItemCount * itemHeight) / 2,
@@ -81,7 +101,6 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
   );
   const computeRenderRange = useCallback(
     (offsetY: number) => {
-      const halfItemOffset = visibleItemCount % 2 === 0 ? itemHeight / 2 : 0;
       const renderRange = [
         offsetY + extraRenderItem * itemHeight - halfItemOffset,
         offsetY -
@@ -90,7 +109,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
       ];
       return renderRange as [number, number];
     },
-    [itemHeight, extraRenderItem, renderThreshold],
+    [itemHeight, extraRenderItem, renderThreshold, halfItemOffset],
   );
   const computeRenderBoundray = useCallback(
     (offsetY: number) => {
@@ -106,9 +125,31 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
   const renderBoundary = useRef<[number, number]>(
     computeRenderBoundray(initialOffsetY),
   );
-  const cycliData = useMemo(() => DoubleLinkList(data, true), [data]);
+  const cycliData = useMemo(() => {
+    let startTime = 0;
+
+    if (debug) {
+      startTime = performance.now();
+    }
+
+    const link = DoubleLinkList(data, true);
+
+    if (debug) {
+      console.debug(
+        `Doubly linked list generated in: ${performance.now() - startTime}ms`,
+      );
+    }
+
+    return link;
+  }, [data]);
   const generateRenderList = useCallback(
     (baseIndex: number, renderRange: [number, number]) => {
+      let startTime = 0;
+
+      if (debug) {
+        startTime = performance.now();
+      }
+
       const result: WrapItem[] = [];
       const [_, map] = cycliData;
       const baseNode = map.get(baseIndex);
@@ -147,26 +188,45 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
         }
       }
 
+      if (debug) {
+        console.debug(
+          `Render List generated in: ${performance.now() - startTime}ms`,
+        );
+      }
+
       return result;
     },
-    [cycliData, extraRenderItem],
+    [cycliData, extraRenderItem, debug],
   );
-  const [innerData, setInnerData] = useState(
-    generateRenderList(0, renderRange.current),
+  const initialData = useMemo(
+    () => generateRenderList(_initialIndex, renderRange.current),
+    [_initialIndex],
   );
+  const [innerData, setInnerData] = useState(initialData);
   const lazyRender = useEvent((offsetY: number) => {
     'worklet';
     const [startBoundary, endBoundary] = renderBoundary.current;
-    const bottomOffset = visibleItemCount * itemHeight;
-    if (!(offsetY >= startBoundary || offsetY - bottomOffset <= endBoundary))
+    if (!(offsetY >= startBoundary || offsetY - visibleHeight <= endBoundary))
       return;
 
-    const offsetIdx = Math.floor((offsetY - initialOffsetY) / itemHeight) % len;
+    if (offsetY >= startBoundary) offsetY = startBoundary;
+    if (offsetY - visibleHeight <= endBoundary)
+      offsetY = endBoundary + visibleHeight;
+    if (halfItemOffset > 0) offsetY -= halfItemOffset;
+
+    const offsetIdx =
+      ((offsetY - initialOffsetY) / itemHeight - initialIndex) % len;
     let baseIdx = 0;
     if (offsetIdx > 0) {
       baseIdx = len - offsetIdx;
     } else {
       baseIdx = Math.abs(offsetIdx);
+    }
+
+    if (debug) {
+      console.debug(
+        `offsetY: ${offsetY}, offsetIdx: ${offsetIdx}, baseIdx: ${baseIdx}`,
+      );
     }
 
     renderRange.current = computeRenderRange(offsetY);
@@ -183,10 +243,11 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
       offset.value += event.changeY;
     })
     .onFinalize(event => {
+      const maxAbsVelocity = Math.min(Math.abs(event.velocityY), maxVelocity);
       offset.value = withDecay({
-        velocity: Math.min(event.velocityY, maxVelocity),
+        velocity: event.velocityY < 0 ? -maxAbsVelocity : maxAbsVelocity,
         rubberBandEffect: true,
-        clamp: [-containerHeight, 0],
+        clamp: [-containerHeight - halfItemOffset, 0 - halfItemOffset],
       });
     });
   useEffect(() => {
@@ -213,15 +274,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
         <GestureDetector gesture={pan}>
           <Reanimated.View ref={ref} style={[animatedStyles]}>
             <View className="relative" style={{height: containerHeight}}>
-              {innerData.map((item, index) => (
-                <Item
-                  key={`${item.wrapped.value}_${index}`}
-                  top={-item.top}
-                  itemHeight={itemHeight}
-                  label={item.wrapped.label}
-                />
-              ))}
-              {boundaryIndicator && (
+              {debug && (
                 <>
                   <View
                     className="absolute w-full bg-orange-700"
@@ -239,6 +292,14 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
                   />
                 </>
               )}
+              {innerData.map((item, index) => (
+                <Item
+                  key={`${item.wrapped.value}_${index}`}
+                  top={-item.top}
+                  itemHeight={itemHeight}
+                  label={item.wrapped.label}
+                />
+              ))}
             </View>
           </Reanimated.View>
         </GestureDetector>
