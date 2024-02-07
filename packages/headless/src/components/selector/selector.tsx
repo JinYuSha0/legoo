@@ -32,6 +32,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     data,
     height,
     cycle = false,
+    clickable = false,
     initialIndex = 0,
     itemHeight = 30,
     containerHeight = 2000 * itemHeight,
@@ -43,6 +44,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     IndicatorComponent = DefaultIndicatorComponent,
     onChange,
   } = props;
+  const [firstPaint, setFirstPaint] = useState(true);
   const len = useMemo(() => data.length, [data.length]);
   const _initialIndex = useMemo(() => {
     if (initialIndex >= len || initialIndex < 0) {
@@ -56,8 +58,8 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     [height, itemHeight],
   );
   const _extraRenderItem = useMemo(
-    () => extraRenderItem ?? 3 * visibleItemCount,
-    [extraRenderItem, visibleItemCount],
+    () => (firstPaint ? 0 : extraRenderItem ?? 3 * visibleItemCount),
+    [firstPaint, extraRenderItem, visibleItemCount],
   );
   const _renderThreshold = useMemo(
     () => (renderThreshold ?? Math.ceil(_extraRenderItem / 2)) * itemHeight,
@@ -190,6 +192,10 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     () => generateRenderList(_initialIndex, renderRange.current),
     [_initialIndex],
   );
+  const firstPaintImporve = useEvent(() => {
+    setFirstPaint(false);
+    setInnerData(generateRenderList(_initialIndex, renderRange.current));
+  });
   const [innerData, setInnerData] = useState(initialData);
   const lazyRender = useEvent((offsetY: number) => {
     'worklet';
@@ -224,25 +230,39 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
 
     setInnerData(generateRenderList(baseIdx, renderRange.current));
   });
+  const panBeginTime = useSharedValue(-1);
   const offset = useSharedValue(initialOffsetY);
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{translateY: offset.value}],
   }));
   const pan = Gesture.Pan()
+    .onBegin(event => {
+      panBeginTime.value = performance.now();
+    })
     .onChange(event => {
       offset.value += event.changeY;
     })
     .onFinalize(event => {
-      const maxAbsVelocity = Math.min(Math.abs(event.velocityY), maxVelocity);
-      const velocity = event.velocityY < 0 ? -maxAbsVelocity : maxAbsVelocity;
-      const expectedVelocityEffectedOffset =
-        Math.abs(velocity) < 100 ? 0 : velocity / 3;
-      const expectedOffset = Math.round(
-        (offset.value + expectedVelocityEffectedOffset - initialOffsetY) /
-          itemHeight,
-      );
-      let expectedRechedOffset = initialOffsetY + expectedOffset * itemHeight;
+      const duration = performance.now() - panBeginTime.value;
+      let expectedRechedOffset = offset.value;
+      let expectedOffsetIdx = 0;
       let finalizeIdx = null;
+      if (clickable && duration <= 200) {
+        // If duration less than 300ms, judged as a click event.
+        console.log('click', initialOffsetY, offset.value, event.y);
+      } else {
+        // velocityY less than 100, judged as a slow drag event.
+        // velocityY more than 100, judged as fast scroll event
+        const maxAbsVelocity = Math.min(Math.abs(event.velocityY), maxVelocity);
+        const velocity = event.velocityY < 0 ? -maxAbsVelocity : maxAbsVelocity;
+        const expectedVelocityEffectedOffset =
+          Math.abs(velocity) < 100 ? 0 : velocity / 3;
+        expectedOffsetIdx = Math.round(
+          (offset.value + expectedVelocityEffectedOffset - initialOffsetY) /
+            itemHeight,
+        );
+        expectedRechedOffset = initialOffsetY + expectedOffsetIdx * itemHeight;
+      }
       if (!cycle) {
         if (expectedRechedOffset >= clamp.max) {
           expectedRechedOffset = clamp.max;
@@ -261,7 +281,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
         finished => {
           if (finished && onChange) {
             if (finalizeIdx === null) {
-              finalizeIdx = (expectedOffset - _initialIndex) % len;
+              finalizeIdx = (expectedOffsetIdx - _initialIndex) % len;
               finalizeIdx =
                 finalizeIdx > 0 ? len - finalizeIdx : Math.abs(finalizeIdx);
             }
@@ -272,6 +292,9 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     });
   useEffect(() => {
     const id = 1;
+    requestAnimationFrame(() => {
+      firstPaintImporve();
+    });
     runOnUI(() => {
       offset.addListener(id, value => {
         runOnJS(lazyRender)(value);

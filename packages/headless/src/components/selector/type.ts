@@ -21,6 +21,10 @@ export interface ISelectorProps<T = any> {
    */
   cycle?: boolean;
   /**
+   * Whether the item enables click selection function
+   */
+  clickable?: boolean;
+  /**
    * Initial selected index
    * default: 0
    */

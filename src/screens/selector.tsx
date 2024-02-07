@@ -3,7 +3,7 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {View} from 'react-native';
 import {Selector, Layout} from '@legoo/headless';
 import {ScreenNames} from '@helper/sceenNames';
-import React, {memo} from 'react';
+import React, {memo, Suspense, useEffect, useRef} from 'react';
 
 type Props = NativeStackScreenProps<RootStackParamList, ScreenNames.SELECTOR>;
 
@@ -15,46 +15,52 @@ const data = Array.from({length: 100})
   }));
 
 const SelectorScreen: React.FC<Props> = props => {
+  const time = useRef(performance.now());
+  useEffect(() => {
+    console.log(performance.now() - time.current);
+  }, []);
   return (
     <Layout bottomOffset={20}>
-      <View className="flex-row">
-        <View className="w-20">
-          <Selector
-            cycle
-            data={data}
-            initialIndex={5}
-            height={200}
-            maxVelocity={1800}
-            onChange={(value, idx) => {
-              console.log(value, idx);
-            }}
-          />
+      <Suspense>
+        <View className="flex-row">
+          <View className="w-20">
+            <Selector
+              cycle
+              data={data}
+              initialIndex={5}
+              height={200}
+              maxVelocity={1000}
+              onChange={(value, idx) => {
+                console.log(value, idx);
+              }}
+            />
+          </View>
+          <View className="w-20">
+            <Selector
+              data={data}
+              initialIndex={0}
+              height={200}
+              maxVelocity={1000}
+              onChange={(value, idx) => {
+                console.log(value, idx);
+              }}
+            />
+          </View>
+          <View className="w-20">
+            <Selector
+              cycle
+              debug
+              data={data}
+              initialIndex={7}
+              height={200}
+              maxVelocity={1000}
+              onChange={(value, idx) => {
+                console.log(value, idx);
+              }}
+            />
+          </View>
         </View>
-        <View className="w-20">
-          <Selector
-            data={data}
-            initialIndex={0}
-            height={200}
-            maxVelocity={1800}
-            onChange={(value, idx) => {
-              console.log(value, idx);
-            }}
-          />
-        </View>
-        <View className="w-20">
-          <Selector
-            cycle
-            debug
-            data={data}
-            initialIndex={7}
-            height={200}
-            maxVelocity={1800}
-            onChange={(value, idx) => {
-              console.log(value, idx);
-            }}
-          />
-        </View>
-      </View>
+      </Suspense>
     </Layout>
   );
 };
