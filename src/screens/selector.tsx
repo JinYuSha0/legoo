@@ -20,9 +20,35 @@ const SelectorScreen: React.FC<Props> = props => {
       <View className="flex-row">
         <View className="w-20">
           <Selector
+            cycle
+            data={data}
+            initialIndex={5}
+            height={200}
+            maxVelocity={1800}
+            onChange={(value, idx) => {
+              console.log(value, idx);
+            }}
+          />
+        </View>
+        <View className="w-20">
+          <Selector
             data={data}
             initialIndex={0}
             height={200}
+            maxVelocity={1800}
+            onChange={(value, idx) => {
+              console.log(value, idx);
+            }}
+          />
+        </View>
+        <View className="w-20">
+          <Selector
+            cycle
+            debug
+            data={data}
+            initialIndex={7}
+            height={200}
+            maxVelocity={1800}
             onChange={(value, idx) => {
               console.log(value, idx);
             }}

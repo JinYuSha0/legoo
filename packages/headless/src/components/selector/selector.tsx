@@ -20,7 +20,6 @@ import Reanimated, {
   runOnJS,
   runOnUI,
   withSpring,
-  withClamp,
 } from 'react-native-reanimated';
 import DefaultItemComponent from './item';
 import DefaultIndicatorComponent from './indicator';
@@ -32,7 +31,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
   const {
     data,
     height,
-    cycle = true,
+    cycle = false,
     initialIndex = 0,
     itemHeight = 30,
     containerHeight = 2000 * itemHeight,
@@ -48,7 +47,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
   const _initialIndex = useMemo(() => {
     if (initialIndex >= len || initialIndex < 0) {
       console.warn('initialIndex out of bounds');
-      return initialIndex % len;
+      return initialIndex > 0 ? initialIndex % len : 0;
     }
     return initialIndex;
   }, [initialIndex, len]);
@@ -79,6 +78,14 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     () => (visibleItemCount % 2 === 0 ? itemHeight / 2 : 0),
     [visibleItemCount, itemHeight],
   );
+  const clamp = useMemo(() => {
+    if (!cycle) {
+      const max = initialOffsetY + _initialIndex * itemHeight;
+      const min = max - (len - 1) * itemHeight;
+      return {min: min, max: max};
+    }
+    return null;
+  }, [cycle, initialOffsetY, _initialIndex, len, itemHeight]);
   const computeRenderRange = useCallback(
     (offsetY: number) => {
       const renderRange = [
@@ -189,6 +196,8 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     const [startBoundary, endBoundary] = renderBoundary.current;
     if (!(offsetY >= startBoundary || offsetY - visibleHeight <= endBoundary))
       return;
+    if (!cycle && clamp && (offsetY >= clamp.max || offsetY <= clamp.min))
+      return;
 
     if (offsetY >= startBoundary) offsetY = startBoundary;
     if (offsetY - visibleHeight <= endBoundary)
@@ -232,24 +241,33 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
         (offset.value + expectedVelocityEffectedOffset - initialOffsetY) /
           itemHeight,
       );
-      const expectedRechedOffset = initialOffsetY + expectedOffset * itemHeight;
-      // -containerHeight - halfItemOffset, 0 - halfItemOffset
-      offset.value = withClamp(
-        {},
-        withSpring(
-          expectedRechedOffset,
-          {
-            velocity: event.velocityY,
-            damping: 100,
-          },
-          finished => {
-            if (finished && onChange) {
-              let idx = expectedOffset % len;
-              idx = idx > 0 ? len - idx : Math.abs(idx);
-              runOnJS(onChange)(data[idx].value, idx);
+      let expectedRechedOffset = initialOffsetY + expectedOffset * itemHeight;
+      let finalizeIdx = null;
+      if (!cycle) {
+        if (expectedRechedOffset >= clamp.max) {
+          expectedRechedOffset = clamp.max;
+          finalizeIdx = 0;
+        } else if (expectedRechedOffset <= clamp.min) {
+          expectedRechedOffset = clamp.min;
+          finalizeIdx = len - 1;
+        }
+      }
+      offset.value = withSpring(
+        expectedRechedOffset,
+        {
+          velocity: event.velocityY,
+          damping: 100,
+        },
+        finished => {
+          if (finished && onChange) {
+            if (finalizeIdx === null) {
+              finalizeIdx = (expectedOffset - _initialIndex) % len;
+              finalizeIdx =
+                finalizeIdx > 0 ? len - finalizeIdx : Math.abs(finalizeIdx);
             }
-          },
-        ),
+            runOnJS(onChange)(data[finalizeIdx].value, finalizeIdx);
+          }
+        },
       );
     });
   useEffect(() => {
