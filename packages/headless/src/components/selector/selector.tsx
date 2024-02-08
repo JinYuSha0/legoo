@@ -44,7 +44,6 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     IndicatorComponent = DefaultIndicatorComponent,
     onChange,
   } = props;
-  const [firstPaint, setFirstPaint] = useState(true);
   const len = useMemo(() => data.length, [data.length]);
   const _initialIndex = useMemo(() => {
     if (initialIndex >= len || initialIndex < 0) {
@@ -58,8 +57,8 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     [height, itemHeight],
   );
   const _extraRenderItem = useMemo(
-    () => (firstPaint ? 0 : extraRenderItem ?? 3 * visibleItemCount),
-    [firstPaint, extraRenderItem, visibleItemCount],
+    () => extraRenderItem ?? 3 * visibleItemCount,
+    [extraRenderItem, visibleItemCount],
   );
   const _renderThreshold = useMemo(
     () => (renderThreshold ?? Math.ceil(_extraRenderItem / 2)) * itemHeight,
@@ -132,7 +131,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     return link;
   }, [data]);
   const generateRenderList = useCallback(
-    (baseIndex: number, renderRange: [number, number]) => {
+    (baseIndex: number, renderRange: [number, number], imporve?: boolean) => {
       let startTime = 0;
 
       if (debug) {
@@ -143,7 +142,8 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
       const [_, map] = cycliData;
       const baseNode = map.get(baseIndex);
 
-      const topLen = _extraRenderItem + Math.floor(visibleItemCount / 2);
+      const topVisibleCount = Math.floor(visibleItemCount / 2);
+      const topLen = _extraRenderItem + topVisibleCount;
       let topStartOffset =
         renderRange[0] - (topLen - (halfItemOffset === 0 ? 1 : 2)) * itemHeight;
       let head = baseNode.prev;
@@ -153,6 +153,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
           result.unshift({
             top: topStartOffset,
             wrapped: head?.value,
+            lazy: imporve ? i > topVisibleCount : false,
           });
           head = head.prev;
           topStartOffset += itemHeight;
@@ -161,7 +162,8 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
         }
       }
 
-      const bottomLen = _extraRenderItem + Math.ceil(visibleItemCount / 2);
+      const bottomVisibleCount = Math.ceil(visibleItemCount / 2);
+      const bottomLen = _extraRenderItem + bottomVisibleCount;
       let bottomStartOffset = renderRange[0] - (bottomLen - 1) * itemHeight;
       let tail = baseNode;
       for (let i = 0; i < bottomLen; i++) {
@@ -170,6 +172,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
           result.push({
             top: bottomStartOffset,
             wrapped: tail?.value,
+            lazy: imporve ? i > bottomVisibleCount : false,
           });
           tail = tail?.next;
           bottomStartOffset -= itemHeight;
@@ -178,7 +181,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
         }
       }
 
-      if (debug) {
+      if (debug && !imporve) {
         console.debug(
           `Render List generated in: ${performance.now() - startTime}ms`,
         );
@@ -189,13 +192,9 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     [cycliData, _extraRenderItem, debug],
   );
   const initialData = useMemo(
-    () => generateRenderList(_initialIndex, renderRange.current),
+    () => generateRenderList(_initialIndex, renderRange.current, true),
     [_initialIndex],
   );
-  const firstPaintImporve = useEvent(() => {
-    setFirstPaint(false);
-    setInnerData(generateRenderList(_initialIndex, renderRange.current));
-  });
   const [innerData, setInnerData] = useState(initialData);
   const lazyRender = useEvent((offsetY: number) => {
     'worklet';
@@ -292,8 +291,10 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     });
   useEffect(() => {
     const id = 1;
-    requestAnimationFrame(() => {
-      firstPaintImporve();
+    // Imporve first render time speend
+    // reduce first render view count
+    requestIdleCallback(() => {
+      setInnerData(generateRenderList(_initialIndex, renderRange.current));
     });
     runOnUI(() => {
       offset.addListener(id, value => {
@@ -339,14 +340,16 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
                     />
                   </>
                 )}
-                {innerData.map((item, index) => (
-                  <ItemComponent
-                    key={`${item.wrapped.value}_${index}`}
-                    top={-item.top}
-                    itemHeight={itemHeight}
-                    label={item.wrapped.label}
-                  />
-                ))}
+                {innerData
+                  .filter(item => item.lazy === false)
+                  .map((item, index) => (
+                    <ItemComponent
+                      key={`${item.wrapped.value}_${index}`}
+                      top={-item.top}
+                      itemHeight={itemHeight}
+                      label={item.wrapped.label}
+                    />
+                  ))}
               </View>
             </Reanimated.View>
           </GestureDetector>

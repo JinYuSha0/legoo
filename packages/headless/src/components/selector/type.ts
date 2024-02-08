@@ -84,4 +84,5 @@ export interface ISelectorProps<T = any> {
 export type WrapItem = {
   top: number;
   wrapped: IItem;
+  lazy?: boolean;
 };

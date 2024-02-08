@@ -17,7 +17,7 @@ const data = Array.from({length: 100})
 const SelectorScreen: React.FC<Props> = props => {
   const time = useRef(performance.now());
   useEffect(() => {
-    console.log(performance.now() - time.current);
+    console.log('Enter page speed time:', performance.now() - time.current);
   }, []);
   return (
     <Layout bottomOffset={20}>
@@ -29,7 +29,7 @@ const SelectorScreen: React.FC<Props> = props => {
               data={data}
               initialIndex={5}
               height={200}
-              maxVelocity={1000}
+              maxVelocity={1400}
               onChange={(value, idx) => {
                 console.log(value, idx);
               }}
@@ -38,9 +38,9 @@ const SelectorScreen: React.FC<Props> = props => {
           <View className="w-20">
             <Selector
               data={data}
-              initialIndex={0}
+              initialIndex={6}
               height={200}
-              maxVelocity={1000}
+              maxVelocity={1400}
               onChange={(value, idx) => {
                 console.log(value, idx);
               }}
@@ -53,7 +53,7 @@ const SelectorScreen: React.FC<Props> = props => {
               data={data}
               initialIndex={7}
               height={200}
-              maxVelocity={1000}
+              maxVelocity={1400}
               onChange={(value, idx) => {
                 console.log(value, idx);
               }}
