@@ -1,7 +1,5 @@
 import {useEffect, useRef} from 'react';
 
-type AnyFunction = (...args: any[]) => any;
-
 /**
  * Similar to useCallback, with a few subtle differences:
  * - The returned function is a stable reference, and will always be the same between renders

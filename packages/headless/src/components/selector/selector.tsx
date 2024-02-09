@@ -1,8 +1,7 @@
 import type {ISelectorProps, WrapItem} from './type';
 import {View} from 'react-native';
-import {isNil, last} from '@legoo/helper';
-import {DoubleLinkList} from '@legoo/helper';
-import {useEvent} from '@legoo/hooks';
+import {isNil, last, DoubleLinkList} from '@legoo/helper';
+import {useEvent, useNextEffect} from '@legoo/hooks';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import React, {
   type ForwardRefRenderFunction,
@@ -196,22 +195,26 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     [_initialIndex],
   );
   const [innerData, setInnerData] = useState(initialData);
-  const lazyRender = useEvent((offsetY: number) => {
+  const lazyRender = useEvent((offsetY: number, reset?: boolean) => {
     'worklet';
     const [startBoundary, endBoundary] = renderBoundary.current;
-    if (!(offsetY >= startBoundary || offsetY - visibleHeight <= endBoundary))
-      return;
-    if (!cycle && clamp && (offsetY >= clamp.max || offsetY <= clamp.min))
-      return;
 
-    if (offsetY >= startBoundary) offsetY = startBoundary;
-    if (offsetY - visibleHeight <= endBoundary)
-      offsetY = endBoundary + visibleHeight;
-    if (halfItemOffset > 0) offsetY -= halfItemOffset;
+    if (!reset) {
+      if (!(offsetY >= startBoundary || offsetY - visibleHeight <= endBoundary))
+        return;
+      if (!cycle && clamp && (offsetY >= clamp.max || offsetY <= clamp.min))
+        return;
+
+      if (offsetY >= startBoundary) offsetY = startBoundary;
+      if (offsetY - visibleHeight <= endBoundary)
+        offsetY = endBoundary + visibleHeight;
+      if (halfItemOffset > 0) offsetY -= halfItemOffset;
+    }
 
     const offsetIdx =
       ((offsetY - initialOffsetY) / itemHeight - initialIndex) % len;
     let baseIdx = 0;
+
     if (offsetIdx > 0) {
       baseIdx = len - offsetIdx;
     } else {
@@ -228,6 +231,17 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     renderBoundary.current = computeRenderBoundray(offsetY);
 
     setInnerData(generateRenderList(baseIdx, renderRange.current));
+
+    return baseIdx;
+  });
+  const listReset = useEvent(() => {
+    let offsetY = offset.value;
+    if (!cycle && offset.value < clamp.min) {
+      offset.value = clamp.min;
+      offsetY = clamp.min;
+    }
+    const baseIdx = lazyRender(offsetY, true);
+    onChange?.(data[baseIdx].value, baseIdx);
   });
   const panBeginTime = useSharedValue(-1);
   const offset = useSharedValue(initialOffsetY);
@@ -246,9 +260,10 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
       let expectedRechedOffset = offset.value;
       let expectedOffsetIdx = 0;
       let finalizeIdx = null;
-      if (clickable && duration <= 200) {
+      if (clickable && duration <= 120 && event.velocityY < 100) {
         // If duration less than 300ms, judged as a click event.
-        console.log('click', initialOffsetY, offset.value, event.y);
+        const offset = Math.round((event.y - containerHeight / 2) / itemHeight);
+        console.log('click', offset);
       } else {
         // velocityY less than 100, judged as a slow drag event.
         // velocityY more than 100, judged as fast scroll event
@@ -307,6 +322,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
       })();
     };
   }, []);
+  useNextEffect(listReset, [data]);
   return (
     <View style={{height, marginTop: excessHeight / 2}}>
       <View className="relative">
