@@ -1,6 +1,6 @@
 import type {RootStackParamList} from '@/navigation/rootStack';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import {Selector, Layout, Button} from '@legoo/headless';
 import {useEvent} from '@legoo/hooks';
 import {ScreenNames} from '@helper/sceenNames';
@@ -18,6 +18,7 @@ const data = Array.from({length: 1000})
 const SelectorScreen: React.FC<Props> = props => {
   const time = useRef(performance.now());
   const [innerData, setInnerData] = useState(data);
+  const [result, setResult] = useState('');
   const onPress = useEvent(() => {
     setInnerData(
       Array.from({length: 28})
@@ -27,6 +28,9 @@ const SelectorScreen: React.FC<Props> = props => {
           value: idx + 1,
         })),
     );
+  });
+  const onChange = useEvent((value, idx) => {
+    setResult(`${value},${idx}`);
   });
   useEffect(() => {
     console.log('Enter page speed time:', performance.now() - time.current);
@@ -48,40 +52,39 @@ const SelectorScreen: React.FC<Props> = props => {
               console.log(id, phase, actualDuration);
             }}>
             <Selector
+              cycle
+              clickable
               data={innerData}
               initialIndex={0}
               height={200}
-              onChange={(value, idx) => {
-                console.log(value, idx);
-              }}
+              onChange={onChange}
             />
           </Profiler>
         </View>
         <View className="w-20">
           <Selector
+            clickable
             data={data}
             initialIndex={6}
             height={200}
             maxVelocity={1400}
-            onChange={(value, idx) => {
-              console.log(value, idx);
-            }}
+            onChange={onChange}
           />
         </View>
         <View className="w-20">
           <Selector
             cycle
+            clickable
             data={data}
             initialIndex={7}
             height={200}
             maxVelocity={1400}
-            onChange={(value, idx) => {
-              console.log(value, idx);
-            }}
+            onChange={onChange}
           />
         </View>
       </View>
       <Button onPress={onPress}>reduce array</Button>
+      <Text>{result}</Text>
     </Layout>
   );
 };

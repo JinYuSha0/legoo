@@ -1,5 +1,5 @@
 import type {ISelectorProps, WrapItem} from './type';
-import {View} from 'react-native';
+import {Platform, View} from 'react-native';
 import {isNil, last, DoubleLinkList} from '@legoo/helper';
 import {useEvent, useNextEffect} from '@legoo/hooks';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
@@ -34,7 +34,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     clickable = false,
     initialIndex = 0,
     itemHeight = 30,
-    containerHeight = 2000 * itemHeight,
+    containerHeight = 10000 * itemHeight,
     extraRenderItem,
     renderThreshold,
     debug = false,
@@ -45,6 +45,12 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     onChange,
   } = props;
   const dataUpdateCount = useRef(0);
+  const velocityYThreshould = useRef(
+    Platform.select({
+      ios: 10,
+      android: 50,
+    }),
+  );
   const len = useMemo(() => data.length, [data.length]);
   const _initialIndex = useMemo(() => {
     if (initialIndex >= len || initialIndex < 0) {
@@ -275,10 +281,15 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
       let expectedRechedOffset = offset.value;
       let expectedOffsetIdx = 0;
       let finalizeIdx = null;
-      if (clickable && duration <= 120 && event.velocityY < 100) {
-        // If duration less than 300ms, judged as a click event.
-        const offset = Math.round((event.y - containerHeight / 2) / itemHeight);
-        console.log('click', offset);
+      if (
+        clickable &&
+        duration <= 150 &&
+        Math.abs(event.velocityY) < velocityYThreshould.current
+      ) {
+        // If duration less than 150ms, judged as a click event.
+        expectedOffsetIdx = -Math.round(
+          (event.y - containerHeight / 2) / itemHeight,
+        );
       } else {
         // velocityY less than 100, judged as a slow drag event.
         // velocityY more than 100, judged as fast scroll event
@@ -290,8 +301,8 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
           (offset.value + expectedVelocityEffectedOffset - initialOffsetY) /
             itemHeight,
         );
-        expectedRechedOffset = initialOffsetY + expectedOffsetIdx * itemHeight;
       }
+      expectedRechedOffset = initialOffsetY + expectedOffsetIdx * itemHeight;
       if (!cycle) {
         if (expectedRechedOffset >= clamp.max) {
           expectedRechedOffset = clamp.max;
