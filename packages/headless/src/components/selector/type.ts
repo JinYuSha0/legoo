@@ -73,6 +73,12 @@ export interface ISelectorProps<T = any> {
    * Indicator Component
    */
   IndicatorComponent?: (props: IIndicatorProps) => React.ReactNode;
+  keyExtractor?: (
+    value: T,
+    index: number,
+    direction: -1 | 1,
+    dataUpdateCount: number,
+  ) => string;
   /**
    * A callback triggered when the selection changes.
    * the first parameter is the selected value,
@@ -84,5 +90,6 @@ export interface ISelectorProps<T = any> {
 export type WrapItem = {
   top: number;
   wrapped: IItem;
+  direction: -1 | 1;
   lazy?: boolean;
 };

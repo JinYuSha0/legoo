@@ -41,8 +41,10 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     maxVelocity = Number.MAX_SAFE_INTEGER,
     ItemComponent = DefaultItemComponent,
     IndicatorComponent = DefaultIndicatorComponent,
+    keyExtractor,
     onChange,
   } = props;
+  const dataUpdateCount = useRef(0);
   const len = useMemo(() => data.length, [data.length]);
   const _initialIndex = useMemo(() => {
     if (initialIndex >= len || initialIndex < 0) {
@@ -152,6 +154,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
           result.unshift({
             top: topStartOffset,
             wrapped: head?.value,
+            direction: -1,
             lazy: imporve ? i > topVisibleCount : false,
           });
           head = head.prev;
@@ -171,6 +174,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
           result.push({
             top: bottomStartOffset,
             wrapped: tail?.value,
+            direction: 1,
             lazy: imporve ? i > bottomVisibleCount : false,
           });
           tail = tail?.next;
@@ -235,6 +239,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     return baseIdx;
   });
   const listReset = useEvent(() => {
+    dataUpdateCount.current += 1;
     let offsetY = offset.value;
     if (!cycle && offset.value < clamp.min) {
       offset.value = clamp.min;
@@ -243,6 +248,16 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     const baseIdx = lazyRender(offsetY, true);
     onChange?.(data[baseIdx].value, baseIdx);
   });
+  const _keyExtractor = useCallback((item: WrapItem, index: number) => {
+    if (keyExtractor)
+      return keyExtractor(
+        item.wrapped.value,
+        index,
+        item.direction,
+        dataUpdateCount.current,
+      );
+    return `${item.wrapped.value}_${item.direction}_${dataUpdateCount.current}`;
+  }, []);
   const panBeginTime = useSharedValue(-1);
   const offset = useSharedValue(initialOffsetY);
   const animatedStyles = useAnimatedStyle(() => ({
@@ -360,7 +375,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
                   .filter(item => item.lazy === false)
                   .map((item, index) => (
                     <ItemComponent
-                      key={`${item.wrapped.value}_${index}`}
+                      key={_keyExtractor(item, index)}
                       top={-item.top}
                       itemHeight={itemHeight}
                       label={item.wrapped.label}

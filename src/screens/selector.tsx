@@ -4,11 +4,11 @@ import {View} from 'react-native';
 import {Selector, Layout, Button} from '@legoo/headless';
 import {useEvent} from '@legoo/hooks';
 import {ScreenNames} from '@helper/sceenNames';
-import React, {memo, useEffect, useRef, useState} from 'react';
+import React, {Profiler, memo, useEffect, useRef, useState} from 'react';
 
 type Props = NativeStackScreenProps<RootStackParamList, ScreenNames.SELECTOR>;
 
-const data = Array.from({length: 100})
+const data = Array.from({length: 1000})
   .fill(undefined)
   .map((_, idx) => ({
     label: `${idx + 1}`,
@@ -35,16 +35,27 @@ const SelectorScreen: React.FC<Props> = props => {
     <Layout bottomOffset={20}>
       <View className="flex-row">
         <View className="w-20">
-          <Selector
-            debug
-            data={innerData}
-            initialIndex={0}
-            height={200}
-            maxVelocity={1400}
-            onChange={(value, idx) => {
-              console.log(value, idx);
-            }}
-          />
+          <Profiler
+            id="selector1"
+            onRender={(
+              id,
+              phase,
+              actualDuration,
+              baseDuration,
+              startTime,
+              commitTime,
+            ) => {
+              console.log(id, phase, actualDuration);
+            }}>
+            <Selector
+              data={innerData}
+              initialIndex={0}
+              height={200}
+              onChange={(value, idx) => {
+                console.log(value, idx);
+              }}
+            />
+          </Profiler>
         </View>
         <View className="w-20">
           <Selector
@@ -60,7 +71,6 @@ const SelectorScreen: React.FC<Props> = props => {
         <View className="w-20">
           <Selector
             cycle
-            debug
             data={data}
             initialIndex={7}
             height={200}
