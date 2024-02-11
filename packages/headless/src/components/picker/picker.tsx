@@ -1,4 +1,4 @@
-import type {ISelectorProps, WrapItem} from './type';
+import type {IPickerProps, WrapItem} from './type';
 import {Platform, View} from 'react-native';
 import {isNil, last, DoubleLinkList} from '@legoo/helper';
 import {useEvent, useNextEffect} from '@legoo/hooks';
@@ -23,7 +23,7 @@ import Reanimated, {
 import DefaultItemComponent from './item';
 import DefaultIndicatorComponent from './indicator';
 
-const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
+const Selector: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
   props,
   ref,
 ) => {

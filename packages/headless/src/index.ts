@@ -49,4 +49,4 @@ export {
   type IAlertDialogProps,
   default as AlertDialog,
 } from './components/alertDialog/alertDialog';
-export * from './components/selector/index';
+export * from './components/picker/index';

@@ -1,7 +1,7 @@
 import type {RootStackParamList} from '@/navigation/rootStack';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Text, View} from 'react-native';
-import {Selector, Layout, Button} from '@legoo/headless';
+import {Picker, Layout, Button} from '@legoo/headless';
 import {useEvent} from '@legoo/hooks';
 import {ScreenNames} from '@helper/sceenNames';
 import React, {Profiler, memo, useEffect, useRef, useState} from 'react';
@@ -51,7 +51,7 @@ const SelectorScreen: React.FC<Props> = props => {
             ) => {
               console.log(id, phase, actualDuration);
             }}>
-            <Selector
+            <Picker
               cycle
               clickable
               data={innerData}
@@ -62,7 +62,7 @@ const SelectorScreen: React.FC<Props> = props => {
           </Profiler>
         </View>
         <View className="w-20">
-          <Selector
+          <Picker
             clickable
             data={data}
             initialIndex={6}
@@ -72,7 +72,7 @@ const SelectorScreen: React.FC<Props> = props => {
           />
         </View>
         <View className="w-20">
-          <Selector
+          <Picker
             cycle
             clickable
             data={data}

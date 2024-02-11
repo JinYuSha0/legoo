@@ -6,13 +6,13 @@ export type IItem<T = any> = {
   value: T;
 };
 
-export interface ISelectorProps<T = any> {
+export interface IPickerProps<T = any> {
   /**
    * Data array
    */
   data: IItem<T>[];
   /**
-   * Selector height
+   * Picker height
    * default: true
    */
   height: number;
