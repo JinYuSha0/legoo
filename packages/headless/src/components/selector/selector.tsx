@@ -39,18 +39,18 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     renderThreshold,
     debug = false,
     maxVelocity = Number.MAX_SAFE_INTEGER,
+    velocityYClickThreshould = Platform.select({
+      ios: 10,
+      android: 50,
+    }),
     ItemComponent = DefaultItemComponent,
     IndicatorComponent = DefaultIndicatorComponent,
     keyExtractor,
     onChange,
   } = props;
   const dataUpdateCount = useRef(0);
-  const velocityYThreshould = useRef(
-    Platform.select({
-      ios: 10,
-      android: 50,
-    }),
-  );
+  const animationRunning = useSharedValue(0);
+  const animationEndReset = useSharedValue(0);
   const len = useMemo(() => data.length, [data.length]);
   const _initialIndex = useMemo(() => {
     if (initialIndex >= len || initialIndex < 0) {
@@ -245,6 +245,13 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
     return baseIdx;
   });
   const listReset = useEvent(() => {
+    if (animationRunning.value) {
+      console.warn(
+        'The animation is running, modifying data will be executed after the animation ends',
+      );
+      animationEndReset.value = 1;
+      return;
+    }
     dataUpdateCount.current += 1;
     let offsetY = offset.value;
     if (!cycle && offset.value < clamp.min) {
@@ -271,6 +278,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
   }));
   const pan = Gesture.Pan()
     .onBegin(event => {
+      animationRunning.value = 1;
       panBeginTime.value = performance.now();
     })
     .onChange(event => {
@@ -284,7 +292,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
       if (
         clickable &&
         duration <= 150 &&
-        Math.abs(event.velocityY) < velocityYThreshould.current
+        Math.abs(event.velocityY) < velocityYClickThreshould
       ) {
         // If duration less than 150ms, judged as a click event.
         expectedOffsetIdx = -Math.round(
@@ -319,13 +327,18 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, ISelectorProps> = (
           damping: 100,
         },
         finished => {
-          if (finished && onChange) {
-            if (finalizeIdx === null) {
-              finalizeIdx = (expectedOffsetIdx - _initialIndex) % len;
-              finalizeIdx =
-                finalizeIdx > 0 ? len - finalizeIdx : Math.abs(finalizeIdx);
+          if (finished) {
+            if (onChange) {
+              if (finalizeIdx === null) {
+                finalizeIdx = (expectedOffsetIdx - _initialIndex) % len;
+                finalizeIdx =
+                  finalizeIdx > 0 ? len - finalizeIdx : Math.abs(finalizeIdx);
+              }
+              runOnJS(onChange)(data[finalizeIdx].value, finalizeIdx);
             }
-            runOnJS(onChange)(data[finalizeIdx].value, finalizeIdx);
+            if (animationEndReset.value) runOnJS(listReset)();
+            animationRunning.value = 0;
+            animationEndReset.value = 0;
           }
         },
       );

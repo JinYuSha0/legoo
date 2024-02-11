@@ -65,6 +65,12 @@ export interface ISelectorProps<T = any> {
    */
   maxVelocity?: number;
   /**
+   * If the velocityY is less than this value,
+   * it is judged as a click event,
+   * which may be different for each model.
+   */
+  velocityYClickThreshould?: number;
+  /**
    * Item component
    * it is recommended to use the React.memo package to improve performance
    */
@@ -73,6 +79,13 @@ export interface ISelectorProps<T = any> {
    * Indicator Component
    */
   IndicatorComponent?: (props: IIndicatorProps) => React.ReactNode;
+  /**
+   * Generate a unique key for the item
+   * value: value of item
+   * index: index of item
+   * direction: -1(the top half) 1(the bottom half)
+   * dataUpdateCount: Count of data updates
+   */
   keyExtractor?: (
     value: T,
     index: number,
