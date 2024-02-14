@@ -56,7 +56,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     }
     return initialIndex;
   }, [initialIndex, len]);
-  const prevIndex = useSharedValue(_initialIndex);
+  const preValue = useSharedValue(data[_initialIndex].value);
   const visibleItemCount = useMemo(
     () => Math.floor(height / itemHeight),
     [height, itemHeight],
@@ -145,7 +145,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
 
       const result: WrapItem[] = [];
       const [_, map] = cycliData;
-      const baseNode = map.get(baseIndex) ?? map.get(len - 1);
+      const baseNode = map.get(baseIndex);
 
       const topVisibleCount = Math.floor(visibleItemCount / 2);
       const topLen = _extraRenderItem + topVisibleCount;
@@ -242,6 +242,11 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
 
     return baseIdx;
   });
+  const _onChange = useEvent((value: any, index: number) => {
+    if (preValue.value === value) return;
+    onChange?.(value, index);
+    preValue.value = value;
+  });
   const listReset = useEvent(() => {
     let offsetY = offset.value;
     if (!cycle && offset.value < clamp.min) {
@@ -249,9 +254,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
       offsetY = clamp.min;
     }
     const baseIdx = lazyRender(offsetY, true);
-    // if (data[baseIdx] && data[prevIndex.value] !== data[baseIdx]) {
-    //   onChange?.(data[baseIdx].value, baseIdx);
-    // }
+    if (data[baseIdx]) _onChange(data[baseIdx].value, baseIdx);
   });
   const _keyExtractor = useCallback(
     (item: WrapItem, index: number) => {
@@ -317,12 +320,20 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
         finalizeIdx =
           finalizeIdx > 0 ? len - finalizeIdx : Math.abs(finalizeIdx);
       }
-      prevIndex.value = finalizeIdx;
-      if (onChange) runOnJS(onChange)(data[finalizeIdx].value, finalizeIdx);
-      offset.value = withSpring(expectedRechedOffset, {
-        velocity: event.velocityY,
-        damping: 100,
-      });
+      if (Math.abs(event.velocityY) < 100)
+        runOnJS(_onChange)(data[finalizeIdx].value, finalizeIdx);
+      offset.value = withSpring(
+        expectedRechedOffset,
+        {
+          velocity: event.velocityY,
+          damping: 100,
+        },
+        finished => {
+          if (finished && Math.abs(event.velocityY) >= 100) {
+            runOnJS(_onChange)(data[finalizeIdx].value, finalizeIdx);
+          }
+        },
+      );
     });
   useEffect(() => {
     const id = 1;
