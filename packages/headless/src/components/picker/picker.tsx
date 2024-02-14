@@ -145,7 +145,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
 
       const result: WrapItem[] = [];
       const [_, map] = cycliData;
-      const baseNode = map.get(baseIndex);
+      const baseNode = map.get(baseIndex) ?? map.get(len - 1);
 
       const topVisibleCount = Math.floor(visibleItemCount / 2);
       const topLen = _extraRenderItem + topVisibleCount;
@@ -196,7 +196,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
 
       return result;
     },
-    [cycliData, _extraRenderItem, debug],
+    [len, cycliData, _extraRenderItem, debug],
   );
   const initialData = useMemo(
     () => generateRenderList(_initialIndex, renderRange.current, true),
@@ -260,6 +260,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     (item: WrapItem, index: number) => {
       if (keyExtractor)
         return keyExtractor(item.wrapped.value, index, item.direction);
+      if (!cycle) return `${item.wrapped.value}`;
       if (len <= visibleItemCount + 2 * _extraRenderItem) {
         return `${item.wrapped.value}_${index}`;
       }
@@ -294,7 +295,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
           (event.y - containerHeight / 2) / itemHeight,
         );
       } else {
-        // velocityY less than 100, judged as a slow drag event.
+        // velocityY less than 100, judged as a slow scroll event.
         // velocityY more than 100, judged as fast scroll event
         const maxAbsVelocity = Math.min(Math.abs(event.velocityY), maxVelocity);
         const velocity = event.velocityY < 0 ? -maxAbsVelocity : maxAbsVelocity;
@@ -320,6 +321,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
         finalizeIdx =
           finalizeIdx > 0 ? len - finalizeIdx : Math.abs(finalizeIdx);
       }
+      // slow scroll trigger onChange immediately
       if (Math.abs(event.velocityY) < 100)
         runOnJS(_onChange)(data[finalizeIdx].value, finalizeIdx);
       offset.value = withSpring(
@@ -329,6 +331,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
           damping: 100,
         },
         finished => {
+          // fast scroll trigger onChange when animtion end
           if (finished && Math.abs(event.velocityY) >= 100) {
             runOnJS(_onChange)(data[finalizeIdx].value, finalizeIdx);
           }
