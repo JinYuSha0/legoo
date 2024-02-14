@@ -86,12 +86,7 @@ export interface IPickerProps<T = any> {
    * direction: -1(the top half) 1(the bottom half)
    * dataUpdateCount: Count of data updates
    */
-  keyExtractor?: (
-    value: T,
-    index: number,
-    direction: -1 | 1,
-    dataUpdateCount: number,
-  ) => string;
+  keyExtractor?: (value: T, index: number, direction: -1 | 1) => string;
   /**
    * A callback triggered when the selection changes.
    * the first parameter is the selected value,

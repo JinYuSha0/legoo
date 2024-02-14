@@ -9,8 +9,8 @@ type Stack = ReturnType<typeof createNativeStackNavigator>;
 export type IScreenProps = React.ComponentProps<Stack['Screen']>;
 
 export type IPortalPushParams<T = any, P = {}> = Omit<
-  Omit<Omit<IScreenProps, 'component'>, 'initialParams'>,
-  'name'
+  IScreenProps,
+  'component' | 'initialParams' | 'name'
 > & {
   name?: string;
   initialParams?: Partial<P>;

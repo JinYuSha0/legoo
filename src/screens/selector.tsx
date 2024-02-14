@@ -1,7 +1,7 @@
 import type {RootStackParamList} from '@/navigation/rootStack';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Text, View} from 'react-native';
-import {Picker, Layout, Button} from '@legoo/headless';
+import {Picker, DatePicker, Layout, Button} from '@legoo/headless';
 import {useEvent} from '@legoo/hooks';
 import {ScreenNames} from '@helper/sceenNames';
 import React, {Profiler, memo, useEffect, useRef, useState} from 'react';
@@ -15,7 +15,7 @@ const data = Array.from({length: 1000})
     value: idx + 1,
   }));
 
-const SelectorScreen: React.FC<Props> = props => {
+const WheelPicker: React.FC<{}> = props => {
   const time = useRef(performance.now());
   const [innerData, setInnerData] = useState(data);
   const [result, setResult] = useState('');
@@ -36,8 +36,8 @@ const SelectorScreen: React.FC<Props> = props => {
     console.log('Enter page speed time:', performance.now() - time.current);
   }, []);
   return (
-    <Layout bottomOffset={20}>
-      <View className="flex-row">
+    <View>
+      <View className="flex-row justify-center">
         <View className="w-20">
           <Profiler
             id="selector1"
@@ -85,6 +85,15 @@ const SelectorScreen: React.FC<Props> = props => {
       </View>
       <Button onPress={onPress}>reduce array</Button>
       <Text>{result}</Text>
+    </View>
+  );
+};
+
+const SelectorScreen: React.FC<Props> = props => {
+  return (
+    <Layout bottomOffset={20}>
+      <DatePicker mode="date" height={200} onChange={date => {}} />
+      {/* <WheelPicker /> */}
     </Layout>
   );
 };

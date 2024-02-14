@@ -50,3 +50,4 @@ export {
   default as AlertDialog,
 } from './components/alertDialog/alertDialog';
 export * from './components/picker/index';
+export * from './components/datePicker/index';

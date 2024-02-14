@@ -23,7 +23,7 @@ import Reanimated, {
 import DefaultItemComponent from './item';
 import DefaultIndicatorComponent from './indicator';
 
-const Selector: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
+const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
   props,
   ref,
 ) => {
@@ -48,9 +48,6 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     keyExtractor,
     onChange,
   } = props;
-  const dataUpdateCount = useRef(0);
-  const animationRunning = useSharedValue(0);
-  const animationEndReset = useSharedValue(0);
   const len = useMemo(() => data.length, [data.length]);
   const _initialIndex = useMemo(() => {
     if (initialIndex >= len || initialIndex < 0) {
@@ -59,6 +56,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     }
     return initialIndex;
   }, [initialIndex, len]);
+  const prevIndex = useSharedValue(_initialIndex);
   const visibleItemCount = useMemo(
     () => Math.floor(height / itemHeight),
     [height, itemHeight],
@@ -147,7 +145,7 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
 
       const result: WrapItem[] = [];
       const [_, map] = cycliData;
-      const baseNode = map.get(baseIndex);
+      const baseNode = map.get(baseIndex) ?? map.get(len - 1);
 
       const topVisibleCount = Math.floor(visibleItemCount / 2);
       const topLen = _extraRenderItem + topVisibleCount;
@@ -245,32 +243,27 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     return baseIdx;
   });
   const listReset = useEvent(() => {
-    if (animationRunning.value) {
-      console.warn(
-        'The animation is running, modifying data will be executed after the animation ends',
-      );
-      animationEndReset.value = 1;
-      return;
-    }
-    dataUpdateCount.current += 1;
     let offsetY = offset.value;
     if (!cycle && offset.value < clamp.min) {
       offset.value = clamp.min;
       offsetY = clamp.min;
     }
     const baseIdx = lazyRender(offsetY, true);
-    onChange?.(data[baseIdx].value, baseIdx);
+    // if (data[baseIdx] && data[prevIndex.value] !== data[baseIdx]) {
+    //   onChange?.(data[baseIdx].value, baseIdx);
+    // }
   });
-  const _keyExtractor = useCallback((item: WrapItem, index: number) => {
-    if (keyExtractor)
-      return keyExtractor(
-        item.wrapped.value,
-        index,
-        item.direction,
-        dataUpdateCount.current,
-      );
-    return `${item.wrapped.value}_${item.direction}_${dataUpdateCount.current}`;
-  }, []);
+  const _keyExtractor = useCallback(
+    (item: WrapItem, index: number) => {
+      if (keyExtractor)
+        return keyExtractor(item.wrapped.value, index, item.direction);
+      if (len <= visibleItemCount + 2 * _extraRenderItem) {
+        return `${item.wrapped.value}_${index}`;
+      }
+      return `${item.wrapped.value}_${item.direction}`;
+    },
+    [len, visibleItemCount, _extraRenderItem],
+  );
   const panBeginTime = useSharedValue(-1);
   const offset = useSharedValue(initialOffsetY);
   const animatedStyles = useAnimatedStyle(() => ({
@@ -278,7 +271,6 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
   }));
   const pan = Gesture.Pan()
     .onBegin(event => {
-      animationRunning.value = 1;
       panBeginTime.value = performance.now();
     })
     .onChange(event => {
@@ -320,28 +312,17 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
           finalizeIdx = len - 1;
         }
       }
-      offset.value = withSpring(
-        expectedRechedOffset,
-        {
-          velocity: event.velocityY,
-          damping: 100,
-        },
-        finished => {
-          if (finished) {
-            if (onChange) {
-              if (finalizeIdx === null) {
-                finalizeIdx = (expectedOffsetIdx - _initialIndex) % len;
-                finalizeIdx =
-                  finalizeIdx > 0 ? len - finalizeIdx : Math.abs(finalizeIdx);
-              }
-              runOnJS(onChange)(data[finalizeIdx].value, finalizeIdx);
-            }
-            if (animationEndReset.value) runOnJS(listReset)();
-            animationRunning.value = 0;
-            animationEndReset.value = 0;
-          }
-        },
-      );
+      if (finalizeIdx === null) {
+        finalizeIdx = (expectedOffsetIdx - _initialIndex) % len;
+        finalizeIdx =
+          finalizeIdx > 0 ? len - finalizeIdx : Math.abs(finalizeIdx);
+      }
+      prevIndex.value = finalizeIdx;
+      if (onChange) runOnJS(onChange)(data[finalizeIdx].value, finalizeIdx);
+      offset.value = withSpring(expectedRechedOffset, {
+        velocity: event.velocityY,
+        damping: 100,
+      });
     });
   useEffect(() => {
     const id = 1;
@@ -419,4 +400,4 @@ const Selector: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
   );
 };
 
-export default memo(forwardRef(Selector));
+export default memo(forwardRef(Picker));
