@@ -10,12 +10,13 @@ export const DateTypeLevel: Record<DateType, number> = {
   year: 5,
 };
 
-interface BaseProps {
+export interface BaseProps {
   height?: number;
   mode?: 'date' | 'time' | 'year-month';
   initDate?: Date;
   pickerProps?: Omit<IPickerProps, 'data' | 'height' | 'onChange'>;
   columnsOrder?: DateType[];
+  formatter?: (value: string, type: DateType) => string;
 }
 
 export interface IDatePickerProps extends BaseProps {

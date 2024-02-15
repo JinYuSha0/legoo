@@ -1,7 +1,13 @@
 import type {RootStackParamList} from '@/navigation/rootStack';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Text, View} from 'react-native';
-import {Picker, DatePicker, Layout, Button} from '@legoo/headless';
+import {
+  type DateType,
+  Picker,
+  DatePicker,
+  Layout,
+  Button,
+} from '@legoo/headless';
 import {useEvent} from '@legoo/hooks';
 import {ScreenNames} from '@helper/sceenNames';
 import React, {Profiler, memo, useEffect, useRef, useState} from 'react';
@@ -90,6 +96,18 @@ const WheelPicker: React.FC<{}> = props => {
   );
 };
 
+function dateFormatter(value: string, type: DateType) {
+  switch (type) {
+    case 'year':
+      return `${value}年`;
+    case 'month':
+      return `${value}月`;
+    case 'day':
+      return `${value}日`;
+  }
+  return value;
+}
+
 const SelectorScreen: React.FC<Props> = props => {
   return (
     <Layout bottomOffset={20}>
@@ -97,6 +115,7 @@ const SelectorScreen: React.FC<Props> = props => {
         mode="date"
         initDate={new Date('1989-6-4')}
         columnsOrder={['year', 'month', 'day', 'hour', 'minute']}
+        formatter={dateFormatter}
         onChange={date => {
           console.log(date);
         }}

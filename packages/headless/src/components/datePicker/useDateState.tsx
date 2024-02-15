@@ -1,5 +1,6 @@
 import type {IItem} from '../picker/type';
 import {
+  BaseProps,
   IDateTimePickerProps,
   DateType,
   DateTypeLevel,
@@ -17,11 +18,16 @@ import {
 import {useEvent} from '@legoo/hooks';
 import React, {useCallback, useMemo, useState} from 'react';
 
-function generateOrderArray(max: number, offset: number = 0): IItem[] {
+function generateOrderArray(
+  max: number,
+  offset: number = 0,
+  type: DateType,
+  formatter: BaseProps['formatter'] = (value: string) => value,
+): IItem[] {
   return Array.from({length: max})
     .fill(undefined)
     .map((_, idx) => ({
-      label: paddingLeft(idx + offset, 2),
+      label: formatter(paddingLeft(idx + offset, 2), type),
       value: idx + offset,
     }));
 }
@@ -41,6 +47,7 @@ export function useDateState(props: IDateTimePickerProps) {
     mode,
     initDate,
     columnsOrder = ['day', 'month', 'year', 'hour', 'minute'],
+    formatter,
   } = props;
 
   const boundary = useMemo(() => {
@@ -84,60 +91,75 @@ export function useDateState(props: IDateTimePickerProps) {
         let monthArr: IItem[], dayArr: IItem[];
         if (year === minYear) {
           if (type > DateTypeLevel['month'])
-            monthArr = generateOrderArray(minMonth, 1);
+            monthArr = generateOrderArray(minMonth, 1, 'month', formatter);
           if (
             mode === 'date' &&
             type > DateTypeLevel['day'] &&
             judgePropertyInArrary('month', monthArr, dateProperty)
           ) {
             if (month === minMonth) {
-              dayArr = generateOrderArray(minDay, 1);
+              dayArr = generateOrderArray(minDay, 1, 'day', formatter);
             } else {
               dayArr = generateOrderArray(
                 getDaysInMonth(`${year}-${month}`),
                 1,
+                'day',
+                formatter,
               );
             }
           }
         } else if (year === maxYear) {
           if (type > DateTypeLevel['month'])
-            monthArr = generateOrderArray(maxMonth, 1);
+            monthArr = generateOrderArray(maxMonth, 1, 'month', formatter);
           if (
             mode === 'date' &&
             type > DateTypeLevel['day'] &&
             judgePropertyInArrary('month', monthArr, dateProperty)
           ) {
             if (month === maxMonth) {
-              dayArr = generateOrderArray(maxDay, 1);
+              dayArr = generateOrderArray(maxDay, 1, 'day', formatter);
             } else {
               dayArr = generateOrderArray(
                 getDaysInMonth(`${year}-${month}`),
                 1,
+                'day',
+                formatter,
               );
             }
           }
         } else {
           if (type > DateTypeLevel['month'])
-            monthArr = generateOrderArray(12, 1);
+            monthArr = generateOrderArray(12, 1, 'month', formatter);
           if (
             mode === 'date' &&
             type > DateTypeLevel['day'] &&
             judgePropertyInArrary('month', monthArr, dateProperty)
           )
-            dayArr = generateOrderArray(getDaysInMonth(`${year}-${month}`), 1);
+            dayArr = generateOrderArray(
+              getDaysInMonth(`${year}-${month}`),
+              1,
+              'day',
+              formatter,
+            );
         }
         return {
           day: dayArr,
           month: monthArr,
           year:
             type > DateTypeLevel['year']
-              ? generateOrderArray(maxYear - minYear, minYear + 1).reverse()
+              ? generateOrderArray(
+                  maxYear - minYear,
+                  minYear + 1,
+                  'year',
+                  formatter,
+                ).reverse()
               : undefined,
         };
       } else if (mode === 'time') {
         return {
-          hour: props.hourArray ?? generateOrderArray(24),
-          minute: props.minuteArray ?? generateOrderArray(60),
+          hour: props.hourArray ?? generateOrderArray(24, 0, 'hour', formatter),
+          minute:
+            props.minuteArray ?? generateOrderArray(60, 0, 'minute', formatter),
         };
       }
     },
