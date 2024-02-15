@@ -99,7 +99,6 @@ const SelectorScreen: React.FC<Props> = props => {
         onChange={date => {
           console.log(date);
         }}
-        pickerProps={{}}
       />
       {/* <WheelPicker /> */}
     </Layout>

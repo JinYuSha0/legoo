@@ -34,8 +34,8 @@ export interface ITimePickerProps extends BaseProps {
 
 export interface IYearMonthPickerProps extends BaseProps {
   mode: 'year-month';
-  monthArray?: IItem[];
-  yearArray?: IItem[];
+  minimumDate?: Date;
+  maximumDate?: Date;
   onChange?: (time: string) => void;
 }
 

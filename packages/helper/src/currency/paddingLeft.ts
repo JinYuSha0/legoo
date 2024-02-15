@@ -4,8 +4,8 @@ export function paddingLeft(
   value: string | number,
   padding: number = 3,
   fill: string = '0',
-) {
-  if (isEmpty(value)) return value;
+): string {
+  if (isEmpty(value)) return `${value}`;
   let newValue = `${+value}`;
   const l = newValue.length;
   if (l < padding) {

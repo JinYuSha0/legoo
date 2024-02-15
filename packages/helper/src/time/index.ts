@@ -1,25 +1,29 @@
 import dayjs, {type ManipulateType} from 'dayjs';
 
 export function getCurrYear() {
-  return dayjs().year();
+  return new Date().getFullYear();
 }
 
 export function getCurrMonth() {
-  return dayjs().month() + 1;
+  return new Date().getMonth() + 1;
 }
 
 export function getCurrDay() {
-  return dayjs().date();
+  return new Date().getDate();
+}
+
+export function getToday() {
+  const {year, month, day} = getDateInfo(new Date());
+  return new Date(`${year}-${month}-${day}`);
 }
 
 export function getDateInfo(date: Date) {
-  const _date = dayjs(date);
   return {
-    year: _date.year(),
-    month: _date.month() + 1,
-    day: _date.date(),
-    hour: _date.hour(),
-    minute: _date.minute(),
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+    hour: date.getHours(),
+    minute: date.getMinutes(),
   };
 }
 

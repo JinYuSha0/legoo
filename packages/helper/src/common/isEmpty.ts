@@ -11,5 +11,5 @@ export function isEmpty(value: any) {
   if (isPlainObject(value)) {
     return !Object.keys(value).length;
   }
-  return true;
+  return false;
 }
