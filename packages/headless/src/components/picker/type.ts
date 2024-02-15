@@ -15,7 +15,7 @@ export interface IPickerProps<T = any> {
    * Picker height
    * default: true
    */
-  height: number;
+  height?: number;
   /**
    * Whether the rendering list is cycle
    */
@@ -59,6 +59,10 @@ export interface IPickerProps<T = any> {
    */
   debug?: boolean;
   /**
+   * Disable pan gestures
+   */
+  disabled?: boolean;
+  /**
    * Maximum scroll velocity
    * if the velocity is too high, it will easily cause a white screen.
    * limit the velocity to reduce unnecessary rendering.
@@ -93,7 +97,16 @@ export interface IPickerProps<T = any> {
    * and the second parameter is the index of the selection in the data array.
    */
   onChange?: (value: T, index: number) => void;
+  /**
+   * Callback triggered by picker state changes.
+   * begin: Animation begin
+   * running: Animation running
+   * finished: Animation finished
+   */
+  onStatusChange?: (status: PickerStatus) => void;
 }
+
+export type PickerStatus = 'begin' | 'running' | 'finished';
 
 export type WrapItem = {
   top: number;

@@ -95,7 +95,8 @@ const SelectorScreen: React.FC<Props> = props => {
     <Layout bottomOffset={20}>
       <DatePicker
         mode="date"
-        height={200}
+        initDate={new Date('1989-6-4')}
+        columnsOrder={['year', 'month', 'day', 'hour', 'minute']}
         onChange={date => {
           console.log(date);
         }}

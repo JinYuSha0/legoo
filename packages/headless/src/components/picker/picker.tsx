@@ -1,6 +1,6 @@
-import type {IPickerProps, WrapItem} from './type';
+import type {IPickerProps, PickerStatus, WrapItem} from './type';
 import {Platform, View} from 'react-native';
-import {isNil, last, DoubleLinkList} from '@legoo/helper';
+import {isNil, last, DoubleLinkList, serial} from '@legoo/helper';
 import {useEvent, useNextEffect} from '@legoo/hooks';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import React, {
@@ -29,15 +29,16 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
 ) => {
   const {
     data,
-    height,
     cycle = false,
     clickable = false,
     initialIndex = 0,
-    itemHeight = 30,
+    height = 210,
+    itemHeight = 42,
     containerHeight = 10000 * itemHeight,
     extraRenderItem,
     renderThreshold,
     debug = false,
+    disabled = false,
     maxVelocity = Number.MAX_SAFE_INTEGER,
     velocityYClickThreshould = Platform.select({
       ios: 10,
@@ -47,7 +48,10 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     IndicatorComponent = DefaultIndicatorComponent,
     keyExtractor,
     onChange,
+    onStatusChange,
   } = props;
+  const innerStatusRef = useRef<PickerStatus>('finished');
+  const animtionFinishedQuene = useRef<Function[]>([]);
   const len = useMemo(() => data.length, [data.length]);
   const _initialIndex = useMemo(() => {
     if (initialIndex >= len || initialIndex < 0) {
@@ -57,6 +61,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     return initialIndex;
   }, [initialIndex, len]);
   const preValue = useSharedValue(data[_initialIndex].value);
+  const panBeginTime = useSharedValue(-1);
   const visibleItemCount = useMemo(
     () => Math.floor(height / itemHeight),
     [height, itemHeight],
@@ -145,7 +150,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
 
       const result: WrapItem[] = [];
       const [_, map] = cycliData;
-      const baseNode = map.get(baseIndex) ?? map.get(len - 1);
+      const baseNode = map.get(baseIndex);
 
       const topVisibleCount = Math.floor(visibleItemCount / 2);
       const topLen = _extraRenderItem + topVisibleCount;
@@ -238,7 +243,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     renderRange.current = computeRenderRange(offsetY);
     renderBoundary.current = computeRenderBoundray(offsetY);
 
-    setInnerData(generateRenderList(baseIdx, renderRange.current));
+    setInnerData(generateRenderList(Math.round(baseIdx), renderRange.current));
 
     return baseIdx;
   });
@@ -248,6 +253,11 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     preValue.value = value;
   });
   const listReset = useEvent(() => {
+    // Prevent reset list while animation is in progress
+    if (innerStatusRef.current !== 'finished') {
+      animtionFinishedQuene.current.push(listReset);
+      return;
+    }
     let offsetY = offset.value;
     if (!cycle && offset.value < clamp.min) {
       offset.value = clamp.min;
@@ -255,6 +265,14 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     }
     const baseIdx = lazyRender(offsetY, true);
     if (data[baseIdx]) _onChange(data[baseIdx].value, baseIdx);
+  });
+  const _onStatusChange = useEvent(async (status: PickerStatus) => {
+    innerStatusRef.current = status;
+    onStatusChange?.(status);
+    if (status === 'finished') {
+      serial(...animtionFinishedQuene.current)();
+      animtionFinishedQuene.current = [];
+    }
   });
   const _keyExtractor = useCallback(
     (item: WrapItem, index: number) => {
@@ -268,19 +286,20 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     },
     [len, visibleItemCount, _extraRenderItem],
   );
-  const panBeginTime = useSharedValue(-1);
   const offset = useSharedValue(initialOffsetY);
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{translateY: offset.value}],
   }));
   const pan = Gesture.Pan()
     .onBegin(event => {
+      runOnJS(_onStatusChange)('begin');
       panBeginTime.value = performance.now();
     })
     .onChange(event => {
       offset.value += event.changeY;
     })
     .onFinalize(event => {
+      runOnJS(_onStatusChange)('running');
       const duration = performance.now() - panBeginTime.value;
       let expectedRechedOffset = offset.value;
       let expectedOffsetIdx = 0;
@@ -322,8 +341,10 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
           finalizeIdx > 0 ? len - finalizeIdx : Math.abs(finalizeIdx);
       }
       // slow scroll trigger onChange immediately
-      if (Math.abs(event.velocityY) < 100)
+      if (Math.abs(event.velocityY) < 100) {
         runOnJS(_onChange)(data[finalizeIdx].value, finalizeIdx);
+        runOnJS(_onStatusChange)('finished');
+      }
       offset.value = withSpring(
         expectedRechedOffset,
         {
@@ -334,6 +355,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
           // fast scroll trigger onChange when animtion end
           if (finished && Math.abs(event.velocityY) >= 100) {
             runOnJS(_onChange)(data[finalizeIdx].value, finalizeIdx);
+            runOnJS(_onStatusChange)('finished');
           }
         },
       );
@@ -365,7 +387,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
             height: visibleHeight,
             overflow: 'hidden',
           }}>
-          <GestureDetector gesture={pan}>
+          <GestureDetector gesture={!disabled ? pan : Gesture.Pan()}>
             <Reanimated.View ref={ref} style={[animatedStyles]}>
               <View
                 className="relative"
@@ -405,9 +427,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
           </GestureDetector>
         </View>
         <View className="absolute top-0 left-0 bottom-0 right-0 pointer-events-none">
-          <View className="flex flex-1 justify-center items-center z-10">
-            <IndicatorComponent itemHeight={itemHeight} />
-          </View>
+          <IndicatorComponent itemHeight={itemHeight} />
         </View>
       </View>
     </View>

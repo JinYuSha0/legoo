@@ -11,7 +11,7 @@ export const DateTypeLevel: Record<DateType, number> = {
 };
 
 interface BaseProps {
-  height: number;
+  height?: number;
   mode?: 'date' | 'time' | 'year-month';
   initDate?: Date;
   pickerProps?: Omit<IPickerProps, 'data' | 'height' | 'onChange'>;
@@ -48,5 +48,5 @@ export interface IColumnsCascade {
   name: DateType;
   list: IItem[];
   maxVelocity?: number;
-  onChange?: (value: number) => void;
+  onChange: (value: number) => void;
 }

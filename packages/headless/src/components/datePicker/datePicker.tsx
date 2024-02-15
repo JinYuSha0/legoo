@@ -9,6 +9,7 @@ import React, {
   memo,
   useEffect,
 } from 'react';
+import clsx from 'clsx';
 
 const DatePicker: ForwardRefRenderFunction<View, IDateTimePickerProps> = (
   props,
@@ -25,7 +26,9 @@ const DatePicker: ForwardRefRenderFunction<View, IDateTimePickerProps> = (
   return (
     <View className="flex-row">
       {columns.map(col => (
-        <View key={col.name} className="w-20">
+        <View
+          key={col.name}
+          className={clsx(columns.length === 3 ? 'w-1/3' : 'w-1/2')}>
           <Picker
             {...pickerProps}
             initialIndex={initIndexes[col.name]}

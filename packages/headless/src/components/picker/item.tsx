@@ -19,7 +19,11 @@ const Item: React.FC<IItemProps> = props => {
         top: top,
         height: itemHeight,
       }}>
-      <Text className={clsx('text-foreground text-center', textClassName)}>
+      <Text
+        className={clsx(
+          'text-base text-foreground text-center',
+          textClassName,
+        )}>
         {label}
       </Text>
     </View>

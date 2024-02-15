@@ -13,13 +13,17 @@ const Indicator: ForwardRefRenderFunction<View, IIndicatorProps> = (
 ) => {
   const {itemHeight, className} = props;
   return (
-    <View
-      ref={ref}
-      className={clsx('w-full border-t border-b border-foreground', className)}
-      style={{
-        height: itemHeight,
-      }}
-    />
+    <View className="flex flex-1 flex-col z-10">
+      <View className="flex flex-1 bg-background/70" />
+      <View
+        ref={ref}
+        className={clsx('w-full border-t border-b border-border', className)}
+        style={{
+          height: itemHeight,
+        }}
+      />
+      <View className="flex flex-1 bg-background/70" />
+    </View>
   );
 };
 
