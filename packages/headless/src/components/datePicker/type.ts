@@ -22,21 +22,21 @@ export interface IDatePickerProps extends BaseProps {
   mode: 'date';
   minimumDate?: Date;
   maximumDate?: Date;
-  onChange: (date: Date) => void;
+  onChange?: (date: Date) => void;
 }
 
 export interface ITimePickerProps extends BaseProps {
   mode: 'time';
   hourArray?: IItem[];
   minuteArray?: IItem[];
-  onChange: (time: string) => void;
+  onChange?: (time: string) => void;
 }
 
 export interface IYearMonthPickerProps extends BaseProps {
   mode: 'year-month';
   monthArray?: IItem[];
   yearArray?: IItem[];
-  onChange: (time: string) => void;
+  onChange?: (time: string) => void;
 }
 
 export type IDateTimePickerProps =
@@ -47,5 +47,6 @@ export type IDateTimePickerProps =
 export interface IColumnsCascade {
   name: DateType;
   list: IItem[];
+  maxVelocity?: number;
   onChange?: (value: number) => void;
 }

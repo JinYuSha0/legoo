@@ -20,6 +20,7 @@
   "dependencies": {
     "@legoo/helper": "workspace:*",
     "@legoo/hooks": "workspace:*",
+    "@legoo/treasure-chest": "workspace:*",
     "@gorhom/bottom-sheet": "^4.6.0",
     "@react-navigation/native": "^6.1.9",
     "clsx": "^2.1.0",

@@ -30,6 +30,7 @@ const WheelPicker: React.FC<{}> = props => {
     );
   });
   const onChange = useEvent((value, idx) => {
+    console.log(value);
     setResult(`${value},${idx}`);
   });
   useEffect(() => {
@@ -92,7 +93,14 @@ const WheelPicker: React.FC<{}> = props => {
 const SelectorScreen: React.FC<Props> = props => {
   return (
     <Layout bottomOffset={20}>
-      <DatePicker mode="date" height={200} onChange={date => {}} />
+      <DatePicker
+        mode="date"
+        height={200}
+        onChange={date => {
+          console.log(date);
+        }}
+        pickerProps={{}}
+      />
       {/* <WheelPicker /> */}
     </Layout>
   );

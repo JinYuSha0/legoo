@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -221,6 +225,9 @@ importers:
       '@legoo/hooks':
         specifier: workspace:*
         version: link:../hooks
+      '@legoo/treasure-chest':
+        specifier: workspace:*
+        version: link:../treasure-chest
       '@react-navigation/native':
         specifier: ^6.1.9
         version: 6.1.9(react-native@0.73.2)(react@18.2.0)
@@ -2518,6 +2525,7 @@ packages:
       '@helux/utils': 4.2.5
       limu: 3.12.3
     dev: false
+    bundledDependencies: false
 
   /@helux/hooks-impl@4.2.5:
     resolution: {integrity: sha512-0KFPm9WTtcu8Snz3sWonAi/djo5q8bfWLzt3bVaO34ASPRnmBDM+80t0kgfIYZQqWs0YcvSH4AlkOitNAqyHew==}
@@ -2525,16 +2533,19 @@ packages:
       '@helux/types': 4.2.5
       '@helux/utils': 4.2.5
     dev: false
+    bundledDependencies: false
 
   /@helux/types@4.2.5:
     resolution: {integrity: sha512-98u4MKZYGj4HHAgdksWKIHuzlStbI0EYk4aShx2vCdRfPF29MKWkP+suMA7faZAcJ0oEvdrD1I5Vpk8AalKyCg==}
     dev: false
+    bundledDependencies: false
 
   /@helux/utils@4.2.5:
     resolution: {integrity: sha512-YqD3X4AG9JOVWYFHJ1XDlc/LlezwZu2yS6x9rWPtS152QqKjghDX0LEO7gcv9Toz63cI3TM3j3nQqaKkD3E9EQ==}
     dependencies:
       '@helux/types': 4.2.5
     dev: false
+    bundledDependencies: false
 
   /@humanwhocodes/config-array@0.11.14:
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -10151,6 +10162,7 @@ packages:
       '@helux/core': 4.2.5
       react: 18.2.0
     dev: false
+    bundledDependencies: false
 
   /hermes-estree@0.15.0:
     resolution: {integrity: sha512-lLYvAd+6BnOqWdnNbP/Q8xfl8LOGw4wVjfrNd9Gt8eoFzhNBRVD95n4l2ksfMVOoxuVyegs85g83KS9QOsxbVQ==}
@@ -18200,7 +18212,6 @@ packages:
     resolution: {directory: packages/nativewind/packages/nativewind, type: directory}
     id: file:packages/nativewind/packages/nativewind
     name: nativewind
-    version: 4.0.22
     engines: {node: '>=16'}
     peerDependencies:
       tailwindcss: '>3.3.0'
@@ -18212,7 +18223,6 @@ packages:
     resolution: {directory: packages/nativewind/packages/react-native-css-interop, type: directory}
     id: file:packages/nativewind/packages/react-native-css-interop
     name: react-native-css-interop
-    version: 0.0.21
     engines: {node: '>=16'}
     peerDependencies:
       react: '>=18'
@@ -18242,7 +18252,3 @@ packages:
       - '@babel/core'
       - supports-color
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false

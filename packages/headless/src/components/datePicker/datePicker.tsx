@@ -2,6 +2,7 @@ import type {IDateTimePickerProps} from './type';
 import {View} from 'react-native';
 import {useDateState} from './useDateState';
 import {Picker} from '../picker';
+import {isNil} from '@legoo/helper';
 import React, {
   type ForwardRefRenderFunction,
   forwardRef,
@@ -15,9 +16,11 @@ const DatePicker: ForwardRefRenderFunction<View, IDateTimePickerProps> = (
 ) => {
   const {height, pickerProps, onChange} = props;
   const {cycle, clickable} = pickerProps ?? {};
-  const {columns, result, initDateProperty} = useDateState(props);
+  const {columns, result, initIndexes} = useDateState(props);
   useEffect(() => {
-    onChange(result as any);
+    if (!isNil(result) && onChange) {
+      onChange(result as any);
+    }
   }, [result]);
   return (
     <View className="flex-row">
@@ -25,13 +28,12 @@ const DatePicker: ForwardRefRenderFunction<View, IDateTimePickerProps> = (
         <View key={col.name} className="w-20">
           <Picker
             {...pickerProps}
-            initialIndex={
-              col.name === 'year' ? 0 : initDateProperty[col.name] - 1
-            }
+            initialIndex={initIndexes[col.name]}
+            height={height}
             cycle={cycle ?? true}
             clickable={clickable ?? true}
             data={col.list}
-            height={height}
+            maxVelocity={col.maxVelocity}
             onChange={col.onChange}
           />
         </View>

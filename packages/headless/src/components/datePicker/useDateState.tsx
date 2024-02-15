@@ -5,7 +5,7 @@ import {
   DateTypeLevel,
   IColumnsCascade,
 } from './type';
-import {isNil, removeNilField} from '@legoo/helper';
+import {isNil, nextTick, removeNilField} from '@legoo/helper';
 import {dateSub, getDateInfo, getDaysInMonth} from '@legoo/helper';
 import {useEvent} from '@legoo/hooks';
 import React, {useCallback, useMemo, useState} from 'react';
@@ -19,6 +19,16 @@ function generateOrderArray(max: number, offset: number = 0): IItem[] {
     }));
 }
 
+function judgePropertyInArrary(
+  type: DateType,
+  arr: IItem[] | undefined,
+  dateProperty?: Record<DateType, number>,
+) {
+  if (isNil(dateProperty) || isNil(arr)) return true;
+  const value = dateProperty[type];
+  return arr.findIndex(ele => ele.value === value) > -1;
+}
+
 export function useDateState(props: IDateTimePickerProps) {
   const {
     mode,
@@ -27,9 +37,13 @@ export function useDateState(props: IDateTimePickerProps) {
   } = props;
 
   const generateDateRecord = useCallback<
-    (currDate: Date, type?: number) => Partial<Record<DateType, IItem[]>>
+    (
+      currDate: Date,
+      type?: number,
+      dateProperty?: Record<DateType, number>,
+    ) => Partial<Record<DateType, IItem[]>>
   >(
-    (currDate: Date, type: number = Number.MAX_SAFE_INTEGER) => {
+    (currDate, type = Number.MAX_SAFE_INTEGER, dateProperty) => {
       if (mode === 'date') {
         const {
           minimumDate = dateSub(undefined, 100, 'y'),
@@ -48,11 +62,14 @@ export function useDateState(props: IDateTimePickerProps) {
           year: minYear,
         } = getDateInfo(minimumDate);
         const {month, year} = getDateInfo(currDate);
-        let monthArr, dayArr;
+        let monthArr: IItem[], dayArr: IItem[];
         if (year === minYear) {
           if (type > DateTypeLevel['month'])
             monthArr = generateOrderArray(minMonth, 1);
-          if (type > DateTypeLevel['day']) {
+          if (
+            type > DateTypeLevel['day'] &&
+            judgePropertyInArrary('month', monthArr, dateProperty)
+          ) {
             if (month === minMonth) {
               dayArr = generateOrderArray(minDay, 1);
             } else {
@@ -65,7 +82,10 @@ export function useDateState(props: IDateTimePickerProps) {
         } else if (year === maxYear) {
           if (type > DateTypeLevel['month'])
             monthArr = generateOrderArray(maxMonth, 1);
-          if (type > DateTypeLevel['day']) {
+          if (
+            type > DateTypeLevel['day'] &&
+            judgePropertyInArrary('month', monthArr, dateProperty)
+          ) {
             if (month === maxMonth) {
               dayArr = generateOrderArray(maxDay, 1);
             } else {
@@ -78,7 +98,10 @@ export function useDateState(props: IDateTimePickerProps) {
         } else {
           if (type > DateTypeLevel['month'])
             monthArr = generateOrderArray(12, 1);
-          if (type > DateTypeLevel['day'])
+          if (
+            type > DateTypeLevel['day'] &&
+            judgePropertyInArrary('month', monthArr, dateProperty)
+          )
             dayArr = generateOrderArray(getDaysInMonth(`${year}-${month}`), 1);
         }
         return {
@@ -107,9 +130,12 @@ export function useDateState(props: IDateTimePickerProps) {
   );
 
   const datePropertyToDate = useEvent(
-    (dateProperty: Record<DateType, number>) => {
+    (dateProperty: Record<DateType, number>, hasDay: boolean = true) => {
       const {year, month, day} = dateProperty;
-      return new Date(`${year}-${month}-${day}`);
+      if (hasDay) {
+        return new Date(`${year}-${month}-${day}`);
+      }
+      return new Date(`${year}-${month}`);
     },
   );
 
@@ -124,23 +150,39 @@ export function useDateState(props: IDateTimePickerProps) {
     [_initDate, generateDateRecord],
   );
 
+  const initIndexes = useMemo<Record<DateType, number>>(() => {
+    return {
+      year: initDateRecord.year.findIndex(
+        item => item.value === initDateProperty.year,
+      ),
+      month: initDateProperty.month - 1,
+      day: initDateProperty.day - 1,
+      hour: initDateProperty.hour - 1,
+      minute: initDateProperty.minute - 1,
+    };
+  }, [initDateProperty, initDateRecord]);
+
   const [dateProperty, setDateProperty] =
     useState<Record<DateType, number>>(initDateProperty);
 
   const [dateRecord, setDateRecord] = useState(initDateRecord);
 
-  const onColumnChange = useEvent((type: DateType, value: number) => {
-    const newDateProperty = {...dateProperty, [type]: value};
-    console.log('newDateProperty', type, newDateProperty);
+  const onColumnChange = useEvent(async (type: DateType, value: number) => {
+    let newDateProperty: Record<DateType, number>;
+    setDateProperty(prev => {
+      newDateProperty = {...prev, [type]: value};
+      return newDateProperty;
+    });
+    await nextTick();
     if (mode === 'date') {
-      const newDate = datePropertyToDate(newDateProperty);
-      console.log('newDate', newDate);
-      const record = generateDateRecord(newDate, DateTypeLevel[type]);
-      setDateRecord(prev => {
-        return {...prev, ...removeNilField(record)};
-      });
+      const newDate = datePropertyToDate(newDateProperty, false);
+      const record = generateDateRecord(
+        newDate,
+        DateTypeLevel[type],
+        newDateProperty,
+      );
+      setDateRecord(prev => ({...prev, ...removeNilField(record)}));
     }
-    setDateProperty(newDateProperty);
   });
 
   const columns = useMemo(() => {
@@ -151,6 +193,7 @@ export function useDateState(props: IDateTimePickerProps) {
       result[idx] = {
         name: key,
         list: dateRecord[key],
+        maxVelocity: dateRecord[key].length <= 31 ? 1600 : undefined,
         onChange: onColumnChange.bind(null, key),
       };
     });
@@ -172,6 +215,6 @@ export function useDateState(props: IDateTimePickerProps) {
   return {
     columns,
     result,
-    initDateProperty,
+    initIndexes,
   };
 }
