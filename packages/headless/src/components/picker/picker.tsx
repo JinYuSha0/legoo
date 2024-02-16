@@ -16,8 +16,8 @@ import React, {
 import Reanimated, {
   useAnimatedStyle,
   useSharedValue,
+  useAnimatedReaction,
   runOnJS,
-  runOnUI,
   withSpring,
 } from 'react-native-reanimated';
 import DefaultItemComponent from './item';
@@ -360,25 +360,20 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
         },
       );
     });
+  useAnimatedReaction(
+    () => offset.value,
+    (currentValue, previousValue) => {
+      runOnJS(lazyRender)(currentValue);
+    },
+  );
+  useNextEffect(listReset, [data]);
   useEffect(() => {
-    const id = 1;
     // Imporve first render time speend
     // reduce first render view count
     requestIdleCallback(() => {
       setInnerData(generateRenderList(_initialIndex, renderRange.current));
     });
-    runOnUI(() => {
-      offset.addListener(id, value => {
-        runOnJS(lazyRender)(value);
-      });
-    })();
-    return () => {
-      runOnUI(() => {
-        offset.removeListener(id);
-      })();
-    };
   }, []);
-  useNextEffect(listReset, [data]);
   return (
     <View style={{height, marginTop: excessHeight / 2}}>
       <View className="relative">
