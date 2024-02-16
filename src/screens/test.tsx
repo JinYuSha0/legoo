@@ -3,17 +3,32 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Text, View} from 'react-native';
 import {
   type IPortalScreenProps,
+  type DateType,
   Layout,
   Center,
   Input,
   Button,
   pushPortalScreen,
+  DatePicker,
 } from '@legoo/headless';
 import {AmountInput} from '@legoo/treasure-chest';
 import {ScreenNames} from '@helper/sceenNames';
 import React, {memo, useRef} from 'react';
+import BottomSheet from './bottomsheet';
 
 type Props = NativeStackScreenProps<RootStackParamList, ScreenNames.TEST>;
+
+function dateFormatter(value: string, type: DateType) {
+  switch (type) {
+    case 'year':
+      return `${value}年`;
+    case 'month':
+      return `${value}月`;
+    case 'day':
+      return `${value}日`;
+  }
+  return value;
+}
 
 function NonAnonymous(props: IPortalScreenProps<string, {msg: string}>) {
   const {
@@ -24,22 +39,22 @@ function NonAnonymous(props: IPortalScreenProps<string, {msg: string}>) {
   } = props;
   const resultRef = useRef(msg);
   return (
-    <View className="w-screen h-60 p-8 gap-y-2 bg-rose-300">
-      <Input placeholder="Please input" maxLength={30}>
-        {(props, ref) => (
-          <AmountInput
-            ref={ref}
-            defaultValue={msg}
-            decimal={2}
-            onChangeText={text => {
-              resultRef.current = text;
-            }}
-            {...props}
-          />
-        )}
-      </Input>
-      <Button onPress={() => future.resolve(resultRef.current)}>Ok</Button>
-    </View>
+    <BottomSheet
+      snapPoints={[400]}
+      onClose={() => future.reject('Portal screen closed by bottomsheet')}>
+      <View className="flex flex-col justify-between p-8 gap-y-8">
+        <DatePicker
+          mode="date"
+          initDate={new Date('1989-6-4')}
+          columnsOrder={['year', 'month', 'day', 'hour', 'minute']}
+          formatter={dateFormatter}
+          onChange={date => {
+            console.log(date);
+          }}
+        />
+        <Button onPress={() => future.resolve(resultRef.current)}>Ok</Button>
+      </View>
+    </BottomSheet>
   );
 }
 

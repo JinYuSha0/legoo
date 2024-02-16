@@ -51,3 +51,7 @@ export {
 } from './components/alertDialog/alertDialog';
 export * from './components/picker/index';
 export * from './components/datePicker/index';
+export {
+  type IBottomSheetProps,
+  default as BottomSheet,
+} from './components/bottomSheet/bottomSheet';
