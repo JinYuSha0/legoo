@@ -26,7 +26,7 @@ const Input: ForwardRefRenderFunction<any, IInputProps> = (props, ref) => {
   };
   if (children) {
     if (typeof children === 'function') return children(_props, ref);
-    return children;
+    if (React.isValidElement(children)) return children;
   }
   return <TextInput ref={ref} {..._props} />;
 };

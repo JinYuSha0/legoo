@@ -13,7 +13,7 @@ function logInfo(info: string) {
   console.log(Colors.cyan('info') + ' ' + info.toString());
 }
 
-function detectHasDevices() {
+function judgeHasDevices() {
   return new Promise<boolean>((res, rej) => {
     const cilld = exec('adb devices', (error, stdout, stderr) => {
       if (error) {
@@ -38,24 +38,28 @@ export default async function (ports: number[]) {
       logError(`${port} is not a valid port`);
     }
   });
-  const hasDevices = await detectHasDevices();
-  const command = validPorts
-    .map(
-      port =>
-        `adb ${
-          hasDevices ? '' : 'wait-for-device '
-        }reverse tcp:${port} tcp:${port}`,
-    )
-    .join(' && ');
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      logError(error);
-      return;
-    }
-    if (stderr) {
-      logError(stderr);
-      return;
-    }
-    logInfo(`port [${validPorts.join(', ')}] have been reverse`);
-  });
+  try {
+    const hasDevices = await judgeHasDevices();
+    const command = validPorts
+      .map(
+        port =>
+          `adb ${
+            hasDevices ? '' : 'wait-for-device '
+          }reverse tcp:${port} tcp:${port}`,
+      )
+      .join(' && ');
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        logError(error);
+        return;
+      }
+      if (stderr) {
+        logError(stderr);
+        return;
+      }
+      logInfo(`port [${validPorts.join(', ')}] have been reverse`);
+    });
+  } catch (error) {
+    logError(error);
+  }
 }

@@ -78,11 +78,11 @@ export interface IPickerProps<T = any> {
    * Item component
    * it is recommended to use the React.memo package to improve performance
    */
-  ItemComponent?: (props: IItemProps) => React.ReactNode;
+  ItemComponent?: React.ComponentType<IItemProps>;
   /**
    * Indicator Component
    */
-  IndicatorComponent?: (props: IIndicatorProps) => React.ReactNode;
+  IndicatorComponent?: React.ComponentType<IIndicatorProps>;
   /**
    * Generate a unique key for the item
    * value: value of item
