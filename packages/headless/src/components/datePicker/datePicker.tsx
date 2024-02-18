@@ -15,7 +15,7 @@ const DatePicker: ForwardRefRenderFunction<View, IDateTimePickerProps> = (
   props,
   ref,
 ) => {
-  const {height, pickerProps, onChange} = props;
+  const {height, pickerProps, className, onChange} = props;
   const {cycle, clickable} = pickerProps ?? {};
   const {columns, result, initIndexes} = useDateState(props);
   useEffect(() => {
@@ -24,7 +24,7 @@ const DatePicker: ForwardRefRenderFunction<View, IDateTimePickerProps> = (
     }
   }, [result]);
   return (
-    <View className="flex-row">
+    <View className={clsx('flex-row bg-background', className)}>
       {columns.map(col => (
         <View
           key={col.name}

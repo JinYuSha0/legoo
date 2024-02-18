@@ -16,6 +16,7 @@ export interface BaseProps {
   initDate?: Date;
   pickerProps?: Omit<IPickerProps, 'data' | 'height' | 'onChange'>;
   columnsOrder?: DateType[];
+  className?: string;
   formatter?: (value: string, type: DateType) => string;
 }
 
