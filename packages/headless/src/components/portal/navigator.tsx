@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {atom, useAtom} from 'helux';
 import {deferred, serial, randomStr, nextTick, noop} from '@legoo/helper';
 import {navigationRef} from '../provider/provider';
+import {PortalProvider} from './context';
 import React from 'react';
 import Portal from './portal';
 
@@ -29,6 +30,7 @@ export function pushPortalScreen<T = any, P = {}>(
     draft.set(name, {...portalPushParams, future});
   });
   function removeScreen() {
+    navigationRef.goBack();
     setScreens(draft => {
       draft.delete(name);
     });
@@ -53,18 +55,21 @@ export function withPortalStack(
           screenOptions={{
             presentation: 'transparentModal',
             headerShown: false,
-            animation: 'none',
+            animation: 'fade',
+            animationDuration: 0,
           }}>
           {Array.from(screens.values()).map(screen => {
             const {portal, future, onClose, ...rest} = screen;
             function TempScreen(props) {
               return (
-                <Portal future={future} {...portal}>
-                  {React.createElement(screen.component, {
-                    ...props,
-                    future,
-                  })}
-                </Portal>
+                <PortalProvider>
+                  <Portal future={future} {...portal}>
+                    {React.createElement(screen.component, {
+                      ...props,
+                      future,
+                    })}
+                  </Portal>
+                </PortalProvider>
               );
             }
             TempScreen.name = `Portal_${screen.name}`;

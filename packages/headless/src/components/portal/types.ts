@@ -27,3 +27,7 @@ export type IPortalScreenProps<
 export interface IPortalFeture<T = any> {
   future: Future<T>;
 }
+
+export interface Closeable {
+  close: (onAnimationEnd?: () => void) => void;
+}
