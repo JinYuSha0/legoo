@@ -10,6 +10,7 @@ import {
   Button,
   pushPortalScreen,
   DatePicker,
+  usePortalContext,
 } from '@legoo/headless';
 import {AmountInput} from '@legoo/treasure-chest';
 import {ScreenNames} from '@helper/sceenNames';
@@ -38,6 +39,7 @@ function NonAnonymous(props: IPortalScreenProps<string, {msg: string}>) {
     future,
   } = props;
   const resultRef = useRef(msg);
+  const {closeWithAnimation} = usePortalContext();
   return (
     <BottomSheet
       snapPoints={[400]}
@@ -52,7 +54,12 @@ function NonAnonymous(props: IPortalScreenProps<string, {msg: string}>) {
             console.log(date);
           }}
         />
-        <Button onPress={() => future.resolve(resultRef.current)}>Ok</Button>
+        <Button
+          onPress={() =>
+            closeWithAnimation(() => future.resolve(resultRef.current))
+          }>
+          Ok
+        </Button>
       </View>
     </BottomSheet>
   );
