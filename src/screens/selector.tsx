@@ -80,10 +80,9 @@ const WheelPicker: React.FC<{}> = props => {
         </View>
         <View className="w-20">
           <Picker
-            cycle
             clickable
             data={data}
-            initialIndex={7}
+            initialIndex={0}
             height={200}
             maxVelocity={1400}
             onChange={onChange}
@@ -120,7 +119,7 @@ const SelectorScreen: React.FC<Props> = props => {
           console.log(date);
         }}
       />
-      {/* <WheelPicker /> */}
+      <WheelPicker />
     </Layout>
   );
 };

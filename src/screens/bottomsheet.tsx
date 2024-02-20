@@ -35,7 +35,7 @@ interface IBottomSheetProps {
 }
 
 const defaultAnimationConfig: WithSpringConfig = {
-  duration: 200,
+  duration: 120,
   dampingRatio: 1,
   stiffness: 1,
   overshootClamping: false,
@@ -77,7 +77,7 @@ const BottomSheet: React.ForwardRefRenderFunction<
       if (measurement === null) return;
       height.value = measurement.height;
       offset.value = enableMountAnimation ? measurement.height : 0;
-      opacity.value = withSpring(1, {duration: 160});
+      opacity.value = 1;
       if (enableMountAnimation) offset.value = withSpring(0, animationConfig);
     })();
   }, []);
