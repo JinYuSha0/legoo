@@ -224,8 +224,9 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
       if (halfItemOffset > 0) offsetY -= halfItemOffset;
     }
 
-    const offsetIdx =
-      ((offsetY - initialOffsetY) / itemHeight - initialIndex) % len;
+    const offsetIdx = Math.round(
+      ((offsetY - initialOffsetY) / itemHeight - initialIndex) % len,
+    );
     let baseIdx = 0;
 
     if (offsetIdx > 0) {
@@ -233,6 +234,8 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     } else {
       baseIdx = Math.abs(offsetIdx);
     }
+
+    if (baseIdx >= len) baseIdx = len - 1;
 
     if (debug) {
       console.debug(
@@ -243,7 +246,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     renderRange.current = computeRenderRange(offsetY);
     renderBoundary.current = computeRenderBoundray(offsetY);
 
-    setInnerData(generateRenderList(Math.round(baseIdx), renderRange.current));
+    setInnerData(generateRenderList(baseIdx, renderRange.current));
 
     return baseIdx;
   });
