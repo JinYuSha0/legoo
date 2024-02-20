@@ -55,7 +55,7 @@
     "deprecated-react-native-prop-types": "^5.0.0",
     "invariant": "^2.2.4",
     "nullthrows": "^1.1.1",
-    "react-native": "0.73.2",
+    "react-native": "0.73.4",
     "react-native-web": "^0.19.10"
   },
   "devDependencies": {
