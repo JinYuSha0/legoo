@@ -5,7 +5,7 @@ module.exports = {
       '@legoo/screen-adaption/babel',
       {
         include: ['*.tsx', 'src/**/*.tsx'], // , 'packages/**/*.js'
-        tailwindcss: 'global.css',
+        nativewindcss: 'global.css',
       },
     ],
     [

@@ -9,7 +9,8 @@ interface InputParams {
   include: string[];
   exclude?: string[];
   unit?: string;
-  tailwindcss?: string;
+  onlyNativewind?: boolean;
+  nativewindcss?: string;
 }
 
 interface InnerAttribute {}
@@ -31,13 +32,16 @@ export default function (
           const relativeFilename = normalizePath(
             removeStartSep(relativePath(cwd, state.filename)),
           );
-          const tailwindcssFileName = opt.tailwindcss
-            ? normalizePath(removeStartSep(relativePath(cwd, opt.tailwindcss)))
+          const tailwindcssFileName = opt.nativewindcss
+            ? normalizePath(
+                removeStartSep(relativePath(cwd, opt.nativewindcss)),
+              )
             : null;
           if (relativeFilename === tailwindcssFileName) {
             path.traverse(visitorCss);
             return;
           }
+          if (opt.onlyNativewind === true) return;
           const excludeFiles = (opt.exclude ?? []).map(path =>
             normalizePath(removeStartSep(relativePath(cwd, path))),
           );
