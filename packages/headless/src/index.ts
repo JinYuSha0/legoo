@@ -1,6 +1,5 @@
 import {cssInterop} from 'nativewind';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {
   KeyboardAvoidingView,
   KeyboardStickyView,
@@ -8,9 +7,6 @@ import {
 } from 'react-native-keyboard-controller/src/components';
 
 cssInterop(SafeAreaView, {
-  className: 'style',
-});
-cssInterop(GestureHandlerRootView, {
   className: 'style',
 });
 cssInterop(KeyboardAvoidingView, {

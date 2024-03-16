@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 
 import * as React from 'react';
+import {StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {KeyboardProvider} from 'react-native-keyboard-controller';
 import {
@@ -13,10 +14,8 @@ import {
   NavigationContainer,
   createNavigationContainerRef,
 } from '@react-navigation/native';
-import clsx from 'clsx';
 
 export interface IAppProviderProps {
-  className?: string;
   safeAreaProviderProps?: SafeAreaProviderProps;
   keyboardProviderProps?: React.ComponentProps<typeof KeyboardProvider>;
   navigationContainerProps?: React.ComponentProps<typeof NavigationContainer>;
@@ -30,7 +29,6 @@ const AppProvider: React.FC<
 > = props => {
   const {
     children,
-    className,
     safeAreaProviderProps,
     keyboardProviderProps,
     navigationContainerProps,
@@ -39,7 +37,7 @@ const AppProvider: React.FC<
     <SafeAreaProvider
       initialMetrics={initialWindowMetrics}
       {...safeAreaProviderProps}>
-      <GestureHandlerRootView className={clsx('flex-1', className)}>
+      <GestureHandlerRootView style={styles.container}>
         <KeyboardProvider statusBarTranslucent {...keyboardProviderProps}>
           <NavigationContainer
             ref={navigationRef}
@@ -53,5 +51,11 @@ const AppProvider: React.FC<
 };
 
 AppProvider.displayName = 'AppProvider';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default React.memo(AppProvider);

@@ -5,11 +5,9 @@
  * @format
  */
 import './global.css';
-import {normalization, AppProvider} from '@legoo/headless';
+import {AppProvider} from '@legoo/headless';
 import React from 'react';
 import RootStack from './src/navigation/rootStack';
-
-normalization(['ios', 'android']);
 
 function App(): React.JSX.Element {
   return (

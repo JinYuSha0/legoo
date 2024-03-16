@@ -1,21 +1,16 @@
 const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
 const {withNativeWind} = require('nativewind/metro');
 
-const defaultConfig = getDefaultConfig(__dirname, {isCSSEnabled: true});
+const defaultConfig = getDefaultConfig(__dirname);
 
 const config = mergeConfig(defaultConfig, {
-  resolver: {
-    sourceExts: [...defaultConfig.resolver.sourceExts, 'css'],
-  },
   transformer: {
     ...defaultConfig.transformer,
-    getTransformOptions: async () => ({
-      babelTransformerPath: require('metro-babel-transformer'),
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: true,
-      },
-    }),
+    babelTransformerPath: require.resolve('react-native-svg-transformer'),
+  },
+  resolver: {
+    assetExts: defaultConfig.resolver.assetExts.filter(ext => ext !== 'svg'),
+    sourceExts: [...defaultConfig.resolver.sourceExts, 'svg'],
   },
 });
 
