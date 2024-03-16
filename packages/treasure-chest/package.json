@@ -1,6 +1,6 @@
 {
   "name": "@legoo/treasure-chest",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "treasure-chest",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -49,6 +49,7 @@
   },
   "homepage": "https://github.com/JinYuSha0/legoo/tree/main/frontend/packages/headless/legoo-treasure-chest#readme",
   "publishConfig": {
+    "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {

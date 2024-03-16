@@ -8,17 +8,12 @@ import React, {
   useMemo,
 } from 'react';
 import {View, StatusBar} from 'react-native';
-import {ChevronLeft} from 'lucide-react-native';
 import {useColorScheme, cssInterop} from 'nativewind';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {NavBarHeight} from '../../helper/ui';
 import DefaultHeaderLeft from './headerLeft';
 import DefaultHeaderTitle from './headerTitle';
 import clsx from 'clsx';
-
-cssInterop(ChevronLeft, {
-  className: 'style',
-});
 
 export interface INavBarProps extends NativeStackHeaderProps {
   className?: string;

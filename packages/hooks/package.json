@@ -8,7 +8,12 @@
   "homepage": "https://github.com/JinYuSha0/legoo/tree/main/frontend/packages/hooks",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rimraf dist && swc src --ignore **/*.d.ts -d dist && tsc --emitDeclarationOnly --declaration"
+    "build": "rimraf dist && concurrently -n w: npm:build:*",
+    "build:source": "swc src --ignore **/*.d.ts -d dist",
+    "build:types": "tsc --emitDeclarationOnly --declaration",
+    "watch": "rimraf dist && concurrently -n w: npm:watch:*",
+    "watch:source": "swc src --ignore **/*.d.ts -d dist -w -q",
+    "watch:types": "tsc --watch --emitDeclarationOnly --declaration"
   },
   "author": "Soul Shao <a1009943858@gmail.com> (https://github.com/JinYuSha0)",
   "source": "src/index",
@@ -22,5 +27,9 @@
     "@swc/core": "^1.3.103",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
