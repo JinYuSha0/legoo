@@ -1,10 +1,10 @@
-import React, {isValidElement} from 'react';
+import {type IPortalScreenProps} from '../portal';
 import {View, Text, Pressable} from 'react-native';
 import {pushPortalScreen} from '../portal';
-import Button from '../button/button';
 import {X} from 'lucide-react-native';
-import {type IPortalScreenProps} from '../portal';
-import clsx from 'clsx';
+import {cx} from 'class-variance-authority';
+import React, {isValidElement} from 'react';
+import Button from '../button/button';
 
 export interface IAlertDialogProps {
   title: React.ReactNode;
@@ -56,15 +56,14 @@ const AlertDialog = (props: IPortalScreenProps<any, IAlertDialogProps>) => {
         onPress={close}
         className="top-0 bottom-0 left-0 right-0 fixed bg-transparent"></Pressable>
       <View
-        className={clsx(
+        className={cx(
           'bg-white w-full max-w-xs p-3 border rounded-md min-w-[250px] gap-2 text-foreground text-base',
           className,
         )}>
-        <View className={clsx('pr-5 text-lg', titleClassName)}>
+        <View className={cx('pr-5 text-lg', titleClassName)}>
           {isValidElement(title) ? title : <Text>{title}</Text>}
         </View>
-        <View
-          className={clsx('text-sm text-muted-foreground', contentClassName)}>
+        <View className={cx('text-sm text-muted-foreground', contentClassName)}>
           {isValidElement(content) ? content : <Text>{content}</Text>}
         </View>
         <View className="flex flex-row-reverse">

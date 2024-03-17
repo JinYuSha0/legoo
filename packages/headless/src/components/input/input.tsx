@@ -1,6 +1,6 @@
 import {TextInput, type TextInputProps} from 'react-native';
+import {cx} from 'class-variance-authority';
 import React, {forwardRef, ForwardRefRenderFunction, memo} from 'react';
-import clsx from 'clsx';
 
 export interface IInputProps extends Omit<TextInputProps, 'children'> {
   disabled?: boolean;
@@ -13,7 +13,7 @@ export interface IInputProps extends Omit<TextInputProps, 'children'> {
 const Input: ForwardRefRenderFunction<any, IInputProps> = (props, ref) => {
   const {className, disabled = false, children, ...rest} = props;
   const _props: TextInputProps = {
-    className: clsx(
+    className: cx(
       'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm placeholder:text-muted-foreground outline-none focus:border-primary',
       {
         'opacity-50 cursor-not-allowed': disabled,

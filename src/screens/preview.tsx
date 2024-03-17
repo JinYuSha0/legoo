@@ -4,9 +4,9 @@ import {View} from 'react-native';
 import {useThemeContext, Layout, Center, Button, Input} from '@legoo/headless';
 import {AmountInput, RestrictedTextInput} from '@legoo/treasure-chest';
 import {ScreenNames} from '@helper/sceenNames';
+import {cx} from 'class-variance-authority';
 import * as Helper from '@legoo/helper';
 import React, {memo} from 'react';
-import clsx from 'clsx';
 
 type Props = NativeStackScreenProps<RootStackParamList, ScreenNames.PREVIEW>;
 
@@ -27,7 +27,7 @@ const Preview: React.FC<Props> = props => {
         <View className="bg-primary w-[125px] h-[125px] rounded-md "></View>
         <View className="bg-green-500 w-[125px] h-[125px] rounded-md"></View>
         <View
-          className={clsx('bg-indigo-400 w-[125px] h-[125px]', {
+          className={cx('bg-indigo-400 w-[125px] h-[125px]', {
             'rounded-md': true,
           })}></View>
       </View>

@@ -1,8 +1,8 @@
 import {type ForwardRefRenderFunction, forwardRef, memo} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {View, Text} from 'react-native';
+import {cx} from 'class-variance-authority';
 import React from 'react';
-import clsx from 'clsx';
 
 export interface IHeaderTitleProps {
   children: string;
@@ -22,7 +22,7 @@ export const HeaderTitle: ForwardRefRenderFunction<View, IHeaderTitleProps> = (
       style={{paddingTop: insets.top}}>
       <View className="flex-1 justify-center items-center">
         <Text
-          className={clsx(
+          className={cx(
             'w-7/12 text-center text-base text-foreground font-medium',
             className,
           )}

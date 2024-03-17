@@ -1,6 +1,7 @@
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import {View} from 'react-native';
 import {usePortalContext} from '@legoo/headless';
+import {cx} from 'class-variance-authority';
 import Reanimated, {
   type WithSpringConfig,
   useAnimatedStyle,
@@ -14,7 +15,6 @@ import Reanimated, {
   runOnJS,
 } from 'react-native-reanimated';
 import React, {useCallback, memo, forwardRef, useImperativeHandle} from 'react';
-import clsx from 'clsx';
 
 interface Closeable {
   close: (cb?: () => void) => void;
@@ -122,7 +122,7 @@ const BottomSheet: React.ForwardRefRenderFunction<
   return (
     <Reanimated.View
       ref={animatedRef}
-      className={clsx('bg-background')}
+      className={cx('bg-background')}
       style={[animatedStyles, !enableDynamicSizing ? {height} : null]}
       onLayout={enableDynamicSizing ? onLayout : undefined}>
       <GestureDetector gesture={enableDrag ? pan : Gesture.Pan()}>

@@ -32,12 +32,9 @@ importers:
       '@react-navigation/native-stack':
         specifier: ^6.9.25
         version: 6.9.25(@react-navigation/native@6.1.16)(react-native-safe-area-context@4.9.0)(react-native-screens@3.29.0)(react-native@0.73.4)(react@18.2.0)
-      clsx:
-        specifier: ^2.1.0
-        version: 2.1.0
-      cva:
-        specifier: 1.0.0-beta.1
-        version: 1.0.0-beta.1(typescript@5.4.2)
+      class-variance-authority:
+        specifier: ^0.7.0
+        version: 0.7.0
       helux:
         specifier: ^4.2.5
         version: 4.2.7(react@18.2.0)
@@ -231,18 +228,18 @@ importers:
       '@react-navigation/native':
         specifier: '>=6.0.0'
         version: 6.1.16(react-native@0.73.4)(react@18.2.0)
-      clsx:
-        specifier: ^2.1.0
-        version: 2.1.0
-      cva:
-        specifier: 1.0.0-beta.1
-        version: 1.0.0-beta.1(typescript@5.4.2)
+      class-variance-authority:
+        specifier: '*'
+        version: 0.7.0
       helux:
         specifier: '>=4.2.5'
         version: 4.2.7(react@18.2.0)
       lucide-react-native:
         specifier: ^0.358.0
         version: 0.358.0(react-native-svg@15.1.0)(react-native@0.73.4)(react@18.2.0)
+      nativewind:
+        specifier: '>=4.0.0'
+        version: 4.0.36(@babel/core@7.24.0)(react-native-reanimated@3.8.1)(react-native-safe-area-context@4.9.0)(react-native-svg@15.1.0)(react-native@0.73.4)(react@18.2.0)(tailwindcss@3.3.3)
       react:
         specifier: '*'
         version: 18.2.0
@@ -2306,6 +2303,7 @@ packages:
       '@helux/utils': 4.2.7
       limu: 3.12.4
     dev: false
+    bundledDependencies: false
 
   /@helux/hooks-impl@4.2.7:
     resolution: {integrity: sha512-eOG866lPNJYQZCsc687RxAnndLPmT+L0ev3jcn7G4UVt4tKsFwKyrVVSZa0uRluKK8Wgd5TWsGx9og/o0BhwKg==}
@@ -2313,16 +2311,19 @@ packages:
       '@helux/types': 4.2.7
       '@helux/utils': 4.2.7
     dev: false
+    bundledDependencies: false
 
   /@helux/types@4.2.7:
     resolution: {integrity: sha512-InHLA8bu3OTVqvDkaJYZEqMlIZVQA2G8DGgzfJaSGYbMl2C9mrvVjrSco5DNYzBPZ1vFKeHr1RxIOldeKRgGjg==}
     dev: false
+    bundledDependencies: false
 
   /@helux/utils@4.2.7:
     resolution: {integrity: sha512-5i3fhDbJRZmfZMeMkbBEmUN3PV9VlyKQVQX4VO8IHQd9NPZqbTtg7MhXuMJPpG0mIgQHWNULLAfdd3SwB+fxyg==}
     dependencies:
       '@helux/types': 4.2.7
     dev: false
+    bundledDependencies: false
 
   /@humanwhocodes/config-array@0.11.14:
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -5598,6 +5599,12 @@ packages:
     resolution: {integrity: sha512-0TNiGstbQmCFwt4akjjBg5pLRTSyj/PkWQ1ZoO2zntmg9yLqSRxwEa4iCfQLGjqhiqBfOJa7W/E8wfGrTDmlZQ==}
     dev: true
 
+  /class-variance-authority@0.7.0:
+    resolution: {integrity: sha512-jFI8IQw4hczaL4ALINxqLEXQbWcNjoSkloa4IaufXCJr6QawJyw7tuRysRsrE8w2p/4gGaxKIt/hX3qz/IbD1A==}
+    dependencies:
+      clsx: 2.0.0
+    dev: false
+
   /classnames@2.5.1:
     resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
     dev: false
@@ -5691,11 +5698,6 @@ packages:
 
   /clsx@2.0.0:
     resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}
-    engines: {node: '>=6'}
-    dev: false
-
-  /clsx@2.1.0:
-    resolution: {integrity: sha512-m3iNNWpd9rl3jvvcBnu70ylMdrXt8Vlq4HYadnU5fwcOtvkSQWPmj7amUcDT2qYI7risszBjI5AUIUox9D16pg==}
     engines: {node: '>=6'}
     dev: false
 
@@ -6343,18 +6345,6 @@ packages:
       csv-stringify: 5.6.5
       stream-transform: 2.1.3
     dev: true
-
-  /cva@1.0.0-beta.1(typescript@5.4.2):
-    resolution: {integrity: sha512-gznFqTgERU9q4wg7jfgqtt34+RUt9S5t0xDAAEuDwQEAXEgjdDkKXpLLNjwSxsB4Ln/sqWJEH7yhE8Ny0mxd0w==}
-    peerDependencies:
-      typescript: '>= 4.5.5 < 6'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      clsx: 2.0.0
-      typescript: 5.4.2
-    dev: false
 
   /dargs@7.0.0:
     resolution: {integrity: sha512-2iy1EkLdlBzQGvbweYRFxmFath8+K7+AKB0TlhHWkNuH+TmovaMH/Wp7V7R4u7f4SnX3OgLsU9t1NI9ioDnUpg==}
@@ -8267,6 +8257,7 @@ packages:
       '@helux/core': 4.2.7
       react: 18.2.0
     dev: false
+    bundledDependencies: false
 
   /hermes-estree@0.15.0:
     resolution: {integrity: sha512-lLYvAd+6BnOqWdnNbP/Q8xfl8LOGw4wVjfrNd9Gt8eoFzhNBRVD95n4l2ksfMVOoxuVyegs85g83KS9QOsxbVQ==}
@@ -10326,6 +10317,7 @@ packages:
   /limu@3.12.4:
     resolution: {integrity: sha512-80huqIr3IifdFOysFIFYIP1dfpPNr2ysD6lynJ2R7T081c+cMdmjwxS260H/Wb38ZvZ86LYW1Malu+NTWKhb/A==}
     dev: false
+    bundledDependencies: []
 
   /lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
@@ -14072,6 +14064,7 @@ packages:
     resolution: {integrity: sha512-+2/g0Fds1ERlP6JsakQQDXjZdZMM+rqpamFZJEKh4kwTIn3iDkgKtby0CeNd5ATNZ4Ry1ax15TMx0W2V+miizQ==}
     engines: {node: '>=14.17'}
     hasBin: true
+    dev: true
 
   /ua-parser-js@1.0.37:
     resolution: {integrity: sha512-bhTyI94tZofjo+Dn8SN6Zv8nBDvyXTymAdM3LDI/0IboIUwTu1rEhW7v2TfiVsoYWgkQ4kOVqnI8APUFbIQIFQ==}

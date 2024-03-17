@@ -1,7 +1,7 @@
-import React, {useEffect, useState, isValidElement} from 'react';
 import {Pressable, Text, View} from 'react-native';
 import {Check} from 'lucide-react-native';
-import clsx from 'clsx';
+import {cx} from 'class-variance-authority';
+import React, {useEffect, useState, isValidElement} from 'react';
 
 export interface ICheckboxProps {
   checked?: boolean;
@@ -39,11 +39,11 @@ const Checkbox = (props: ICheckboxProps) => {
     <Pressable
       disabled={disabled}
       onPress={checkClick}
-      className={clsx('flex-row items-center', {
+      className={cx('flex-row items-center', {
         'opacity-50 pointer-events-none': disabled,
       })}>
       <View
-        className={clsx(
+        className={cx(
           'peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
           className,
         )}>
@@ -53,7 +53,7 @@ const Checkbox = (props: ICheckboxProps) => {
         {isValidElement(children) ? (
           children
         ) : (
-          <Text className={clsx('ml-1', textClassName)}>{children}</Text>
+          <Text className={cx('ml-1', textClassName)}>{children}</Text>
         )}
       </View>
     </Pressable>

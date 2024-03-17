@@ -1,6 +1,6 @@
 import type {IPortalFeture} from './types';
 import {TouchableWithoutFeedback, View} from 'react-native';
-import {cva, type VariantProps} from 'cva';
+import {type VariantProps, cva, cx} from 'class-variance-authority';
 import {useHardwareBackPress} from '@legoo/hooks';
 import {usePortalContext} from './context';
 import Layout from '../layout/layout';
@@ -10,10 +10,8 @@ import React, {
   forwardRef,
   useCallback,
 } from 'react';
-import clsx from 'clsx';
 
-const portalVariants = cva({
-  base: 'flex-col',
+const portalVariants = cva('flex-col', {
   variants: {
     overlay: {
       default: 'bg-black/60',
@@ -76,7 +74,7 @@ const Portal: ForwardRefRenderFunction<
   return (
     <Layout
       ref={ref}
-      contentContainerClassName={clsx(
+      contentContainerClassName={cx(
         portalVariants({direction, overlay}),
         className,
       )}

@@ -4,13 +4,13 @@ import {
 } from 'react-native-keyboard-controller';
 import {View} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
+import {cx} from 'class-variance-authority';
 import React, {
   type ForwardRefRenderFunction,
   forwardRef,
   memo,
   useMemo,
 } from 'react';
-import clsx from 'clsx';
 
 interface LayoutPropsBase {
   children: React.ReactNode;
@@ -51,16 +51,16 @@ const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
     [avoiding],
   );
   return (
-    <View className={clsx('flex-1', className)}>
+    <View className={cx('flex-1', className)}>
       <KeyboardView
         ref={ref as any}
         enabled={isFocused}
-        className={clsx('flex-1')}
-        contentContainerClassName={clsx(
+        className={cx('flex-1')}
+        contentContainerClassName={cx(
           'grow bg-background',
           contentContainerClassName,
         )}
-        indicatorClassName={clsx(indicatorClassName)}
+        indicatorClassName={cx(indicatorClassName)}
         keyboardShouldPersistTaps="handled"
         {...rest}>
         {children}

@@ -27,8 +27,6 @@
     "@legoo/helper": "workspace:*",
     "@legoo/hooks": "workspace:*",
     "@legoo/treasure-chest": "workspace:*",
-    "clsx": "^2.1.0",
-    "cva": "1.0.0-beta.1",
     "lucide-react-native": "^0.358.0"
   },
   "devDependencies": {
@@ -40,7 +38,9 @@
   },
   "peerDependencies": {
     "@react-navigation/native": ">=6.0.0",
+    "class-variance-authority": "*",
     "helux": ">=4.2.5",
+    "nativewind": ">=4.0.0",
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": ">=2.0.0",

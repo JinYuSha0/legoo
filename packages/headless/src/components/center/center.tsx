@@ -1,6 +1,6 @@
 import {View, type ViewProps} from 'react-native';
+import {cx} from 'class-variance-authority';
 import React, {memo, forwardRef, ForwardRefRenderFunction} from 'react';
-import clsx from 'clsx';
 
 export interface ICenterProps extends ViewProps {
   className?: string;
@@ -12,7 +12,7 @@ const Center: ForwardRefRenderFunction<any, ICenterProps> = (props, ref) => {
   return (
     <View
       ref={ref}
-      className={clsx('grow justify-center items-center', className)}
+      className={cx('grow justify-center items-center', className)}
       {...rest}>
       {children}
     </View>

@@ -1,6 +1,6 @@
 import {View} from 'react-native';
+import {cx} from 'class-variance-authority';
 import React, {ForwardRefRenderFunction, forwardRef, memo} from 'react';
-import clsx from 'clsx';
 
 export interface IIndicatorProps {
   itemHeight: number;
@@ -17,7 +17,7 @@ const Indicator: ForwardRefRenderFunction<View, IIndicatorProps> = (
       <View className="flex flex-1 bg-background/70" />
       <View
         ref={ref}
-        className={clsx('w-full border-t border-b border-border', className)}
+        className={cx('w-full border-t border-b border-border', className)}
         style={{
           height: itemHeight,
         }}

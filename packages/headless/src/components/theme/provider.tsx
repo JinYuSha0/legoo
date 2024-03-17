@@ -1,6 +1,6 @@
 import {View, Platform} from 'react-native';
 import {useColorScheme} from 'nativewind';
-import clsx from 'clsx';
+import {cx} from 'class-variance-authority';
 import React, {
   createContext,
   useCallback,
@@ -50,7 +50,7 @@ export const ThemeProvider = ({children, colorScheme}: ThemeProviderProps) => {
       ) : (
         <View
           key={reallyColorScheme}
-          className={clsx('flex-1', reallyColorScheme)}>
+          className={cx('flex-1', reallyColorScheme)}>
           {children}
         </View>
       )}

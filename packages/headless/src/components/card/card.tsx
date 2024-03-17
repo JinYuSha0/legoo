@@ -1,5 +1,5 @@
 import {View, Text} from 'react-native';
-import clsx from 'clsx';
+import {cx} from 'class-variance-authority';
 import React, {
   forwardRef,
   ForwardRefRenderFunction,
@@ -19,7 +19,7 @@ const Card: ForwardRefRenderFunction<any, ICardProps> = (props, ref) => {
   return (
     <View
       ref={ref}
-      className={clsx(
+      className={cx(
         'rounded-lg border border-input bg-card text-card-foreground',
         className || 'w-[150px] h-[125px]',
       )}
@@ -27,7 +27,7 @@ const Card: ForwardRefRenderFunction<any, ICardProps> = (props, ref) => {
       {isValidElement(children) ? (
         children
       ) : (
-        <Text className={clsx('text-card-foreground', textClassName)}>
+        <Text className={cx('text-card-foreground', textClassName)}>
           {children}
         </Text>
       )}

@@ -3,13 +3,13 @@ import {View} from 'react-native';
 import {useDateState} from './useDateState';
 import {Picker} from '../picker';
 import {isNil} from '@legoo/helper';
+import {cx} from 'class-variance-authority';
 import React, {
   type ForwardRefRenderFunction,
   forwardRef,
   memo,
   useEffect,
 } from 'react';
-import clsx from 'clsx';
 
 const DatePicker: ForwardRefRenderFunction<View, IDateTimePickerProps> = (
   props,
@@ -24,11 +24,11 @@ const DatePicker: ForwardRefRenderFunction<View, IDateTimePickerProps> = (
     }
   }, [result]);
   return (
-    <View className={clsx('flex-row bg-background', className)}>
+    <View className={cx('flex-row bg-background', className)}>
       {columns.map(col => (
         <View
           key={col.name}
-          className={clsx(columns.length === 3 ? 'w-1/3' : 'w-1/2')}>
+          className={cx(columns.length === 3 ? 'w-1/3' : 'w-1/2')}>
           <Picker
             {...pickerProps}
             initialIndex={initIndexes[col.name]}
