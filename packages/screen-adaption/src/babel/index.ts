@@ -17,6 +17,9 @@ interface InnerAttribute {}
 
 const rootPath = resolve(__dirname, '../');
 
+const nativewindUpdateClientFileName =
+  'node_modules/react-native-css-interop/dist/metro/poll-update-client.js';
+
 export default function (
   {types: t}: typeof Babel,
   opt: InputParams,
@@ -32,12 +35,15 @@ export default function (
           const relativeFilename = normalizePath(
             removeStartSep(relativePath(cwd, state.filename)),
           );
-          const tailwindcssFileName = opt.nativewindcss
+          const nativewindcssFileName = opt.nativewindcss
             ? normalizePath(
                 removeStartSep(relativePath(cwd, opt.nativewindcss)),
               )
             : null;
-          if (relativeFilename === tailwindcssFileName) {
+          if (
+            relativeFilename === nativewindcssFileName ||
+            relativeFilename === nativewindUpdateClientFileName
+          ) {
             path.traverse(visitorCss);
             return;
           }

@@ -1,6 +1,6 @@
 {
   "name": "@legoo/screen-adaption",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "babel plugin for react-native screen adaptation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

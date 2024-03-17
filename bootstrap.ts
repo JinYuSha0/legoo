@@ -1,4 +1,3 @@
-import './global.css';
 import {init, Direction} from '@legoo/screen-adaption';
 import {normalization} from '@legoo/headless';
 
