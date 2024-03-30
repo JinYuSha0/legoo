@@ -39,7 +39,7 @@ export const ThemeProvider = ({children, colorScheme}: ThemeProviderProps) => {
       document.body.classList.remove(reallyColorScheme);
       document.body.classList.add(newColorScheme);
     } else {
-      __setColorScheme(newColorScheme);
+      // __setColorScheme(newColorScheme);
     }
   }, [reallyColorScheme, _setColorScheme]);
   return (

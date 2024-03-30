@@ -4,10 +4,8 @@ import {
 } from '@react-navigation/native-stack';
 import {ScreenNames} from '@helper/sceenNames';
 import {withPortalStack, NavBar} from '@legoo/headless';
-import {variableToHsla} from '@legoo/helper';
-import {Keyboard} from 'react-native';
-import {useUnstableNativeVariable} from 'nativewind';
-import React from 'react';
+import {Keyboard, StatusBar} from 'react-native';
+import React, {useEffect} from 'react';
 import Preview from '@screens/preview';
 import Test from '@/screens/test';
 import Selector from '@/screens/selector';
@@ -31,9 +29,10 @@ const options: Record<keyof typeof ScreenNames, NativeStackNavigationOptions> =
 
 const RootStack = withPortalStack((props: React.PropsWithChildren<{}>) => {
   const {children} = props;
-  const contentBgColor = variableToHsla(
-    useUnstableNativeVariable('--background'),
-  );
+  useEffect(() => {
+    StatusBar.setBarStyle('dark-content');
+    StatusBar.setBackgroundColor('transparent');
+  }, []);
   return (
     <Stack.Navigator
       initialRouteName={ScreenNames.PREVIEW}
@@ -47,9 +46,6 @@ const RootStack = withPortalStack((props: React.PropsWithChildren<{}>) => {
           headerShadowVisible: false,
           animation: 'ios',
           header: props => <NavBar {...props} />,
-          contentStyle: {
-            backgroundColor: contentBgColor,
-          },
         })}>
         <Stack.Screen
           name={ScreenNames.PREVIEW}

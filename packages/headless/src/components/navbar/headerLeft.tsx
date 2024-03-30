@@ -2,16 +2,12 @@ import {type ForwardRefRenderFunction, forwardRef, memo} from 'react';
 import {View} from 'react-native';
 import {ChevronLeft} from 'lucide-react-native';
 import {cssInterop} from 'nativewind';
-import {cx} from 'class-variance-authority';
+import {useUnstableNativeVariable} from 'react-native-css-interop';
+import {variableToColor} from '@legoo/helper';
 import React from 'react';
 import Button from '../button/button';
 
-cssInterop(ChevronLeft, {
-  className: 'style',
-});
-
 export interface IHeaderLeftProps {
-  className?: string;
   goBack: () => void;
 }
 
@@ -19,14 +15,17 @@ export const HeaderLeft: ForwardRefRenderFunction<View, IHeaderLeftProps> = (
   props,
   ref,
 ) => {
-  const {className, goBack} = props;
+  const {goBack} = props;
+  const color = variableToColor(useUnstableNativeVariable('--foreground'));
   return (
     <Button ref={ref} variant="none" size="icon" onPress={goBack}>
-      <ChevronLeft className={cx('text-foreground', className)} />
+      <ChevronLeft color={color} />
     </Button>
   );
 };
 
 HeaderLeft.displayName = 'HeaderLeft';
+
+cssInterop(HeaderLeft, {});
 
 export default memo(forwardRef(HeaderLeft));

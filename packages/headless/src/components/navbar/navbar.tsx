@@ -7,8 +7,7 @@ import React, {
   Fragment,
   useMemo,
 } from 'react';
-import {View, StatusBar} from 'react-native';
-import {useColorScheme, cssInterop} from 'nativewind';
+import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {NavBarHeight} from '../../helper/ui';
 import {cx} from 'class-variance-authority';
@@ -25,12 +24,10 @@ const NavBar: ForwardRefRenderFunction<View, INavBarProps> = (props, ref) => {
   const {
     className,
     titleClassName,
-    leftClassName,
     navigation: {canGoBack, goBack},
     options: {title, headerTintColor, headerTitle, headerLeft, headerRight},
   } = props;
   const insets = useSafeAreaInsets();
-  const {colorScheme} = useColorScheme();
   const _canGoBack = useMemo(() => {
     return canGoBack();
   }, []);
@@ -45,11 +42,10 @@ const NavBar: ForwardRefRenderFunction<View, INavBarProps> = (props, ref) => {
     if (headerLeft) {
       return headerLeft(_headerButtonProps);
     } else {
-      if (_canGoBack)
-        return <DefaultHeaderLeft className={leftClassName} goBack={goBack} />;
+      if (_canGoBack) return <DefaultHeaderLeft goBack={goBack} />;
     }
     return null;
-  }, [_canGoBack, _headerButtonProps, leftClassName, headerLeft, goBack]);
+  }, [_canGoBack, _headerButtonProps, headerLeft, goBack]);
   const _headerTitle = useMemo(() => {
     if (!title) return null;
     if (typeof headerTitle === 'function') {
@@ -66,22 +62,16 @@ const NavBar: ForwardRefRenderFunction<View, INavBarProps> = (props, ref) => {
     [_headerButtonProps, headerRight],
   );
   return (
-    <Fragment>
-      <StatusBar
-        backgroundColor="transparent"
-        barStyle={colorScheme !== 'light' ? 'light-content' : 'dark-content'}
-      />
-      <View
-        ref={ref}
-        className={cx('relative w-screen h-11 bg-background', className)}
-        style={{height: insets.top + NavBarHeight, paddingTop: insets.top}}>
-        <View className="flex flex-1 flex-row items-center justify-between">
-          {_headerLeft}
-          {_headerRight}
-        </View>
-        {_headerTitle}
+    <View
+      ref={ref}
+      className={cx('relative w-screen h-11 bg-background', className)}
+      style={{height: insets.top + NavBarHeight, paddingTop: insets.top}}>
+      <View className="flex flex-1 flex-row items-center justify-between">
+        {_headerLeft}
+        {_headerRight}
       </View>
-    </Fragment>
+      {_headerTitle}
+    </View>
   );
 };
 

@@ -304,6 +304,10 @@ importers:
         version: 5.4.2
 
   packages/hooks:
+    dependencies:
+      '@react-navigation/native':
+        specifier: ^6.1.16
+        version: 6.1.16(react-native@0.73.4)(react@18.2.0)
     devDependencies:
       '@swc/cli':
         specifier: ^0.1.63
@@ -10455,6 +10459,7 @@ packages:
   /limu@3.12.4:
     resolution: {integrity: sha512-80huqIr3IifdFOysFIFYIP1dfpPNr2ysD6lynJ2R7T081c+cMdmjwxS260H/Wb38ZvZ86LYW1Malu+NTWKhb/A==}
     dev: false
+    bundledDependencies: []
 
   /lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}

@@ -1,1 +1,1 @@
-export {variableToHsla} from './variableToHsla';
+export {variableToColor} from './variableToColor';

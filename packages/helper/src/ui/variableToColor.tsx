@@ -1,6 +1,6 @@
 import {isArray} from '../common';
 
-export function variableToHsla(variables: any) {
+export function variableToColor(variables: any) {
   if (isArray(variables)) {
     if (variables.length === 3) {
       return `hsl(${variables.join(' ')})`;

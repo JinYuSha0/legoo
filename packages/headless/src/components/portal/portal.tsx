@@ -74,6 +74,7 @@ const Portal: ForwardRefRenderFunction<
   return (
     <Layout
       ref={ref}
+      translucent
       contentContainerClassName={cx(
         portalVariants({direction, overlay}),
         className,

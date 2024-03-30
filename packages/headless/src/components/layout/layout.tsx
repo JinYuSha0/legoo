@@ -2,9 +2,11 @@ import {
   KeyboardAvoidingView,
   KeyboardAwareScrollView,
 } from 'react-native-keyboard-controller';
-import {View} from 'react-native';
+import {StatusBarProps, View} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {cx} from 'class-variance-authority';
+import {useStatusBar} from '@legoo/hooks';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import React, {
   type ForwardRefRenderFunction,
   forwardRef,
@@ -17,7 +19,9 @@ interface LayoutPropsBase {
   className?: string;
   contentContainerClassName?: string;
   indicatorClassName?: string;
+  translucent?: boolean;
   avoiding?: boolean;
+  statusBar?: StatusBarProps;
 }
 
 interface LayoutPropsAvoiding
@@ -39,19 +43,34 @@ export type LayoutProps = LayoutPropsAvoiding | LayoutPropsAware;
 const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
   const {
     children,
+    translucent,
     avoiding,
     className,
     contentContainerClassName,
     indicatorClassName,
+    statusBar,
+    style,
     ...rest
   } = props;
   const isFocused = useIsFocused();
+  const StatusBar = useStatusBar(true, statusBar);
+  const {top, bottom} = useSafeAreaInsets();
   const KeyboardView = useMemo(
     () => (avoiding ? KeyboardAvoidingView : KeyboardAwareScrollView),
     [avoiding],
   );
+  const containerStyle = useMemo(() => {
+    if (style) return style;
+    if (!translucent) {
+      return {
+        paddingTop: top,
+        paddingBottom: bottom,
+      };
+    }
+  }, [style, translucent, top, bottom]);
   return (
-    <View className={cx('flex-1', className)}>
+    <View className={cx('flex-1', className)} style={containerStyle}>
+      {StatusBar}
       <KeyboardView
         ref={ref as any}
         enabled={isFocused}

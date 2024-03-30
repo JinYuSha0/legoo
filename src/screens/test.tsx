@@ -82,7 +82,7 @@ async function pushPortal() {
 
 const Test: React.FC<Props> = props => {
   return (
-    <Layout bottomOffset={20}>
+    <Layout translucent bottomOffset={20}>
       <View className="flex-1">
         <Center className="px-8">
           <Text>This is test</Text>

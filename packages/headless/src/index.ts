@@ -5,6 +5,7 @@ import {
   KeyboardStickyView,
   KeyboardAwareScrollView,
 } from 'react-native-keyboard-controller/src/components';
+import {ChevronLeft} from 'lucide-react-native';
 
 cssInterop(SafeAreaView, {
   className: 'style',
@@ -19,6 +20,9 @@ cssInterop(KeyboardAwareScrollView, {
   className: 'style',
   contentContainerClassName: 'contentContainerStyle',
   indicatorClassName: 'indicatorStyle',
+});
+cssInterop(ChevronLeft, {
+  className: 'style',
 });
 
 export {normalization} from './normalization';

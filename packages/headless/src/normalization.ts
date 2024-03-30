@@ -1,6 +1,6 @@
-import {useUnstableNativeVariable} from 'nativewind';
+import {useUnstableNativeVariable} from 'react-native-css-interop';
 import {Platform, Text as RNText, TextInput as RNTextInput} from 'react-native';
-import {variableToHsla} from '@legoo/helper';
+import {variableToColor} from '@legoo/helper';
 import {TextInput as TCTextInput} from '@legoo/treasure-chest';
 import React from 'react';
 
@@ -19,7 +19,9 @@ function setTextNormalizationStyle(Component: React.ComponentType) {
   Text.render = function (...args) {
     const origin = oldTextRender.call(this, ...args);
 
-    const textColor = variableToHsla(useUnstableNativeVariable('--foreground'));
+    const textColor = variableToColor(
+      useUnstableNativeVariable('--foreground'),
+    );
 
     // RCTVirtualText is being used for LogBox while RCTText is being used for normal text
     if (origin.type === 'RCTVirtualText') {
@@ -56,7 +58,9 @@ function setTextInputNormalizationStyle(Component: React.ComponentType) {
   TextInput.render = function (...args) {
     const origin = oldTextInputRender.call(this, ...args);
 
-    const textColor = variableToHsla(useUnstableNativeVariable('--foreground'));
+    const textColor = variableToColor(
+      useUnstableNativeVariable('--foreground'),
+    );
 
     const defaultStyle = {color: textColor, allowFontScaling: false};
 

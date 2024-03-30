@@ -1,6 +1,6 @@
 import type {RootStackParamList} from '@/navigation/rootStack';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import {useThemeContext, Layout, Center, Button, Input} from '@legoo/headless';
 import {AmountInput, RestrictedTextInput} from '@legoo/treasure-chest';
 import {ScreenNames} from '@helper/sceenNames';
@@ -22,7 +22,7 @@ function ToggleColorScheme() {
 const Preview: React.FC<Props> = props => {
   const {navigation} = props;
   return (
-    <Layout bottomOffset={20}>
+    <Layout translucent bottomOffset={20}>
       <View className="flex-row">
         <View className="bg-primary w-[125px] h-[125px] rounded-md "></View>
         <View className="bg-green-500 w-[125px] h-[125px] rounded-md"></View>
@@ -60,6 +60,7 @@ const Preview: React.FC<Props> = props => {
             <RestrictedTextInput ref={ref} regex="[^a-z|A-Z]" {...props} />
           )}
         </Input>
+        <Text>111</Text>
       </Center>
     </Layout>
   );
