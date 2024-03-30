@@ -35,9 +35,6 @@ importers:
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
-      helux:
-        specifier: ^4.2.5
-        version: 4.2.7(react@18.2.0)
       lucide-react-native:
         specifier: ^0.317.0
         version: 0.317.0(react-native-svg@15.1.0)(react-native@0.73.4)(react@18.2.0)
@@ -66,7 +63,7 @@ importers:
         specifier: ^3.8.1
         version: 3.8.1(@babel/core@7.24.0)(react-native@0.73.4)(react@18.2.0)
       react-native-safe-area-context:
-        specifier: 4.9.0
+        specifier: ^4.9.0
         version: 4.9.0(react-native@0.73.4)(react@18.2.0)
       react-native-screens:
         specifier: ^3.29.0
@@ -180,6 +177,9 @@ importers:
       react-native-css-interop:
         specifier: ^0.0.34
         version: 0.0.34(@babel/core@7.24.0)(react-native-reanimated@3.8.1)(react-native-safe-area-context@4.9.0)(react-native-svg@15.1.0)(react-native@0.73.4)(react@18.2.0)(tailwindcss@3.3.3)
+      react-native-svg-transformer:
+        specifier: ^1.3.0
+        version: 1.3.0(react-native-svg@15.1.0)(react-native@0.73.4)(typescript@5.4.2)
       react-refresh:
         specifier: ^0.14.0
         version: 0.14.0
@@ -226,19 +226,16 @@ importers:
         specifier: workspace:*
         version: link:../treasure-chest
       '@react-navigation/native':
-        specifier: '>=6.0.0'
+        specifier: ^6.1.16
         version: 6.1.16(react-native@0.73.4)(react@18.2.0)
       class-variance-authority:
-        specifier: '*'
+        specifier: ^0.7.0
         version: 0.7.0
-      helux:
-        specifier: '>=4.2.5'
-        version: 4.2.7(react@18.2.0)
       lucide-react-native:
         specifier: ^0.358.0
         version: 0.358.0(react-native-svg@15.1.0)(react-native@0.73.4)(react@18.2.0)
       nativewind:
-        specifier: '>=4.0.0'
+        specifier: ^4.0.36
         version: 4.0.36(@babel/core@7.24.0)(react-native-reanimated@3.8.1)(react-native-safe-area-context@4.9.0)(react-native-svg@15.1.0)(react-native@0.73.4)(react@18.2.0)(tailwindcss@3.3.3)
       react:
         specifier: '*'
@@ -247,16 +244,16 @@ importers:
         specifier: '*'
         version: 0.73.4(@babel/core@7.24.0)(@babel/preset-env@7.24.0)(react@18.2.0)
       react-native-gesture-handler:
-        specifier: '>=2.0.0'
+        specifier: ^2.15.0
         version: 2.15.0(react-native@0.73.4)(react@18.2.0)
       react-native-keyboard-controller:
-        specifier: '>=1.0.0'
+        specifier: ^1.11.3
         version: 1.11.3(react-native-reanimated@3.8.1)(react-native@0.73.4)(react@18.2.0)
       react-native-reanimated:
-        specifier: '>=3.0.0'
+        specifier: ^3.8.1
         version: 3.8.1(@babel/core@7.24.0)(react-native@0.73.4)(react@18.2.0)
       react-native-safe-area-context:
-        specifier: '>=4.0.0'
+        specifier: ^4.9.0
         version: 4.9.0(react-native@0.73.4)(react@18.2.0)
     devDependencies:
       '@swc/cli':
@@ -277,12 +274,21 @@ importers:
 
   packages/helper:
     dependencies:
+      '@legoo/hooks':
+        specifier: workspace:^
+        version: link:../hooks
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
       decimal.js-light:
         specifier: ^2.5.1
         version: 2.5.1
+      eventemitter3:
+        specifier: ^5.0.1
+        version: 5.0.1
+      limu:
+        specifier: ^3.12.4
+        version: 3.12.4
     devDependencies:
       '@swc/cli':
         specifier: ^0.1.63
@@ -2295,36 +2301,6 @@ packages:
     dependencies:
       '@hapi/hoek': 9.3.0
 
-  /@helux/core@4.2.7:
-    resolution: {integrity: sha512-G8EXYL7rDfWbs9sI3imglWor0+G7ab9EEWs9CHNTmkHEFttkRNMwjUG6jicD8ysb6fjqW3rSimpwa6GOWKfqnA==}
-    dependencies:
-      '@helux/hooks-impl': 4.2.7
-      '@helux/types': 4.2.7
-      '@helux/utils': 4.2.7
-      limu: 3.12.4
-    dev: false
-    bundledDependencies: false
-
-  /@helux/hooks-impl@4.2.7:
-    resolution: {integrity: sha512-eOG866lPNJYQZCsc687RxAnndLPmT+L0ev3jcn7G4UVt4tKsFwKyrVVSZa0uRluKK8Wgd5TWsGx9og/o0BhwKg==}
-    dependencies:
-      '@helux/types': 4.2.7
-      '@helux/utils': 4.2.7
-    dev: false
-    bundledDependencies: false
-
-  /@helux/types@4.2.7:
-    resolution: {integrity: sha512-InHLA8bu3OTVqvDkaJYZEqMlIZVQA2G8DGgzfJaSGYbMl2C9mrvVjrSco5DNYzBPZ1vFKeHr1RxIOldeKRgGjg==}
-    dev: false
-    bundledDependencies: false
-
-  /@helux/utils@4.2.7:
-    resolution: {integrity: sha512-5i3fhDbJRZmfZMeMkbBEmUN3PV9VlyKQVQX4VO8IHQd9NPZqbTtg7MhXuMJPpG0mIgQHWNULLAfdd3SwB+fxyg==}
-    dependencies:
-      '@helux/types': 4.2.7
-    dev: false
-    bundledDependencies: false
-
   /@humanwhocodes/config-array@0.11.14:
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
@@ -3839,6 +3815,146 @@ packages:
       '@sinonjs/commons': 1.8.6
     dev: true
 
+  /@svgr/babel-plugin-add-jsx-attribute@8.0.0(@babel/core@7.24.0):
+    resolution: {integrity: sha512-b9MIk7yhdS1pMCZM8VeNfUlSKVRhsHZNMl5O9SfaX0l0t5wjdgu4IDzGB8bpnGBBOjGST3rRFVsaaEtI4W6f7g==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.24.0
+    dev: true
+
+  /@svgr/babel-plugin-remove-jsx-attribute@8.0.0(@babel/core@7.24.0):
+    resolution: {integrity: sha512-BcCkm/STipKvbCl6b7QFrMh/vx00vIP63k2eM66MfHJzPr6O2U0jYEViXkHJWqXqQYjdeA9cuCl5KWmlwjDvbA==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.24.0
+    dev: true
+
+  /@svgr/babel-plugin-remove-jsx-empty-expression@8.0.0(@babel/core@7.24.0):
+    resolution: {integrity: sha512-5BcGCBfBxB5+XSDSWnhTThfI9jcO5f0Ai2V24gZpG+wXF14BzwxxdDb4g6trdOux0rhibGs385BeFMSmxtS3uA==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.24.0
+    dev: true
+
+  /@svgr/babel-plugin-replace-jsx-attribute-value@8.0.0(@babel/core@7.24.0):
+    resolution: {integrity: sha512-KVQ+PtIjb1BuYT3ht8M5KbzWBhdAjjUPdlMtpuw/VjT8coTrItWX6Qafl9+ji831JaJcu6PJNKCV0bp01lBNzQ==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.24.0
+    dev: true
+
+  /@svgr/babel-plugin-svg-dynamic-title@8.0.0(@babel/core@7.24.0):
+    resolution: {integrity: sha512-omNiKqwjNmOQJ2v6ge4SErBbkooV2aAWwaPFs2vUY7p7GhVkzRkJ00kILXQvRhA6miHnNpXv7MRnnSjdRjK8og==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.24.0
+    dev: true
+
+  /@svgr/babel-plugin-svg-em-dimensions@8.0.0(@babel/core@7.24.0):
+    resolution: {integrity: sha512-mURHYnu6Iw3UBTbhGwE/vsngtCIbHE43xCRK7kCw4t01xyGqb2Pd+WXekRRoFOBIY29ZoOhUCTEweDMdrjfi9g==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.24.0
+    dev: true
+
+  /@svgr/babel-plugin-transform-react-native-svg@8.1.0(@babel/core@7.24.0):
+    resolution: {integrity: sha512-Tx8T58CHo+7nwJ+EhUwx3LfdNSG9R2OKfaIXXs5soiy5HtgoAEkDay9LIimLOcG8dJQH1wPZp/cnAv6S9CrR1Q==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.24.0
+    dev: true
+
+  /@svgr/babel-plugin-transform-svg-component@8.0.0(@babel/core@7.24.0):
+    resolution: {integrity: sha512-DFx8xa3cZXTdb/k3kfPeaixecQLgKh5NVBMwD0AQxOzcZawK4oo1Jh9LbrcACUivsCA7TLG8eeWgrDXjTMhRmw==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.24.0
+    dev: true
+
+  /@svgr/babel-preset@8.1.0(@babel/core@7.24.0):
+    resolution: {integrity: sha512-7EYDbHE7MxHpv4sxvnVPngw5fuR6pw79SkcrILHJ/iMpuKySNCl5W1qcwPEpU+LgyRXOaAFgH0KhwD18wwg6ug==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.24.0
+      '@svgr/babel-plugin-add-jsx-attribute': 8.0.0(@babel/core@7.24.0)
+      '@svgr/babel-plugin-remove-jsx-attribute': 8.0.0(@babel/core@7.24.0)
+      '@svgr/babel-plugin-remove-jsx-empty-expression': 8.0.0(@babel/core@7.24.0)
+      '@svgr/babel-plugin-replace-jsx-attribute-value': 8.0.0(@babel/core@7.24.0)
+      '@svgr/babel-plugin-svg-dynamic-title': 8.0.0(@babel/core@7.24.0)
+      '@svgr/babel-plugin-svg-em-dimensions': 8.0.0(@babel/core@7.24.0)
+      '@svgr/babel-plugin-transform-react-native-svg': 8.1.0(@babel/core@7.24.0)
+      '@svgr/babel-plugin-transform-svg-component': 8.0.0(@babel/core@7.24.0)
+    dev: true
+
+  /@svgr/core@8.1.0(typescript@5.4.2):
+    resolution: {integrity: sha512-8QqtOQT5ACVlmsvKOJNEaWmRPmcojMOzCz4Hs2BGG/toAp/K38LcsMRyLp349glq5AzJbCEeimEoxaX6v/fLrA==}
+    engines: {node: '>=14'}
+    dependencies:
+      '@babel/core': 7.24.0
+      '@svgr/babel-preset': 8.1.0(@babel/core@7.24.0)
+      camelcase: 6.3.0
+      cosmiconfig: 8.3.6(typescript@5.4.2)
+      snake-case: 3.0.4
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+    dev: true
+
+  /@svgr/hast-util-to-babel-ast@8.0.0:
+    resolution: {integrity: sha512-EbDKwO9GpfWP4jN9sGdYwPBU0kdomaPIL2Eu4YwmgP+sJeXT+L7bMwJUBnhzfH8Q2qMBqZ4fJwpCyYsAN3mt2Q==}
+    engines: {node: '>=14'}
+    dependencies:
+      '@babel/types': 7.24.0
+      entities: 4.5.0
+    dev: true
+
+  /@svgr/plugin-jsx@8.1.0(@svgr/core@8.1.0):
+    resolution: {integrity: sha512-0xiIyBsLlr8quN+WyuxooNW9RJ0Dpr8uOnH/xrCVO8GLUcwHISwj1AG0k+LFzteTkAA0GbX0kj9q6Dk70PTiPA==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@svgr/core': '*'
+    dependencies:
+      '@babel/core': 7.24.0
+      '@svgr/babel-preset': 8.1.0(@babel/core@7.24.0)
+      '@svgr/core': 8.1.0(typescript@5.4.2)
+      '@svgr/hast-util-to-babel-ast': 8.0.0
+      svg-parser: 2.0.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@svgr/plugin-svgo@8.1.0(@svgr/core@8.1.0)(typescript@5.4.2):
+    resolution: {integrity: sha512-Ywtl837OGO9pTLIN/onoWLmDQ4zFUycI1g76vuKGEz6evR/ZTJlJuz3G/fIkb6OVBJ2g0o6CGJzaEjfmEo3AHA==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@svgr/core': '*'
+    dependencies:
+      '@svgr/core': 8.1.0(typescript@5.4.2)
+      cosmiconfig: 8.3.6(typescript@5.4.2)
+      deepmerge: 4.3.1
+      svgo: 3.2.0
+    transitivePeerDependencies:
+      - typescript
+    dev: true
+
   /@swc/cli@0.1.65(@swc/core@1.4.8):
     resolution: {integrity: sha512-4NcgsvJVHhA7trDnMmkGLLvWMHu2kSy+qHx6QwRhhJhdiYdNUrhdp+ERxen73sYtaeEOYeLJcWrQ60nzKi6rpg==}
     engines: {node: '>= 12.13'}
@@ -3999,6 +4115,11 @@ packages:
 
   /@tokenizer/token@0.3.0:
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==}
+    dev: true
+
+  /@trysound/sax@0.2.0:
+    resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
+    engines: {node: '>=10.13.0'}
     dev: true
 
   /@tsconfig/node10@1.0.9:
@@ -6312,6 +6433,22 @@ packages:
       mdn-data: 2.0.14
       source-map: 0.6.1
 
+  /css-tree@2.2.1:
+    resolution: {integrity: sha512-OA0mILzGc1kCOCSJerOeqDxDQ4HOh+G8NbOJFOTgOCzpw7fCBubk0fEyxp8AgOL/jvLgYA/uV0cMbe43ElF1JA==}
+    engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0, npm: '>=7.0.0'}
+    dependencies:
+      mdn-data: 2.0.28
+      source-map-js: 1.0.2
+    dev: true
+
+  /css-tree@2.3.1:
+    resolution: {integrity: sha512-6Fv1DV/TYw//QF5IzQdqsNDjx/wc8TrMBZsqjL9eW01tWb7R7k/mq+/VXfJCl7SoD5emsJop9cOByJZfs8hYIw==}
+    engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
+    dependencies:
+      mdn-data: 2.0.30
+      source-map-js: 1.0.2
+    dev: true
+
   /css-what@6.1.0:
     resolution: {integrity: sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==}
     engines: {node: '>= 6'}
@@ -6320,6 +6457,13 @@ packages:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
     engines: {node: '>=4'}
     hasBin: true
+
+  /csso@5.0.5:
+    resolution: {integrity: sha512-0LrrStPOdJj+SPCCrGhzryycLjwcgUSHBtxNA8aIDxf0GLsRh1cKYhB00Gd1lDOS4yGH69+SNn13+TWbVHETFQ==}
+    engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0, npm: '>=7.0.0'}
+    dependencies:
+      css-tree: 2.2.1
+    dev: true
 
   /csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
@@ -7340,6 +7484,10 @@ packages:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
     dev: true
 
+  /eventemitter3@5.0.1:
+    resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
+    dev: false
+
   /events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
@@ -8248,16 +8396,6 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
     dev: true
-
-  /helux@4.2.7(react@18.2.0):
-    resolution: {integrity: sha512-LmHPMMQynW8F5XafssBCNoz928lqc0cSjqYzUkosmU/YKj7xJ9x4UCxfvfwSzOWLj7tcs0MbLui+BzRShBeNFA==}
-    peerDependencies:
-      react: '>=16.8.0'
-    dependencies:
-      '@helux/core': 4.2.7
-      react: 18.2.0
-    dev: false
-    bundledDependencies: false
 
   /hermes-estree@0.15.0:
     resolution: {integrity: sha512-lLYvAd+6BnOqWdnNbP/Q8xfl8LOGw4wVjfrNd9Gt8eoFzhNBRVD95n4l2ksfMVOoxuVyegs85g83KS9QOsxbVQ==}
@@ -10317,7 +10455,6 @@ packages:
   /limu@3.12.4:
     resolution: {integrity: sha512-80huqIr3IifdFOysFIFYIP1dfpPNr2ysD6lynJ2R7T081c+cMdmjwxS260H/Wb38ZvZ86LYW1Malu+NTWKhb/A==}
     dev: false
-    bundledDependencies: []
 
   /lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
@@ -10597,6 +10734,14 @@ packages:
 
   /mdn-data@2.0.14:
     resolution: {integrity: sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==}
+
+  /mdn-data@2.0.28:
+    resolution: {integrity: sha512-aylIc7Z9y4yzHYAJNuESG3hfhC+0Ibp/MAMiaOZgNv4pmEdFyfZhhhny4MNiAfWdBQ1RQ2mfDWmM1x8SvGyp8g==}
+    dev: true
+
+  /mdn-data@2.0.30:
+    resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}
+    dev: true
 
   /media-typer@0.3.0:
     resolution: {integrity: sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==}
@@ -11617,6 +11762,10 @@ packages:
       tslib: 2.6.2
     dev: true
 
+  /path-dirname@1.0.2:
+    resolution: {integrity: sha512-ALzNPpyNq9AqXMBjeymIjFDAkAFH06mHJH/cSBHAgU0s4vfpBn6b2nf8tiRLvagKD8RbTpq2FKTBg7cl9l3c7Q==}
+    dev: true
+
   /path-exists@3.0.0:
     resolution: {integrity: sha512-bpC7GYwiDYQ4wYLe+FA8lhRjhQCMcQGuSgGGqDkg/QerRWw9CmGRT0iSOVRSZJ29NMLZgIzqaljJ63oaL4NIJQ==}
     engines: {node: '>=4'}
@@ -12320,6 +12469,23 @@ packages:
       react-native: 0.73.4(@babel/core@7.24.0)(@babel/preset-env@7.24.0)(react@18.2.0)
       warn-once: 0.1.1
     dev: false
+
+  /react-native-svg-transformer@1.3.0(react-native-svg@15.1.0)(react-native@0.73.4)(typescript@5.4.2):
+    resolution: {integrity: sha512-SV92uRjENDuanHLVuLy2Sdvt6f8vu7qnG8vC9CwBiAXV0BpWN4/wPvfc+r2WPAkcctRZLLOvrGnGA2o8nZd0cg==}
+    peerDependencies:
+      react-native: '>=0.59.0'
+      react-native-svg: '>=12.0.0'
+    dependencies:
+      '@svgr/core': 8.1.0(typescript@5.4.2)
+      '@svgr/plugin-jsx': 8.1.0(@svgr/core@8.1.0)
+      '@svgr/plugin-svgo': 8.1.0(@svgr/core@8.1.0)(typescript@5.4.2)
+      path-dirname: 1.0.2
+      react-native: 0.73.4(@babel/core@7.24.0)(@babel/preset-env@7.24.0)(react@18.2.0)
+      react-native-svg: 15.1.0(react-native@0.73.4)(react@18.2.0)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+    dev: true
 
   /react-native-svg@15.1.0(react-native@0.73.4)(react@18.2.0):
     resolution: {integrity: sha512-p0Sx0EpQNk1nu6UcMEiB8K9P04n3J7s+pNYUwf1d/Yz+v4hk961VjuVqjyndgiEbHZyWiKWLZRVNuvLpwjPY2A==}
@@ -13187,6 +13353,13 @@ packages:
       yargs: 15.4.1
     dev: true
 
+  /snake-case@3.0.4:
+    resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
+    dependencies:
+      dot-case: 3.0.4
+      tslib: 2.6.2
+    dev: true
+
   /sockjs@0.3.24:
     resolution: {integrity: sha512-GJgLTZ7vYb/JtPSSZ10hsOYIvEYsjbNU+zPdIHcUaWVNUEPivzxku31865sSSud0Da0W4lEeOPlmw93zLQchuQ==}
     dependencies:
@@ -13604,6 +13777,24 @@ packages:
   /supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
+
+  /svg-parser@2.0.4:
+    resolution: {integrity: sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==}
+    dev: true
+
+  /svgo@3.2.0:
+    resolution: {integrity: sha512-4PP6CMW/V7l/GmKRKzsLR8xxjdHTV4IMvhTnpuHwwBazSIlw5W/5SmPjN8Dwyt7lKbSJrRDgp4t9ph0HgChFBQ==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+    dependencies:
+      '@trysound/sax': 0.2.0
+      commander: 7.2.0
+      css-select: 5.1.0
+      css-tree: 2.3.1
+      css-what: 6.1.0
+      csso: 5.0.5
+      picocolors: 1.0.0
+    dev: true
 
   /tailwindcss@3.3.3:
     resolution: {integrity: sha512-A0KgSkef7eE4Mf+nKJ83i75TMyq8HqY3qmFIJSWy8bNt0v1lG7jUcpGpoTFxAwYcWOphcTBLPPJg+bDfhDf52w==}

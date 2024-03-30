@@ -29,7 +29,6 @@
     "@legoo/treasure-chest": "workspace:*",
     "@react-navigation/native": "^6.1.16",
     "class-variance-authority": "^0.7.0",
-    "helux": "^4.2.7",
     "nativewind": "^4.0.36",
     "react-native-gesture-handler": "^2.15.0",
     "react-native-keyboard-controller": "^1.11.3",
@@ -47,7 +46,6 @@
   "peerDependencies": {
     "@react-navigation/native": ">=6.0.0",
     "class-variance-authority": "*",
-    "helux": ">=4.2.5",
     "nativewind": ">=4.0.0",
     "react": "*",
     "react-native": "*",

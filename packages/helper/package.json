@@ -22,8 +22,11 @@
   ],
   "license": "ISC",
   "dependencies": {
+    "@legoo/hooks": "workspace:^",
     "dayjs": "^1.11.10",
-    "decimal.js-light": "^2.5.1"
+    "decimal.js-light": "^2.5.1",
+    "eventemitter3": "^5.0.1",
+    "limu": "^3.12.4"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.63",

@@ -13,3 +13,4 @@ export {removeNonNumber} from './removeNonNumber';
 export {removeSpace} from './removeSpace';
 export {throttle} from './throttle';
 export {uniqe} from './uniqe';
+export {Observer, Observable} from './observer';

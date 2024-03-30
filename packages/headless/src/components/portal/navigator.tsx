@@ -1,7 +1,14 @@
 import type {IPortalPushParams, IPortalFeture, IScreenProps} from './types';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {atom, useAtom} from 'helux';
-import {deferred, serial, randomStr, nextTick, noop} from '@legoo/helper';
+import {
+  deferred,
+  serial,
+  randomStr,
+  nextTick,
+  noop,
+  Observer,
+} from '@legoo/helper';
+import {useObserver} from '@legoo/hooks';
 import {navigationRef} from '../provider/provider';
 import {PortalProvider} from './context';
 import React from 'react';
@@ -9,9 +16,9 @@ import Portal from './portal';
 
 const Stack = createNativeStackNavigator();
 
-const [screensAtom, setScreens] = atom<
+const [screensAtom, setScreens] = Observer<
   Map<string, IPortalPushParams & IPortalFeture>
->(() => new Map());
+>(new Map());
 
 export function pushPortalScreen<T = any, P = {}>(
   portalPushParams: IPortalPushParams<T, P>,
@@ -48,7 +55,7 @@ export function withPortalStack(
   Navigator: React.ComponentType<React.PropsWithChildren<{}>>,
 ) {
   return () => {
-    const [screens] = useAtom(screensAtom);
+    const [screens] = useObserver(screensAtom);
     return (
       <Navigator>
         <Stack.Group

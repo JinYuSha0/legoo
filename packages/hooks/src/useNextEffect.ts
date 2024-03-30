@@ -1,9 +1,9 @@
 import {type DependencyList, useEffect, useRef} from 'react';
 
-export function useNextEffect<TCallback extends AnyFunction>(
+export const useNextEffect = <TCallback extends AnyFunction>(
   callback: TCallback,
   deps?: DependencyList,
-) {
+) => {
   const firstFlag = useRef(true);
   useEffect(() => {
     if (firstFlag.current) {
@@ -12,4 +12,4 @@ export function useNextEffect<TCallback extends AnyFunction>(
     }
     return callback();
   }, deps);
-}
+};
