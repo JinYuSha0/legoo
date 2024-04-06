@@ -18,7 +18,7 @@ import React, {
 import {useEvent} from '@legoo/hooks';
 
 const containerVariants = cva(
-  'flex flex-1 flex-row rounded-md border border-input bg-transparent justify-between items-center',
+  'flex-row rounded-md border border-input bg-transparent justify-between items-center',
   {
     variants: {
       variant: {
@@ -36,19 +36,16 @@ const containerVariants = cva(
   },
 );
 
-const inputTextVariantes = cva(
-  'flex flex-1 text-sm placeholder:text-muted-foreground',
-  {
-    variants: {
-      variant: {
-        default: '',
-      },
-    },
-    defaultVariants: {
-      variant: 'default',
+const inputTextVariantes = cva('text-sm placeholder:text-muted-foreground', {
+  variants: {
+    variant: {
+      default: '',
     },
   },
-);
+  defaultVariants: {
+    variant: 'default',
+  },
+});
 
 export interface ITextInput extends TextInput {
   setSecureTextEntry: (value: boolean) => void;
@@ -124,10 +121,20 @@ const Input: ForwardRefRenderFunction<ITextInput, IInputProps> = (
       _onBlur,
     ],
   );
+  const _className = useMemo(
+    () =>
+      cx(
+        containerVariants({variant: isFocused ? 'focus' : undefined, size}),
+        {
+          'opacity-50 cursor-not-allowed': disabled,
+        },
+        className,
+      ),
+    [isFocused, disabled, className],
+  );
   const _content = useMemo(() => {
     if (typeof children === 'function') return children(_props, _ref);
-    if (React.isValidElement(children)) return children;
-    return null;
+    return <TextInput ref={ref} {..._props} />;
   }, [_props, children]);
   const _suffix = useMemo(() => {
     if (suffix) return suffix(_props, inputRef);
@@ -144,14 +151,7 @@ const Input: ForwardRefRenderFunction<ITextInput, IInputProps> = (
     },
   }));
   return (
-    <View
-      className={cx(
-        containerVariants({variant: isFocused ? 'focus' : undefined, size}),
-        {
-          'opacity-50 cursor-not-allowed': disabled,
-        },
-        className,
-      )}>
+    <View className={_className}>
       {_content}
       {_suffix}
     </View>
