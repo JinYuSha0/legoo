@@ -36,16 +36,19 @@ const containerVariants = cva(
   },
 );
 
-const inputTextVariantes = cva('text-sm placeholder:text-muted-foreground', {
-  variants: {
-    variant: {
-      default: '',
+const inputTextVariantes = cva(
+  'flex-1 text-sm placeholder:text-muted-foreground',
+  {
+    variants: {
+      variant: {
+        default: '',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
     },
   },
-  defaultVariants: {
-    variant: 'default',
-  },
-});
+);
 
 export interface ITextInput extends TextInput {
   setSecureTextEntry: (value: boolean) => void;
