@@ -31,6 +31,7 @@ const Label: ForwardRefRenderFunction<
     )}
   </View>
 );
+
 Label.displayName = 'Label';
 
 export default memo(forwardRef(Label));

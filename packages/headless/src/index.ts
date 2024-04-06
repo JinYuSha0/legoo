@@ -56,3 +56,7 @@ export {
   type IBottomSheetProps,
   default as BottomSheet,
 } from './components/bottomSheet/bottomSheet';
+export {
+  type ITextWithLinkProps,
+  default as TextLink,
+} from './components/textLink/textLink';

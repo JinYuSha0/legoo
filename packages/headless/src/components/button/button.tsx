@@ -1,7 +1,13 @@
-import type {PressableProps} from 'react-native';
-import {Text, Pressable} from 'react-native';
+import type {GestureResponderEvent, PressableProps} from 'react-native';
+import {Text, Pressable, Keyboard, View, ActivityIndicator} from 'react-native';
 import {type VariantProps, cva, cx} from 'class-variance-authority';
-import React, {forwardRef, ForwardRefRenderFunction, memo} from 'react';
+import React, {
+  forwardRef,
+  ForwardRefRenderFunction,
+  memo,
+  useMemo,
+} from 'react';
+import {useEvent} from '@legoo/hooks';
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center rounded-md font-medium focus-visible:outline-none',
@@ -54,6 +60,9 @@ export interface IButtonProps
   className?: string;
   textClassName?: string;
   children?: React.ReactNode;
+  keyboardDismiss?: boolean;
+  loading?: boolean;
+  activityIndicatorClassName?: string;
 }
 
 const Button: ForwardRefRenderFunction<any, IButtonProps> = (props, ref) => {
@@ -64,12 +73,23 @@ const Button: ForwardRefRenderFunction<any, IButtonProps> = (props, ref) => {
     variant,
     size,
     disabled = false,
+    keyboardDismiss,
+    loading = false,
+    activityIndicatorClassName,
+    onPress,
     ...rest
   } = props;
+  const _disabled = useMemo(() => {
+    return disabled || loading;
+  }, [disabled, loading]);
+  const _onPress = useEvent((event: GestureResponderEvent) => {
+    onPress?.(event);
+    keyboardDismiss && Keyboard.dismiss();
+  });
   return (
     <Pressable
       ref={ref}
-      disabled={disabled}
+      disabled={_disabled}
       className={cx(
         buttonVariants({
           variant,
@@ -80,13 +100,24 @@ const Button: ForwardRefRenderFunction<any, IButtonProps> = (props, ref) => {
         },
         className,
       )}
+      onPress={_onPress}
       {...rest}>
       {React.isValidElement(children) ? (
         children
       ) : (
-        <Text className={cx(textVariants({variant, className: textClassName}))}>
-          {children}
-        </Text>
+        <View className="w-full">
+          <Text
+            className={cx(textVariants({variant, className: textClassName}))}>
+            {children}
+          </Text>
+          {loading && (
+            <View className="absolute right-2">
+              <ActivityIndicator
+                className={cx('text-white', activityIndicatorClassName)}
+              />
+            </View>
+          )}
+        </View>
       )}
     </Pressable>
   );
