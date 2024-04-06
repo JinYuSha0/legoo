@@ -55,7 +55,8 @@ export function withPortalStack(
   Navigator: React.ComponentType<React.PropsWithChildren<{}>>,
 ) {
   return () => {
-    const [screens] = useObserver(screensAtom);
+    const [screens] =
+      useObserver<Map<string, IPortalPushParams & IPortalFeture>>(screensAtom);
     return (
       <Navigator>
         <Stack.Group
