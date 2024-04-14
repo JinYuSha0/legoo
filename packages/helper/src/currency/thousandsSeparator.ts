@@ -8,8 +8,7 @@ export function thousandsSeparator(
 ): string {
   if (isString(n)) n = removeNonNumber(n);
   if (!isNumber(n)) return String(Config.DEFAULT_SAFE_VALUE);
-  const strSplit = n.toString().split('.');
-  const integer = strSplit[0];
-  const decimal = strSplit[1] || '';
-  return integer.replace(/\B(?=(\d{3})+(?!\d))/g, spearator) + decimal;
+  const [integer, decimal] = n.toString().split('.');
+  const _decimal = decimal ? '.' + decimal : '';
+  return integer.replace(/\B(?=(\d{3})+(?!\d))/g, spearator) + _decimal;
 }

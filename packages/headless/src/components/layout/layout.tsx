@@ -74,7 +74,7 @@ const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
       <KeyboardView
         ref={ref as any}
         enabled={isFocused}
-        className={cx('flex-1')}
+        className={cx('flex-1', {'mb-[-2px]': !avoiding})}
         contentContainerClassName={cx(
           'grow bg-background',
           contentContainerClassName,

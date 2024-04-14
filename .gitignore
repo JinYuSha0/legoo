@@ -70,3 +70,6 @@ dist/
 
 # turbo
 .turbo/
+
+# watchman
+.watchmanconfig
