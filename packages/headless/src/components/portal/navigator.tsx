@@ -1,4 +1,4 @@
-import type {IPortalPushParams, IPortalFeture, IScreenProps} from './types';
+import type {IPortalPushParams, IPortalFuture, IScreenProps} from './types';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   deferred,
@@ -17,7 +17,7 @@ import Portal from './portal';
 const Stack = createNativeStackNavigator();
 
 const [screensAtom, setScreens] = Observer<
-  Map<string, IPortalPushParams & IPortalFeture>
+  Map<string, IPortalPushParams & IPortalFuture>
 >(new Map());
 
 export function pushPortalScreen<T = any, P = {}>(
@@ -56,7 +56,7 @@ export function withPortalStack(
 ) {
   return () => {
     const [screens] =
-      useObserver<Map<string, IPortalPushParams & IPortalFeture>>(screensAtom);
+      useObserver<Map<string, IPortalPushParams & IPortalFuture>>(screensAtom);
     return (
       <Navigator>
         <Stack.Group

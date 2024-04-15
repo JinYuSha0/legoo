@@ -1,4 +1,4 @@
-import type {IPortalFeture} from './types';
+import type {IPortalFuture} from './types';
 import {TouchableWithoutFeedback, View} from 'react-native';
 import {type VariantProps, cva, cx} from 'class-variance-authority';
 import {useHardwareBackPress} from '@legoo/hooks';
@@ -37,7 +37,7 @@ const portalVariants = cva('flex-col', {
 
 export interface IPortalProps
   extends VariantProps<typeof portalVariants>,
-    IPortalFeture {
+    IPortalFuture {
   className?: string;
   closeable?: boolean;
   overlayClosable?: boolean;

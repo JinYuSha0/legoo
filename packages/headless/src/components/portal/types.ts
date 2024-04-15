@@ -22,9 +22,9 @@ export type IPortalPushParams<T = any, P = {}> = Omit<
 export type IPortalScreenProps<
   T = any,
   P extends Record<string, any> = {},
-> = NativeStackScreenProps<{portal: P}, 'portal'> & IPortalFeture<T>;
+> = NativeStackScreenProps<{portal: P}, 'portal'> & IPortalFuture<T>;
 
-export interface IPortalFeture<T = any> {
+export interface IPortalFuture<T = any> {
   future: Future<T>;
 }
 
