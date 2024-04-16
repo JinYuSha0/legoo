@@ -1,7 +1,7 @@
 import type {IPortalFuture} from './types';
 import {TouchableWithoutFeedback, View} from 'react-native';
 import {type VariantProps, cva, cx} from 'class-variance-authority';
-import {useHardwareBackPress} from '@legoo/hooks';
+import {useEvent, useHardwareBackPress} from '@legoo/hooks';
 import {usePortalContext} from './context';
 import Layout from '../layout/layout';
 import React, {
@@ -10,6 +10,12 @@ import React, {
   forwardRef,
   useCallback,
 } from 'react';
+import {
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 
 const portalVariants = cva('flex-col', {
   variants: {
@@ -51,39 +57,58 @@ const Portal: ForwardRefRenderFunction<
     future,
     children,
     direction,
-    overlay,
     className,
     closeable = true,
+    overlay = 'default',
     overlayClosable = true,
+    bottomColor,
   } = props;
+  const bgValue = useSharedValue(1);
+  const StatusBar = useStatusBar('light-content');
   const {closeWithAnimation} = usePortalContext();
+  const bgStyle = useAnimatedStyle(
+    () => ({
+      backgroundColor:
+        overlay === 'none'
+          ? 'transparent'
+          : interpolateColor(
+              bgValue.value,
+              [1, 0],
+              ['rgba(0,0,0,0.5)', 'rgba(0,0,0,0)'],
+            ),
+    }),
+    [overlay],
+  );
+  const close = useEvent((reason: string) => {
+    if (!closeable) return;
+    bgValue.value = withSpring(0, {
+      duration: 80,
+    });
+    closeWithAnimation(() => future.reject(new Error(reason)));
+  });
   const handleHardwareBackPress = useCallback(() => {
-    if (closeable) {
-      closeWithAnimation(() =>
-        future.reject('Portal screen closed by hardware back press'),
-      );
-    }
+    close('Portal screen closed by hardware back press');
     return true;
   }, [future, closeable]);
   const overlayClose = useCallback(() => {
-    closeWithAnimation(() =>
-      future.reject('Portal screen closed by overlay press'),
-    );
+    close('Portal screen closed by overlay press');
   }, [future]);
-  useHardwareBackPress(true, handleHardwareBackPress);
   return (
     <Layout
       ref={ref}
       translucent
-      contentContainerClassName={cx(
-        portalVariants({direction, overlay}),
-        className,
-      )}
+      contentContainerClassName={cx(portalVariants({direction}), className)}
       bounces={false}
-      keyboardShouldPersistTaps="never">
+      keyboardShouldPersistTaps="never"
+      bottomColor={bottomColor}
+      onHardwareBackPress={handleHardwareBackPress}>
+      {StatusBar}
       {closeable && overlayClosable && (
         <TouchableWithoutFeedback className="z-10" onPress={overlayClose}>
-          <View className="absolute top-0 left-0 bottom-0 right-0" />
+          <Animated.View
+            className="absolute top-0 left-0 bottom-0 right-0"
+            style={bgStyle}
+          />
         </TouchableWithoutFeedback>
       )}
       {children}

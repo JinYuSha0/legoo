@@ -2,10 +2,10 @@ import {
   KeyboardAvoidingView,
   KeyboardAwareScrollView,
 } from 'react-native-keyboard-controller';
-import {StatusBarProps, View} from 'react-native';
+import {ScrollView, StatusBarProps, View} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {cx} from 'class-variance-authority';
-import {useStatusBar} from '@legoo/hooks';
+import {useHardwareBackPress, useStatusBar} from '@legoo/hooks';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import React, {
   type ForwardRefRenderFunction,
@@ -19,9 +19,11 @@ interface LayoutPropsBase {
   className?: string;
   contentContainerClassName?: string;
   indicatorClassName?: string;
-  translucent?: boolean;
   avoiding?: boolean;
-  statusBar?: StatusBarProps;
+  translucent?: boolean;
+  paddingBottom?: boolean;
+  bottomColor?: string;
+  onHardwareBackPress?: () => boolean;
 }
 
 interface LayoutPropsAvoiding
@@ -40,54 +42,75 @@ interface LayoutPropsAware
 
 export type LayoutProps = LayoutPropsAvoiding | LayoutPropsAware;
 
+const MyKeyboardAvoidingView: React.FC<
+  React.ComponentProps<typeof KeyboardAvoidingView>
+> = props => {
+  const {children, ...rest} = props;
+  return (
+    <ScrollView
+      horizontal
+      className="grow"
+      keyboardShouldPersistTaps="handled"
+      scrollEnabled={false}
+      nestedScrollEnabled
+      contentContainerStyle={{width: WINDOW_WIDTH}}>
+      <KeyboardAvoidingView {...rest}>{children}</KeyboardAvoidingView>
+    </ScrollView>
+  );
+};
+
 const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
   const {
     children,
-    translucent,
     avoiding,
     className,
     contentContainerClassName,
     indicatorClassName,
-    statusBar,
-    style,
+    translucent,
+    paddingBottom = true,
+    bottomColor = 'transparent',
+    onHardwareBackPress,
     ...rest
   } = props;
-  const isFocused = useIsFocused();
-  const StatusBar = useStatusBar(true, statusBar);
   const {top, bottom} = useSafeAreaInsets();
+  const isFocused = useIsFocused();
+  const StatusBar = useStatusBar('light-content');
   const KeyboardView = useMemo(
-    () => (avoiding ? KeyboardAvoidingView : KeyboardAwareScrollView),
+    () => (avoiding ? MyKeyboardAvoidingView : KeyboardAwareScrollView),
     [avoiding],
   );
-  const containerStyle = useMemo(() => {
-    if (style) return style;
-    if (!translucent) {
-      return {
-        paddingTop: top,
-        paddingBottom: bottom,
-      };
-    }
-  }, [style, translucent, top, bottom]);
+  useHardwareBackPress(true, onHardwareBackPress);
   return (
-    <View className={cx('flex-1', className)} style={containerStyle}>
-      {StatusBar}
+    <View style={[styles.container, {paddingTop: translucent ? 0 : top}]}>
+      {translucent && StatusBar}
       <KeyboardView
         ref={ref as any}
         enabled={isFocused}
-        className={cx('flex-1', {'mb-[-2px]': !avoiding})}
-        contentContainerClassName={cx(
-          'grow bg-background',
-          contentContainerClassName,
-        )}
+        className={cx('flex-1', !avoiding ? 'mb-[-1.2px]' : '')}
+        contentContainerClassName={cx('grow', contentContainerClassName)}
         indicatorClassName={cx(indicatorClassName)}
+        behavior={avoiding ? 'padding' : undefined}
         keyboardShouldPersistTaps="handled"
         {...rest}>
         {children}
       </KeyboardView>
+      <View
+        style={{
+          width: '100%',
+          height: paddingBottom ? bottom : 0,
+          backgroundColor: bottomColor,
+        }}
+      />
     </View>
   );
 };
 
 Layout.displayName = 'Layout';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default memo(forwardRef(Layout));

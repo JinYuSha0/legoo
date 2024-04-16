@@ -1,6 +1,7 @@
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import {View} from 'react-native';
 import {usePortalContext} from '@legoo/headless';
+import {last} from '@legoo/helper';
 import {cx} from 'class-variance-authority';
 import Reanimated, {
   type WithSpringConfig,
@@ -29,6 +30,9 @@ interface Closeable {
 
 interface IBottomSheetPropsCommon {
   className?: string;
+  headerClassName?: string;
+  bodyClassName?: string;
+  indicadorClassName?: string;
   index?: number;
   snapPoints?: number[];
   enableDrag?: boolean;
@@ -38,7 +42,8 @@ interface IBottomSheetPropsCommon {
   enableDynamicSizing?: boolean;
   enableMountAnimation?: boolean;
   enableUnmountAnimation?: boolean;
-  animationConfig?: WithSpringConfig;
+  animationShowingConfig?: WithSpringConfig;
+  animationClosingConfig?: WithSpringConfig;
   CLOSE_MAX_VELOCITY?: number;
   DEFAULT_HEIGHT?: number;
   SNAP_PROPORTION?: number;
@@ -59,11 +64,19 @@ export type IBottomSheetProps =
   | IBottomSheetPropsDynamic
   | IBottomSheetPropsSnap;
 
-const defaultAnimationConfig: WithSpringConfig = {
-  duration: 120,
-  dampingRatio: 1,
-  stiffness: 1,
-  overshootClamping: false,
+const defaultShowingAnimationConfig: WithSpringConfig = {
+  duration: 332,
+  dampingRatio: 0.8,
+  stiffness: 100,
+  restDisplacementThreshold: 150,
+  restSpeedThreshold: 150,
+  reduceMotion: ReduceMotion.System,
+};
+
+const defaultClosingAnimationConfig: WithSpringConfig = {
+  duration: 166,
+  dampingRatio: 0.8,
+  stiffness: 100,
   restDisplacementThreshold: 150,
   restSpeedThreshold: 150,
   reduceMotion: ReduceMotion.System,
@@ -75,6 +88,9 @@ const BottomSheet: React.ForwardRefRenderFunction<
 > = (props, ref) => {
   const {
     className,
+    headerClassName,
+    bodyClassName,
+    indicadorClassName,
     index = 0,
     snapPoints = [],
     enableDrag = true,
@@ -82,7 +98,8 @@ const BottomSheet: React.ForwardRefRenderFunction<
     enableDynamicSizing = false,
     enableMountAnimation = true,
     enableUnmountAnimation = true,
-    animationConfig = defaultAnimationConfig,
+    animationShowingConfig = defaultShowingAnimationConfig,
+    animationClosingConfig = defaultClosingAnimationConfig,
     CLOSE_MAX_VELOCITY = 300,
     DEFAULT_HEIGHT = 300,
     SNAP_PROPORTION = 1 / 4,
@@ -99,12 +116,21 @@ const BottomSheet: React.ForwardRefRenderFunction<
     [snapPoints],
   );
   const currSnapPointIdxRef = useRef(index);
-  const currSnapPoint = snapPoints[index] ?? DEFAULT_HEIGHT;
-  const offset = useSharedValue(currSnapPoint);
-  const height = useSharedValue(currSnapPoint);
-  const opacity = useSharedValue(enableDynamicSizing ? 0 : 1);
+  const maxHeight = useMemo(() => {
+    if (!enableDynamicSizing) {
+      return last(sortedSnapPoints)!;
+    }
+    return 0;
+  }, []);
+  const initOffset = useMemo(() => {
+    if (!enableDynamicSizing) {
+      return Math.abs(maxHeight - (snapPoints[index] ?? DEFAULT_HEIGHT));
+    }
+    return 0;
+  }, []);
+  const height = useSharedValue(maxHeight);
+  const offset = useSharedValue(initOffset);
   const animatedStyles = useAnimatedStyle(() => ({
-    opacity: opacity.value,
     transform: [{translateY: offset.value}],
   }));
   const onLayout = useCallback(() => {
@@ -114,32 +140,36 @@ const BottomSheet: React.ForwardRefRenderFunction<
         if (measurement === null) return;
         height.value = measurement.height;
         offset.value = enableMountAnimation ? measurement.height : 0;
-        opacity.value = 1;
       }
-      if (enableMountAnimation) offset.value = withSpring(0, animationConfig);
+      if (enableMountAnimation)
+        offset.value = withSpring(initOffset, animationShowingConfig);
     })();
   }, []);
   const close = useCallback((cb?: () => void) => {
     'worklet';
     if (enableUnmountAnimation || offset.value !== 0) {
-      offset.value = withSpring(height.value, animationConfig, finished => {
-        finished && runOnJS(cb ?? onClose)();
-      });
+      offset.value = withSpring(
+        height.value,
+        animationClosingConfig,
+        finished => {
+          finished && runOnJS(cb ?? onClose)();
+        },
+      );
     } else {
       runOnJS(cb ?? onClose)();
     }
   }, []);
   const recover = useCallback(() => {
     'worklet';
-    offset.value = withSpring(0, animationConfig);
+    offset.value = withSpring(0, animationShowingConfig);
   }, []);
   const getNextHeightIdx = useCallback(
     (translationY: number, currIdx: number) => {
       'worklet';
-      // 目前的高度
-      const currHeight = currSnapPoint - offset.value;
-      // 当前的snap高度
       const currSnapHeight = snapPoints[currIdx];
+      // 目前的高度
+      const currHeight = currSnapHeight - translationY;
+      // 当前的snap高度
       // 转换为排序后的index
       let nextIdx = sortedSnapPoints.findIndex(val => val === currSnapHeight);
       // 没变化
@@ -183,7 +213,7 @@ const BottomSheet: React.ForwardRefRenderFunction<
         return currIdx;
       }
     },
-    [enableDynamicSizing, snapPoints, sortedSnapPoints, currSnapPoint],
+    [enableDynamicSizing, snapPoints, sortedSnapPoints],
   );
   const pan = Gesture.Pan()
     .onBegin(() => {
@@ -222,7 +252,10 @@ const BottomSheet: React.ForwardRefRenderFunction<
         return;
       }
       const nextHeight = snapPoints[nextHeightIdx];
-      offset.value = withSpring(height.value - nextHeight, animationConfig);
+      offset.value = withSpring(
+        height.value - nextHeight,
+        animationShowingConfig,
+      );
     });
   useImperativeHandle(closeableRef, () => ({
     close,
@@ -233,7 +266,7 @@ const BottomSheet: React.ForwardRefRenderFunction<
   return (
     <Reanimated.View
       ref={animatedRef}
-      className={cx('w-screen')}
+      className={cx('w-screen', className)}
       style={[animatedStyles, !enableDynamicSizing ? {height} : null]}
       onLayout={onLayout}>
       <GestureDetector gesture={enableDrag ? pan : Gesture.Pan()}>
@@ -241,13 +274,22 @@ const BottomSheet: React.ForwardRefRenderFunction<
           header
         ) : (
           <View className="flex">
-            <View className="bg-background h-6 w-full items-center justify-center">
-              <View className="h-[6px] w-32 rounded-md bg-border" />
+            <View
+              className={cx(
+                'bg-background h-6 w-full items-center justify-center',
+                headerClassName,
+              )}>
+              <View
+                className={cx(
+                  'h-[6px] w-32 rounded-md bg-border',
+                  indicadorClassName,
+                )}
+              />
             </View>
           </View>
         )}
       </GestureDetector>
-      <View className={cx('bg-background', className)}>{children}</View>
+      <View className={cx('bg-background', bodyClassName)}>{children}</View>
     </Reanimated.View>
   );
 };
