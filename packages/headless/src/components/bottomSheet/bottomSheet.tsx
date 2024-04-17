@@ -129,7 +129,7 @@ const BottomSheet: React.ForwardRefRenderFunction<
     return 0;
   }, []);
   const height = useSharedValue(maxHeight);
-  const offset = useSharedValue(initOffset);
+  const offset = useSharedValue(maxHeight);
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{translateY: offset.value}],
   }));
