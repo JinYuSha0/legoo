@@ -319,7 +319,7 @@ const BottomSheet: React.ForwardRefRenderFunction<
       })
       .shouldCancelWhenOutside(false)
       .simultaneousWithExternalGesture(scrollRef)
-      .enabled(enableDrag && scrollable ? offset.value !== 0 : true);
+      .enabled(enableDrag && (scrollable ? offset.value !== 0 : true));
   }, [enableDrag, scrollable]);
   const body = useMemo(() => {
     return scrollable ? (
