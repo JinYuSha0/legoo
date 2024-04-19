@@ -68,14 +68,20 @@ export function withPortalStack(
           }}>
           {Array.from(screens.values()).map(screen => {
             const {portal, future, onClose, ...rest} = screen;
-            function TempScreen(props) {
+            function TempScreen(props: any) {
               return (
                 <PortalProvider>
                   <Portal future={future} {...portal}>
-                    {React.createElement(screen.component, {
-                      ...props,
-                      future,
-                    })}
+                    {React.createElement(
+                      screen.animationContainer ?? React.Fragment,
+                      {
+                        // @ts-ignore
+                        children: React.createElement(screen.component, {
+                          ...props,
+                          future,
+                        }),
+                      },
+                    )}
                   </Portal>
                 </PortalProvider>
               );

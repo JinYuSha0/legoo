@@ -15,6 +15,7 @@ export type IPortalPushParams<T = any, P = {}> = Omit<
   name?: string;
   initialParams?: Partial<P>;
   component: React.ComponentType<IPortalScreenProps<T, P>>;
+  animationContainer?: React.ComponentType;
   portal?: Omit<IPortalProps, 'future'>;
   onClose?: () => void;
 };

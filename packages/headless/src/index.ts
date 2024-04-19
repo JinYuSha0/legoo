@@ -61,3 +61,4 @@ export {
   type ITextWithLinkProps,
   default as TextLink,
 } from './components/textLink/textLink';
+export * from './components/animation/index';
