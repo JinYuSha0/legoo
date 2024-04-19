@@ -32,6 +32,7 @@ export {
   default as AppProvider,
   navigationRef,
 } from './components/provider/provider';
+export {default as Modal} from './components/provider/modal';
 export {ThemeProvider, useThemeContext} from './components/theme';
 export * from './components/portal/index';
 export {type LayoutProps, default as Layout} from './components/layout/layout';

@@ -14,6 +14,7 @@ import {
   NavigationContainer,
   createNavigationContainerRef,
 } from '@react-navigation/native';
+import {ModalProvider} from './modal';
 
 export interface IAppProviderProps {
   safeAreaProviderProps?: SafeAreaProviderProps;
@@ -37,15 +38,17 @@ const AppProvider: React.FC<
     <SafeAreaProvider
       initialMetrics={initialWindowMetrics}
       {...safeAreaProviderProps}>
-      <GestureHandlerRootView style={styles.container}>
-        <KeyboardProvider statusBarTranslucent {...keyboardProviderProps}>
-          <NavigationContainer
-            ref={navigationRef}
-            {...navigationContainerProps}>
-            <ThemeProvider>{children}</ThemeProvider>
-          </NavigationContainer>
-        </KeyboardProvider>
-      </GestureHandlerRootView>
+      <ModalProvider>
+        <GestureHandlerRootView style={styles.container}>
+          <KeyboardProvider statusBarTranslucent {...keyboardProviderProps}>
+            <NavigationContainer
+              ref={navigationRef}
+              {...navigationContainerProps}>
+              <ThemeProvider>{children}</ThemeProvider>
+            </NavigationContainer>
+          </KeyboardProvider>
+        </GestureHandlerRootView>
+      </ModalProvider>
     </SafeAreaProvider>
   );
 };
