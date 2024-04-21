@@ -147,7 +147,7 @@ const BottomSheet: React.ForwardRefRenderFunction<
   const scrollViewHeight = useSharedValue(0);
   const scrollContentViewHeight = useSharedValue(0);
   const animatedStyles = useAnimatedStyle(() => ({
-    height: enableDynamicSizing ? undefined : height.value,
+    height: height.value === 0 ? undefined : height.value,
     transform: [{translateY: offset.value}],
   }));
   const scrollAnimatedProps = useAnimatedProps(
@@ -162,7 +162,7 @@ const BottomSheet: React.ForwardRefRenderFunction<
     isLayoutRef.current = true;
     const _height = e.nativeEvent.layout.height;
     runOnUI(() => {
-      if (enableDynamicSizing) {
+      if (enableDynamicSizing && _height > 0) {
         height.value = _height;
         offset.value = enableMountAnimation ? _height : 0;
       }
@@ -171,7 +171,6 @@ const BottomSheet: React.ForwardRefRenderFunction<
     })();
   }, []);
   const onScrollLayout = useCallback(async (e: LayoutChangeEvent) => {
-    console.log('onScrollLayout');
     scrollViewHeight.value = e.nativeEvent.layout.height;
   }, []);
   const onScrollContentLayout = useCallback((e: LayoutChangeEvent) => {

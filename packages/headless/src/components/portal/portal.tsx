@@ -3,6 +3,7 @@ import {TouchableWithoutFeedback, View} from 'react-native';
 import {type VariantProps, cva, cx} from 'class-variance-authority';
 import {useHardwareBackPress} from '@legoo/hooks';
 import {usePortalContext} from './context';
+import {useIsFocused} from '@react-navigation/native';
 import Layout from '../layout/layout';
 import React, {
   type ForwardRefRenderFunction,
@@ -56,6 +57,7 @@ const Portal: ForwardRefRenderFunction<
     closeable = true,
     overlayClosable = true,
   } = props;
+  const isFocused = useIsFocused();
   const {closeWithAnimation} = usePortalContext();
   const handleHardwareBackPress = useCallback(() => {
     if (closeable) {
@@ -70,7 +72,7 @@ const Portal: ForwardRefRenderFunction<
       future.reject('Portal screen closed by overlay press'),
     );
   }, [future]);
-  useHardwareBackPress(true, handleHardwareBackPress);
+  useHardwareBackPress(isFocused && true, handleHardwareBackPress);
   return (
     <Layout
       ref={ref}
