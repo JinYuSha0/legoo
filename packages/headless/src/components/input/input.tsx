@@ -147,7 +147,7 @@ const Input: ForwardRefRenderFunction<ITextInput, IInputProps> = (
     ..._ref.current,
     clear: () => {
       rest.onChangeText('');
-      _ref.current.clear();
+      _ref.current?.clear?.();
     },
     setSecureTextEntry: (value: boolean) => {
       setIsSecureTextEntry(value);
