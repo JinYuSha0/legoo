@@ -60,7 +60,7 @@ const Picker: ForwardRefRenderFunction<Reanimated.View, IPickerProps> = (
     }
     return initialIndex;
   }, [initialIndex, len]);
-  const preValue = useSharedValue(data[_initialIndex].value);
+  const preValue = useSharedValue(data[_initialIndex]?.value);
   const panBeginTime = useSharedValue(-1);
   const visibleItemCount = useMemo(
     () => Math.floor(height / itemHeight),

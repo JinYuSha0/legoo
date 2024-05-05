@@ -63,6 +63,7 @@ export interface IInputProps
   children?:
     | ForwardRefRenderFunction<TextInput, TextInputProps>
     | React.ReactNode;
+  prefix?: ForwardRefRenderFunction<TextInput, TextInputProps>;
   suffix?: ForwardRefRenderFunction<TextInput, TextInputProps>;
   isFocused?: boolean;
 }
@@ -76,6 +77,7 @@ const Input: ForwardRefRenderFunction<ITextInput, IInputProps> = (
     inputClassName,
     disabled = false,
     children,
+    prefix,
     suffix,
     variant,
     size,
@@ -139,10 +141,14 @@ const Input: ForwardRefRenderFunction<ITextInput, IInputProps> = (
     if (typeof children === 'function') return children(_props, _ref);
     return <TextInput ref={ref} {..._props} />;
   }, [_props, children]);
+  const _prefix = useMemo(() => {
+    if (prefix) return prefix(_props, inputRef);
+    return null;
+  }, [_props, prefix]);
   const _suffix = useMemo(() => {
     if (suffix) return suffix(_props, inputRef);
     return null;
-  }, [_props, suffix, isFocused]);
+  }, [_props, suffix]);
   useImperativeHandle(inputRef, () => ({
     ..._ref.current,
     clear: () => {
@@ -155,6 +161,7 @@ const Input: ForwardRefRenderFunction<ITextInput, IInputProps> = (
   }));
   return (
     <View className={_className}>
+      {_prefix}
       {_content}
       {_suffix}
     </View>
