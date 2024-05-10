@@ -22,6 +22,7 @@ interface LayoutPropsBase {
   translucent?: boolean;
   avoiding?: boolean;
   statusBar?: StatusBarProps;
+  enabled?: boolean;
 }
 
 interface LayoutPropsAvoiding
@@ -50,6 +51,7 @@ const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
     indicatorClassName,
     statusBar,
     style,
+    enabled,
     ...rest
   } = props;
   const isFocused = useIsFocused();
@@ -73,7 +75,7 @@ const Layout: ForwardRefRenderFunction<any, LayoutProps> = (props, ref) => {
       {StatusBar}
       <KeyboardView
         ref={ref as any}
-        enabled={isFocused}
+        enabled={enabled && isFocused}
         className={cx('flex-1', {'mb-[-2px]': !avoiding})}
         contentContainerClassName={cx(
           'grow bg-background',
